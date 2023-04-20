@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
 
         \Database\Factories\PermissionAndRoleFactory::definition();
 
+        \Database\Factories\AcervoFactory::definition();
+
         
     }
 }

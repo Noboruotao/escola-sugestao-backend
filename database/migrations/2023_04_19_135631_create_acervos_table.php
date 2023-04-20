@@ -163,7 +163,7 @@ class CreateAcervosTable extends Migration
         Schema::dropIfExists('acervos');
         Schema::dropIfExists('situacao_do_acervo');
         Schema::dropIfExists('estado_do_acervo');
-        Schema::dropIfExists('tio_de_acervo');
+        Schema::dropIfExists('tipo_de_acervo');
         Schema::dropIfExists('categoria');
         Schema::dropIfExists('autores');
         Schema::dropIfExists('nacionalidades');
