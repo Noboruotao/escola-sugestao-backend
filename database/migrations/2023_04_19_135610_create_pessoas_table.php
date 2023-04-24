@@ -38,7 +38,7 @@ class CreatePessoasTable extends Migration
                     ->constrained('pessoas')
                     ->onDelete('cascade');
             $table->string('formacao_academica');
-            $table->string('experiencia_proficional');
+            $table->string('experiencia_profissional');
         });
 
 
@@ -101,6 +101,13 @@ class CreatePessoasTable extends Migration
                     ->constrained('alunos')
                     ->primary()
                     ->inDelete('cascade');
+        });
+
+
+        Schema::create('mensalidades', function(Blueprint $table){
+            $table->id();
+            $table->foreignId('aluno_id');
+            $table->float('valor');
         });
     }
 

@@ -19,7 +19,7 @@ class CreateAcervosTable extends Migration
                 });
 
 
-        Schema::create('nacionalidade', function (Blueprint $table){
+        Schema::create('nacionalidades', function (Blueprint $table){
             $table->id();
             $table->string('nacionalidade');
             $table->foreignId('idioma_oficial_id')
@@ -32,7 +32,7 @@ class CreateAcervosTable extends Migration
             $table->id();
             $table->string('nome');
             $table->foreignId('nacionalidade_id')
-                    ->constrained('nacionalidade')
+                    ->constrained('nacionalidades')
                     ->onDelete('cascade');
             $table->date('data_de_nascimento')
                     ->nullable();
@@ -119,11 +119,6 @@ class CreateAcervosTable extends Migration
         });
 
         
-
-
-
-
-
         Schema::create('emprestimos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('acervo_id')

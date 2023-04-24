@@ -15,28 +15,30 @@ class PermissionAndRoleFactory extends Factory
      */
     public function definition()
     {
-        ( Role::exists() == False )? seedRoles(): Null;
+        
         
     }
 
 
-    public function seedRoles()
+    protected function seedRoles()
     {
-        $roles_data = [
-            ['name' =>'Administrador'],
-            ['name' =>'Diretor'],
-            ['name' =>'Vice-Diretor'],
-            ['name' =>'Professor'],
-            ['name' =>'Orientador Educacional'],
-            ['name' =>'Coordenador Pedagógico'],
-            ['name' =>'Bibliotecário'],
-            ['name' =>'Aluno'],
-            ['name' =>'Pais/Responsável'],
-        ];
+        if(Role::exists()==false){
+            $roles_data = [
+                ['name' =>'Administrador'],
+                ['name' =>'Diretor'],
+                ['name' =>'Vice-Diretor'],
+                ['name' =>'Professor'],
+                ['name' =>'Orientador Educacional'],
+                ['name' =>'Coordenador Pedagógico'],
+                ['name' =>'Bibliotecário'],
+                ['name' =>'Aluno'],
+                ['name' =>'Pais/Responsável'],
+            ];
 
-        foreach( $roles_data as $role )
-        {
-            Role::create( $role );
+            foreach( $roles_data as $role )
+            {
+                Role::create( $role );
+            }
         }
     }
 }

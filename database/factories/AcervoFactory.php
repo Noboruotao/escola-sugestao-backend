@@ -4,178 +4,321 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
-class AcervoFactory extends Factory
+class AcervoFactory extends customFactory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
+    
     public function definition()
     {
-        seedTabelasSemFK();
+        $acervoSeeder = new AcervoFactory();
+
+        $acervoSeeder->insertTipoAcervo();
+        $acervoSeeder->insertEstadoAcervo();
+        $acervoSeeder->insertSituacaoAcervo();
+        $acervoSeeder->insertCategoriaAcervo();
+        $acervoSeeder->insertIdiomas();
+        $acervoSeeder->insertEstados();
+
+        $acervoSeeder->insertEditoras(5);
+        $acervoSeeder->insertAutores(20);
         
+        $acervoSeeder->insertAcervo(100);
     }
 
 
-    public function seedTabelasSemFK()
+    protected function insertTipoAcervo()
     {
-    
-        $valores = [
-        
-            [
-                'tabela' => 'tipo_de_acervo',
-                'dados' => [
-                            ['tipo'=>'Livro', 'multa'=>.6],
-                            ['tipo'=>'Periódicos', 'multa'=>.6],
-                            ['tipo'=>'Teses e Dissertações', 'multa'=>.8],
-                            ['tipo'=>'CD e DVD', 'multa'=>.8],
-                            ['tipo'=>'Mapas e Atlas', 'multa'=>.6],
-                            ['tipo'=>'Arquivos Digitais', 'multa'=>.7],
-                            ['tipo'=>'Acervo Infantil', 'multa'=>.4],
-                            ['tipo'=>'Acervo de Referência', 'multa'=>.6],
-                            ['tipo'=>'Coleções Especiais', 'multa'=>.6]
-                        ]
-            ],
-            [
-                'tabela' => 'situacao_do_acervo',
-                'dados' => [
-                            ['situacao'=>'Disponível'],
-                            ['situacao'=>'Emprestado'],
-                            ['situacao'=>'Reservado'],
-                            ['situacao'=>'Em Processamento Técnico'],
-                            ['situacao'=>'Em Manutanção'],
-                            ['situacao'=>'Extraviado'],
-                            ['situacao'=>'Descartado'],
-                    ]
-            ],
-            [
-                'tabela' => 'estado_do_acervo',
-                'dados' => [
-                            ['estado'=>'Bom'],
-                            ['estado'=>'Ótimo'],
-                            ['estado'=>'Falta Páginas'],
-                            ['estado'=>'Capa está Ruim'],
-                            ['estado'=>'Descartado'],
-                            ['estado'=>'Extraviado'],
-                            ['estado'=>'Debuiado'],
-                    ]
-            ],
-            [
-                'tabela' => 'categoria',
-                'dados' => [
-                            ['categoria' => 'Ação e Aventura'],
-                            ['categoria' => 'Arte e Música'],
-                            ['categoria' => 'Autoajuda'],
-                            ['categoria' => 'Biografias e Memórias'],
-                            ['categoria' => 'Ciência e Tecnologia'],
-                            ['categoria' => 'Clássicos'],
-                            ['categoria' => 'Comics e Mangás'],
-                            ['categoria' => 'Contos e Crônicas'],
-                            ['categoria' => 'Educação e Didáticos'],
-                            ['categoria' => 'Erótico'],
-                            ['categoria' => 'Esoterismo'],
-                            ['categoria' => 'Esportes e Lazer'],
-                            ['categoria' => 'Ficção Científica e Fantasia'],
-                            ['categoria' => 'Filosofia'],
-                            ['categoria' => 'História do Brasil'],
-                            ['categoria' => 'História Geral'],
-                            ['categoria' => 'Horror e Suspense'],
-                            ['categoria' => 'Humor'],
-                            ['categoria' => 'Infantojuvenis'],
-                            ['categoria' => 'LGBTQIA+'],
-                            ['categoria' => 'Literatura Brasileira'],
-                            ['categoria' => 'Literatura Estrangeira'],
-                            ['categoria' => 'Medicina e Saúde'],
-                            ['categoria' => 'Negócios e Economia'],
-                            ['categoria' => 'Poesia'],
-                            ['categoria' => 'Policial e Mistério'],
-                            ['categoria' => 'Política'],
-                            ['categoria' => 'Psicologia'],
-                            ['categoria' => 'Religião e Espiritualidade'],
-                            ['categoria' => 'Romance'],
-                            ['categoria' => 'Terror'],
-                            ['categoria' => 'Viagem'],
-                    ]
-            ],
-            [
-                'tabela' => 'idiomas',
-                'dados' => [
-                            ['idioma' => 'Português'],
-                            ['idioma' => 'Inglês'],
-                            ['idioma' => 'Espanhol'],
-                            ['idioma' => 'Francês'],
-                            ['idioma' => 'Alemão'],
-                            ['idioma' => 'Italiano'],
-                            ['idioma' => 'Japonês'],
-                            ['idioma' => 'Mandarim'],
-                            ['idioma' => 'Coreano'],
-                            ['idioma' => 'Russo'],
-                            ['idioma' => 'Árabe'],
-                            ['idioma' => 'Hebraico'],
-                            ['idioma' => 'Grego'],
-                            ['idioma' => 'Latim']
-                            ]
-            ],
-            [
-                'tabela' => 'estados',
-                'dados' => [
-                            ['estado' => 'Acre', 'sigla' => 'AC'],
-                            ['estado' => 'Alagoas', 'sigla' => 'AL'],
-                            ['estado' => 'Amapá', 'sigla' => 'AP'],
-                            ['estado' => 'Amazonas', 'sigla' => 'AM'],
-                            ['estado' => 'Bahia', 'sigla' => 'BA'],
-                            ['estado' => 'Ceará', 'sigla' => 'CE'],
-                            ['estado' => 'Distrito Federal', 'sigla' => 'DF'],
-                            ['estado' => 'Espírito Santo', 'sigla' => 'ES'],
-                            ['estado' => 'Goiás', 'sigla' => 'GO'],
-                            ['estado' => 'Maranhão', 'sigla' => 'MA'],
-                            ['estado' => 'Mato Grosso', 'sigla' => 'MT'],
-                            ['estado' => 'Mato Grosso do Sul', 'sigla' => 'MS'],
-                            ['estado' => 'Minas Gerais', 'sigla' => 'MG'],
-                            ['estado' => 'Pará', 'sigla' => 'PA'],
-                            ['estado' => 'Paraíba', 'sigla' => 'PB'],
-                            ['estado' => 'Paraná', 'sigla' => 'PR'],
-                            ['estado' => 'Pernambuco', 'sigla' => 'PE'],
-                            ['estado' => 'Piauí', 'sigla' => 'PI'],
-                            ['estado' => 'Rio de Janeiro', 'sigla' => 'RJ'],
-                            ['estado' => 'Rio Grande do Norte', 'sigla' => 'RN'],
-                            ['estado' => 'Rio Grande do Sul', 'sigla' => 'RS'],
-                            ['estado' => 'Rondônia', 'sigla' => 'RO'],
-                            ['estado' => 'Roraima', 'sigla' => 'RR'],
-                            ['estado' => 'Santa Catarina', 'sigla' => 'SC'],
-                            ['estado' => 'São Paulo', 'sigla' => 'SP'],
-                            ['estado' => 'Sergipe', 'sigla' => 'SE'],
-                            ['estado' => 'Tocantins', 'sigla' => 'TO'],
-                    ]
-                ]
+        $tipos_acervo = [
+                    ['tipo'=>'Livro', 'multa'=>0.6],
+                    ['tipo'=>'Periódicos', 'multa'=>0.6],
+                    ['tipo'=>'Teses e Dissertações', 'multa'=>0.8],
+                    ['tipo'=>'CD e DVD', 'multa'=>0.8],
+                    ['tipo'=>'Mapas e Atlas', 'multa'=>0.6],
+                    ['tipo'=>'Arquivos Digitais', 'multa'=>0.7],
+                    ['tipo'=>'Acervo Infantil', 'multa'=>0.4],
+                    ['tipo'=>'Acervo de Referência', 'multa'=>0.6],
+                    ['tipo'=>'Coleções Especiais', 'multa'=>0.6]
+                ];
+        $this->verifyTable('tipo_de_acervo', $tipos_acervo);
+    }
+
+
+    protected function insertEstadoAcervo()
+    {
+        $estados_acervo = [
+            ['estado'=>'Bom'],
+            ['estado'=>'Ótimo'],
+            ['estado'=>'Falta Páginas'],
+            ['estado'=>'Capa está Ruim'],
+            ['estado'=>'Descartado'],
+            ['estado'=>'Extraviado'],
+            ['estado'=>'Debuiado'],
         ];
 
-        foreach($valores as $valor)
+        $this->verifyTable('estado_do_acervo', $estados_acervo);
+    }
+
+
+    protected function insertSituacaoAcervo()
+    {
+        $situacao_acervo = [
+            ['situacao'=>'Disponível'],
+            ['situacao'=>'Emprestado'],
+            ['situacao'=>'Reservado'],
+            ['situacao'=>'Em Processamento Técnico'],
+            ['situacao'=>'Em Manutanção'],
+            ['situacao'=>'Extraviado'],
+            ['situacao'=>'Descartado'],
+        ];
+        $this->verifyTable('situacao_do_acervo', $situacao_acervo);
+    }  
+    
+    
+    protected function insertCategoriaAcervo()
+    {
+        $categorias_acervo = [
+            ['categoria' => 'Ação e Aventura'],
+            ['categoria' => 'Arte e Música'],
+            ['categoria' => 'Autoajuda'],
+            ['categoria' => 'Biografias e Memórias'],
+            ['categoria' => 'Ciência e Tecnologia'],
+            ['categoria' => 'Clássicos'],
+            ['categoria' => 'Comics e Mangás'],
+            ['categoria' => 'Contos e Crônicas'],
+            ['categoria' => 'Educação e Didáticos'],
+            ['categoria' => 'Esoterismo'],
+            ['categoria' => 'Esportes e Lazer'],
+            ['categoria' => 'Ficção Científica e Fantasia'],
+            ['categoria' => 'Filosofia'],
+            ['categoria' => 'História do Brasil'],
+            ['categoria' => 'História Geral'],
+            ['categoria' => 'Horror e Suspense'],
+            ['categoria' => 'Humor'],
+            ['categoria' => 'Infantojuvenis'],
+            ['categoria' => 'Literatura Brasileira'],
+            ['categoria' => 'Literatura Estrangeira'],
+            ['categoria' => 'Medicina e Saúde'],
+            ['categoria' => 'Negócios e Economia'],
+            ['categoria' => 'Poesia'],
+            ['categoria' => 'Policial e Mistério'],
+            ['categoria' => 'Política'],
+            ['categoria' => 'Psicologia'],
+            ['categoria' => 'Religião e Espiritualidade'],
+            ['categoria' => 'Romance'],
+            ['categoria' => 'Terror'],
+            ['categoria' => 'Viagem'],
+        ];
+        $this->verifyTable('categorias', $categorias_acervo);
+    }
+
+
+    protected function insertIdiomas()
+    {
+        $idiomas = [
+            ['idioma' => 'Português'],
+            ['idioma' => 'Inglês'],
+            ['idioma' => 'Espanhol'],
+            ['idioma' => 'Francês'],
+            ['idioma' => 'Alemão'],
+            ['idioma' => 'Italiano'],
+            ['idioma' => 'Japonês'],
+            ['idioma' => 'Mandarim'],
+            ['idioma' => 'Coreano'],
+            ['idioma' => 'Russo'],
+            ['idioma' => 'Árabe'],
+            ['idioma' => 'Hebraico'],
+            ['idioma' => 'Grego'],
+            ['idioma' => 'Latim']
+        ];
+        $this->verifyTable('idiomas', $idiomas);
+
+        $nacionalidades = [
+            ['nacionalidade' => 'Brasil', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Português'], $idiomas)+1],
+            ['nacionalidade' => 'Portugal', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Português'], $idiomas)+1],
+            ['nacionalidade' => 'Estados Unidos', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Inglês'], $idiomas)+1],
+            ['nacionalidade' => 'Espanha', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Espanhol'], $idiomas)+1],
+            ['nacionalidade' => 'França', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Francês'], $idiomas)+1],
+            ['nacionalidade' => 'Alemanha', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Alemão'], $idiomas)+1],
+            ['nacionalidade' => 'Itália', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Italiano'], $idiomas)+1],
+            ['nacionalidade' => 'Japão', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Japonês'], $idiomas)+1],
+            ['nacionalidade' => 'China', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Mandarim'], $idiomas)+1],
+            ['nacionalidade' => 'Coreia do Sul', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Coreano'], $idiomas)+1],
+            ['nacionalidade' => 'Rússia', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Russo'], $idiomas)+1],
+            ['nacionalidade' => 'Emirados Árabes Unidos', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Árabe'], $idiomas)+1],
+            ['nacionalidade' => 'Israel', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Hebraico'], $idiomas)+1],
+            ['nacionalidade' => 'Grécia', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Grego'], $idiomas)+1],
+            ['nacionalidade' => 'Vaticano', 
+            'idioma_oficial_id' => array_search(['idioma'=>'Latim'], $idiomas)+1],
+        ];
+
+        $this->verifyTable('nacionalidades', $nacionalidades);
+    }
+
+
+    protected function insertEstados()
+    {
+        $estados = [
+            ['estado' => 'Acre', 'sigla' => 'AC'],
+            ['estado' => 'Alagoas', 'sigla' => 'AL'],
+            ['estado' => 'Amapá', 'sigla' => 'AP'],
+            ['estado' => 'Amazonas', 'sigla' => 'AM'],
+            ['estado' => 'Bahia', 'sigla' => 'BA'],
+            ['estado' => 'Ceará', 'sigla' => 'CE'],
+            ['estado' => 'Distrito Federal', 'sigla' => 'DF'],
+            ['estado' => 'Espírito Santo', 'sigla' => 'ES'],
+            ['estado' => 'Goiás', 'sigla' => 'GO'],
+            ['estado' => 'Maranhão', 'sigla' => 'MA'],
+            ['estado' => 'Mato Grosso', 'sigla' => 'MT'],
+            ['estado' => 'Mato Grosso do Sul', 'sigla' => 'MS'],
+            ['estado' => 'Minas Gerais', 'sigla' => 'MG'],
+            ['estado' => 'Pará', 'sigla' => 'PA'],
+            ['estado' => 'Paraíba', 'sigla' => 'PB'],
+            ['estado' => 'Paraná', 'sigla' => 'PR'],
+            ['estado' => 'Pernambuco', 'sigla' => 'PE'],
+            ['estado' => 'Piauí', 'sigla' => 'PI'],
+            ['estado' => 'Rio de Janeiro', 'sigla' => 'RJ'],
+            ['estado' => 'Rio Grande do Norte', 'sigla' => 'RN'],
+            ['estado' => 'Rio Grande do Sul', 'sigla' => 'RS'],
+            ['estado' => 'Rondônia', 'sigla' => 'RO'],
+            ['estado' => 'Roraima', 'sigla' => 'RR'],
+            ['estado' => 'Santa Catarina', 'sigla' => 'SC'],
+            ['estado' => 'São Paulo', 'sigla' => 'SP'],
+            ['estado' => 'Sergipe', 'sigla' => 'SE'],
+            ['estado' => 'Tocantins', 'sigla' => 'TO'],
+        ];
+        $this->verifyTable('estados', $estados);
+    }
+
+
+    protected function insertEditoras($numero_de_editoras=10)
+    {
+        $editoras = [];
+        while($numero_de_editoras > 0)
         {
-            if( $this->verifyTable($valor['tabela']) )
-            {
-                $this->insertDatas($valor['tabela'], $valor['dados']);
-            }
+            $editoras[] = [
+                    'nome'=>$this->faker->company(),
+                    'email'=>$this->faker->safeEmail(),
+                    'telefone'=>$this->faker->phoneNumber(),
+                    'endereco'=>$this->faker->address(),
+                    'cnpj'=>$this->faker->cnpj(),
+                    'cidade'=>$this->faker->city(),
+                    'cep'=>$this->faker->postcode(),
+                    'estado_id'=>DB::table('estados')->inRandomOrder()->first()->id
+            ];
+            $numero_de_editoras--;
         }
-    
-    }
-    
-
-
-    public function verifyTable($table_name)
-    {
-        return ( DB::table($table_name)->exists() );
+        $this->insertDatas('editoras', $editoras);
     }
 
 
-    public function insertDatas($table, $entrada)
+    protected function insertAutores($numero_de_autores=10)
     {
-        $data = collect($entrada)->map(function($data){
-            return $data;
-        });
+        $autores = $this->makeAutores($numero_de_autores);
+        $this->insertDatas('autores', $autores);
 
-        DB::table($table)->insert( $data->toArray() );
+    }
+
+
+    protected function getLocale($nacionalidade)
+    {
+        if($nacionalidade==1){
+            return 'pt_BR';
+        }else if($nacionalidade==2){
+            return 'pt_PT';
+        }else if($nacionalidade==3){
+            return 'en_US';
+        }else if($nacionalidade==4){
+            return 'es_ES';
+        }else if($nacionalidade==5){
+            return 'fr_FR';
+        }else if($nacionalidade==6){
+            return 'de_DE';
+        }else if($nacionalidade==7){
+            return 'it_IT';
+        }else if($nacionalidade==8){
+            return 'ja_JP';
+        }else if($nacionalidade==9){
+            return 'zh_CN';
+        }else if($nacionalidade==10){
+            return 'ko_KR';
+        }else if($nacionalidade==11){
+            return 'ru_RU';
+        }else if($nacionalidade==12){
+            return 'ar_SA';
+        }else if($nacionalidade==13){
+            return 'he_IL';
+        }else if($nacionalidade==14){
+            return 'el_GR';
+        }else if($nacionalidade==15){
+            return 'en_US';
+        };
+    }
+
+
+    protected function makeAutores($numero_de_autores)
+    {
+        $autores = [];
+        while($numero_de_autores > 0)
+        {
+            $nacionalidade = DB::table('nacionalidades')->inRandomOrder()->first()->id;
+            $faker = \Faker\Factory::create( $this->getLocale($nacionalidade) );
+            $data_de_nascimento = $faker->date($format='Y-m-d',);
+
+            $autores[] = [
+                'nome' => Str::transliterate ($faker->name),
+                'nacionalidade_id' => $nacionalidade,
+                'data_de_nascimento' => $data_de_nascimento,
+                'data_de_falecimento' => (rand(0, 1) ===1)?$faker->date($format='Y-m-d', $min=$data_de_nascimento, $max='now'): null
+            ];
+
+            $numero_de_autores--;
+        }
+        return $autores;
+    }
+
+
+    protected function insertAcervo($numero_de_acervos=10)
+    {
+        $acervos = $this->makeAcervo($numero_de_acervos);
+        $this->insertDatas('acervos', $acervos);
+    }
+
+
+    protected function makeAcervo($numero_de_acervos)
+    {
+        $acervos =[];
+        while($numero_de_acervos>0)
+        {
+            $acervos[] = [
+                'titulo' => $this->faker->sentence($nbWords = 4, $variableNbWords = true),
+                'resumo' => $this->faker->paragraph(3),
+                'tradutor' => $this->faker->name(),
+                'autor_id' =>   DB::table('autores')->inRandomOrder()->first()->id,
+                'idiomas_id' => DB::table('idiomas')->inRandomOrder()->first()->id,
+                'editora_id' => DB::table('editoras')->inRandomOrder()->first()->id,
+                'categoria_id' => DB::table('categorias')->inRandomOrder()->first()->id,
+                'tipo_id' => DB::table('tipo_de_acervo')->inRandomOrder()->first()->id,
+                'estado_id' => DB::table('estado_do_acervo')->inRandomOrder()->first()->id,
+                'situacao_id' => DB::table('situacao_do_acervo')->inRandomOrder()->first()->id,
+                'ano_de_publicacao' => $this->faker->date($format='Y', $max='now')
+            ];
+            $numero_de_acervos--;
+        }
+        return $acervos;
     }
 }
