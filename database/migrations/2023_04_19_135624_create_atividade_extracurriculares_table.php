@@ -21,6 +21,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
 
         Schema::create('atividade_extracurriculares', function (Blueprint $table) {
             $table->id();
+            $table->string('nome');
             $table->foreignId('tipo_id')
                     ->constrained('tipos_de_atividade_extracurricular');
             $table->date('ativo')->default(NULL);

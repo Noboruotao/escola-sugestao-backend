@@ -22,6 +22,10 @@ class PessoaCursoFactory extends customFactory
     }
 
 
+    /**
+     * manda array para customFactory::verifyTable()
+     * @return array
+     */
     protected function inserirCursos()
     {
         $cursos = [
@@ -126,6 +130,10 @@ class PessoaCursoFactory extends customFactory
     }
 
 
+    /**
+     * manda array para customFactory::verifyTable()
+     * @return array
+     */
     protected function insertBolsas()
     {
         $bolsas = [
@@ -151,6 +159,10 @@ class PessoaCursoFactory extends customFactory
     }
 
 
+    /**
+     * manda array para customFactory::verifyTable()
+     * @return array
+     */
     protected function inserirSituacaoAluno()
     {
         $situacao = [
@@ -169,6 +181,10 @@ class PessoaCursoFactory extends customFactory
     }
 
 
+    /**
+     * manda array para customFactory::verifyTable()
+     * @return array
+     */
     protected function insertNivelEscolar()
     {
         $nivel_escolar = [
@@ -182,6 +198,10 @@ class PessoaCursoFactory extends customFactory
     }
 
 
+    /**
+     * manda array para customFactory::verifyTable()
+     * @return array
+     */
     protected function insertAno()
     {
         $data = [];
@@ -199,12 +219,22 @@ class PessoaCursoFactory extends customFactory
     }
 
 
+    /**
+     * retorna idade
+     * @string: date('Y-m-d')
+     * @return int
+     */
     protected function getIdade($data_nascimento)
     {
         return $age = Carbon::parse($data_nascimento)->age;
     }
 
 
+    /**
+     * manda array para customFactory::insertDatas()
+     * @int $numero_de_pessoas
+     * @return array
+     */
     protected function makePessoa($numero_de_pessoa)
     {
         $pessoas = [];
@@ -259,6 +289,10 @@ class PessoaCursoFactory extends customFactory
     }
 
 
+    /**
+     * @array $ids
+     * @return array
+     */
     protected function makeProfessor($ids)
     {
         $datas = [];

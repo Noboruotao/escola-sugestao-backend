@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-class PermissionAndRoleFactory extends Factory
+class PermissionAndRoleFactory extends customFactory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
+    
     public function definition()
     {
-        
+        $rolesPermission = new PermissionAndRoleFactory();
+
+        $rolesPermission->seedRoles();
+        $rolesPermission->attributeRolesToAlunos();
         
     }
 
@@ -41,4 +40,29 @@ class PermissionAndRoleFactory extends Factory
             }
         }
     }
+    
+
+    protected function getAlunos()
+    {
+        return \App\Models\Aluno::select('id')->get()->toArray();
+    }
+
+
+    protected function attributeRolesToAlunos()
+    {
+        $model_has_roles =[];
+        foreach($this->getAlunos() as $aluno)
+        {
+            $model_has_roles[] = [
+                'role_id'=> Role::find(8)->id,
+                'model_type'=> 'Pessoa',
+                'model_id'=> \App\Models\Pessoa::find($aluno)->id
+            ];
+        }
+
+        $this->insertDatas('model_has_roles', $model_has_roles);
+
+    }
+
+
 }

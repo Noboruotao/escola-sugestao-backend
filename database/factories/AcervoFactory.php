@@ -27,6 +27,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * manda a array com os dados do tipo de acervo 
+     * para verifyTable()customFactory
+     */
     protected function insertTipoAcervo()
     {
         $tipos_acervo = [
@@ -44,6 +48,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * manda o array com os dados do estado 
+     * do acervo para verifyTable()customFactory
+     */
     protected function insertEstadoAcervo()
     {
         $estados_acervo = [
@@ -60,6 +68,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * manda o array com os dados da situação 
+     * do acervo para verifyTable()customFactory
+     */
     protected function insertSituacaoAcervo()
     {
         $situacao_acervo = [
@@ -75,6 +87,10 @@ class AcervoFactory extends customFactory
     }  
     
     
+    /**
+     * manda o array com os dados da categoria 
+     * do acervo para verifyTable()customFactory
+     */
     protected function insertCategoriaAcervo()
     {
         $categorias_acervo = [
@@ -113,6 +129,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * manda o array com os dados de idiomas
+     * para a função customFactory::verifyTable
+     */
     protected function insertIdiomas()
     {
         $idiomas = [
@@ -170,6 +190,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * manda o array com os dados dos Estados Brasileiros
+     * para a função customFactory::verifyTable
+     */
     protected function insertEstados()
     {
         $estados = [
@@ -205,6 +229,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * manda o array com os dados de editoras
+     * para a função customFactory::verifyTable
+     */
     protected function insertEditoras($numero_de_editoras=10)
     {
         $editoras = [];
@@ -226,6 +254,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * manda o array com os dados de autores
+     * para a função customFactory::verifyTable
+     */
     protected function insertAutores($numero_de_autores=10)
     {
         $autores = $this->makeAutores($numero_de_autores);
@@ -234,6 +266,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * retorna o locale para o faker
+     * @return string
+     */
     protected function getLocale($nacionalidade)
     {
         if($nacionalidade==1){
@@ -270,6 +306,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * retorn um array para a função $this->insertAutores
+     * @return array
+     */
     protected function makeAutores($numero_de_autores)
     {
         $autores = [];
@@ -292,6 +332,9 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * manda array para a função customFactory::insertDatas()
+     */
     protected function insertAcervo($numero_de_acervos=10)
     {
         $acervos = $this->makeAcervo($numero_de_acervos);
@@ -299,6 +342,10 @@ class AcervoFactory extends customFactory
     }
 
 
+    /**
+     * retorna arrays para $this->isnertAcervo()
+     * @return array
+     */
     protected function makeAcervo($numero_de_acervos)
     {
         $acervos =[];
