@@ -304,6 +304,7 @@ class AcervoFactory extends customFactory
         $acervos =[];
         while($numero_de_acervos>0)
         {
+            $tipo_acervo = DB::table('tipo_de_acervo')->inRandomOrder()->first();
             $acervos[] = [
                 'titulo' => $this->faker->sentence($nbWords = 4, $variableNbWords = true),
                 'resumo' => $this->faker->paragraph(3),
@@ -312,9 +313,10 @@ class AcervoFactory extends customFactory
                 'idiomas_id' => DB::table('idiomas')->inRandomOrder()->first()->id,
                 'editora_id' => DB::table('editoras')->inRandomOrder()->first()->id,
                 'categoria_id' => DB::table('categorias')->inRandomOrder()->first()->id,
-                'tipo_id' => DB::table('tipo_de_acervo')->inRandomOrder()->first()->id,
+                'tipo_id' => $tipo_acervo->id,
                 'estado_id' => DB::table('estado_do_acervo')->inRandomOrder()->first()->id,
                 'situacao_id' => DB::table('situacao_do_acervo')->inRandomOrder()->first()->id,
+                'IBNS' => ($tipo_acervo->id==1)? $this->faker->numerify('###-#-##-######-#'): NULL,
                 'ano_de_publicacao' => $this->faker->date($format='Y', $max='now')
             ];
             $numero_de_acervos--;

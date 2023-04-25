@@ -19,6 +19,6 @@ class DatabaseSeeder extends Seeder
 
         \Database\Factories\AcervoFactory::definition();
 
-        
+        \Database\Factories\PessoaCursoFactory::definition();
     }
 }

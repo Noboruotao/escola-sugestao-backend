@@ -114,6 +114,7 @@ class CreateAcervosTable extends Migration
             $table->foreignId('situacao_id')
                     ->constrained('situacao_do_acervo')
                     ->onDelete('cascade');
+            $table->string('IBNS', 21)->nullable();
             $table->string('ano_de_publicacao', 4);
             $table->timestamps();
         });
