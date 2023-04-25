@@ -25,8 +25,8 @@ class CreatePessoasTable extends Migration
             $table->string('cpf', 14)->unique();
             $table->string('rg', 20)->unique();
             $table->string('endereco');
-            $table->string('telefone', 20);
-            $table->string('celular', 20);
+            $table->string('telefone', 20)->nullable();
+            $table->string('celular', 20)->nullable();
             $table->string('senha');
             $table->timestamps();
             $table->softDeletes();
@@ -37,8 +37,8 @@ class CreatePessoasTable extends Migration
             $table->foreignId('id')
                     ->constrained('pessoas')
                     ->onDelete('cascade');
-            $table->string('formacao_academica');
-            $table->string('experiencia_profissional');
+            $table->text('formacao_academica');
+            $table->text('experiencia_profissional');
         });
 
 
@@ -47,12 +47,29 @@ class CreatePessoasTable extends Migration
             $table->string('situacao');
         });
 
+        
+        Schema::create('nivel_escolar', function (Blueprint $table){
+            $table->id();
+            $table->string('nome');
+        });
+
+
+        Schema::create('anos', function(Blueprint $table){
+            $table->id();
+            $table->foreignId('nivel_escolar_id')
+                    ->constrained('nivel_escolar')
+                    ->onDelete('cascade');
+            $table->integer('ano');
+        });
+
 
         Schema::create('alunos', function (Blueprint $table){
             $table->foreignId('id')
                     ->constrained('pessoas')
                     ->onDelete('cascade');
-            $table->integer('ano');
+            $table->foreignId('ano_id')
+                    ->constrained('anos')
+                    ->onDelete('cascade');
             $table->foreignId('situacao_id')
                     ->constrained('situacao_aluno')
                     ->onDelete('cascade');
@@ -76,21 +93,6 @@ class CreatePessoasTable extends Migration
                     ->onDelete('cascade');
         });
 
-        Schema::create('nivel_escolar', function (Blueprint $table){
-            $table->id();
-            $table->string('nome');
-        });
-
-        Schema::create('alunos_nivel_escolar', function (Blueprint $table){
-            $table->foreignId('aluno_id')
-                    ->constrained('alunos')
-                    ->primary()
-                    ->onDelete('cascade');
-            $table->foreignId('nivel_escolar_id')
-                    ->constrained('nivel_escolar')
-                    ->primary()
-                    ->onDelete('cascade');
-        });
 
         Schema::create('pais_ou_responsaveis', function (Blueprint $table){
             $table->foreignId('pais_ou_responsavel_id')
@@ -125,7 +127,6 @@ class CreatePessoasTable extends Migration
         Schema::dropIfExists('bolsas');
         Schema::dropIfExists('alunos_bolsas');
         Schema::dropIfExists('nivel_escolar');
-        Schema::dropIfExists('alunos_nivel_escolar');
         Schema::dropIfExists('pais_ou_responsaveis');
     }
 }

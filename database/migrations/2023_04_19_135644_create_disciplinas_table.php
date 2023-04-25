@@ -27,7 +27,7 @@ class CreateDisciplinasTable extends Migration
         });
 
 
-        Schema::create('alunos_has_Disciplinas', function (Blueprint $table){
+        Schema::create('alunos_Disciplinas', function (Blueprint $table){
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
                     ->primary();
@@ -84,6 +84,18 @@ class CreateDisciplinasTable extends Migration
                     ->onDelete('cascade')
                     ->primary();
         });
+
+
+        Schema::create('ano_disciplinas', function (Blueprint $table){
+                $table->foreignId('ano_id')
+                        ->constrained('alunos')
+                        ->onDelete('cascade')
+                        ->primary();
+                $table->foreignId('disciplina_id')
+                        ->constrained('disciplinas')
+                        ->onDelete('cascade')
+                        ->primary();
+        });
     }
 
     /**
@@ -94,11 +106,12 @@ class CreateDisciplinasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('disciplinas');
-        Schema::dropIfExists('alunos_has_Disciplinas');
+        Schema::dropIfExists('alunos_Disciplinas');
         Schema::dropIfExists('situacao_da_disciplina');
         Schema::dropIfExists('disciplinas_professores');
         Schema::dropIfExists('notas');
         Schema::dropIfExists('tipos_de_avaliacoes');
         Schema::dropIfExists('materiais_recomendados');
+        Schema::dropIfExists('ano_disciplinas');
     }
 }

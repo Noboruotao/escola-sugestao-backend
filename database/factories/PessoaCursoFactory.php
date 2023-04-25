@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 
 class PessoaCursoFactory extends customFactory
@@ -16,7 +17,8 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->insertBolsas();
         $pessoa_curso->inserirSituacaoAluno();
         $pessoa_curso->insertNivelEscolar();
-        $pessoa_curso->makePessoa(10000);
+        $pessoa_curso->insertAno();
+        $pessoa_curso->makePessoa(4000);
     }
 
 
@@ -180,6 +182,29 @@ class PessoaCursoFactory extends customFactory
     }
 
 
+    protected function insertAno()
+    {
+        $data = [];
+        foreach([[1, 5], [2,9], [3, 3],[4,3], [5, 1]] as $nivel)
+        {
+            for($i=1; $i<=$nivel[1]; $i++)
+            {
+                $data[] = [
+                    'nivel_escolar_id'=> DB::table('nivel_escolar')->find($nivel[0])->id,
+                    'ano'=> $i
+                ];
+            }
+        }
+        $this->verifyTable('anos', $data);
+    }
+
+
+    protected function getIdade($data_nascimento)
+    {
+        return $age = Carbon::parse($data_nascimento)->age;
+    }
+
+
     protected function makePessoa($numero_de_pessoa)
     {
         $pessoas = [];
@@ -190,31 +215,40 @@ class PessoaCursoFactory extends customFactory
         {
             $prim_nome = $this->faker->firstName();
             $last_nome = $this->faker->lastName();
+            $data_nascimento = $this->faker->dateTimeBetween('-'.$this->faker->biasedNumberBetween(2, 50, function($x) {
+                return 11 - $x;
+            }).' years', '-1 years')->format('Y-m-d');
+
+            
+            $idade = $this->getIdade($data_nascimento);
 
             $pessoas[] = [
                 'nome' => $prim_nome . ' ' . $last_nome,
                 'primeiro_nome' => $prim_nome,
                 'ultimo_nome' => $last_nome,
-                'email' => $this->faker->safeEmail,
-                'data_de_nascimento' =>$this->faker->dateTimeBetween('-20 years', '-5 years')->format('Y-m-d'),
+                'email' => $prim_nome.'.'.$this->faker->email(),
+                'data_de_nascimento' => $data_nascimento,
                 'genero' =>$this->faker->randomElement(['Masculino', 'Feminino']),
-                'cpf' => $this->faker->cpf,
-                'rg' => $this->faker->rg,
+                'cpf' => $this->faker->cpf(),
+                'rg' => $this->faker->rg(),
                 'endereco' => $this->faker->address(),
-                'telefone' => (rand(0, 1))? $this->faker->phone: null,
-                'celular' => (rand(0, 1))? $this->faker->cellphone: null,
+                'telefone' => (rand(0, 1))? $this->faker->landline(): null,
+                'celular' => (rand(0, 1))? $this->faker->cellphone(): null,
                 'senha' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             ];
             $numero_de_pessoa--;
+            
 
-            $dividir = $this->faker->randomDigit();
-            if($dividir <= 2){
-                $professores[] = count($pessoas);
-            }else if($dividir <= 7){
+            if( $idade<18 ){
                 $alunos[] = count($pessoas);
             }else{
-                $pais[] = count($pessoas);
+                if($this->faker->randomDigit()<1){
+                    $professores[] = count($pessoas);
+                }else{
+                    $pais[] = count($pessoas);
+                }
             }
+            
         }
 
         $this->insertDatas('pessoas', $pessoas);
@@ -225,10 +259,10 @@ class PessoaCursoFactory extends customFactory
     }
 
 
-    protected function makeProfessor($professores)
+    protected function makeProfessor($ids)
     {
         $datas = [];
-        foreach($professores as $professor)
+        foreach($ids as $professor)
         {
             $curso = DB::table('cursos')->inRandomOrder()->first()->nome;
             $datas[] = [
@@ -237,27 +271,27 @@ class PessoaCursoFactory extends customFactory
                 'experiencia_profissional' => 'Tem experiencia em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso.' por '.$this->faker->numberBetween(3, 40).' anos',
             ];
         }
-        $this->insertDatas('professores', '$datas');
+        $this->insertDatas('professores', $datas);
     }
 
 
-    protected function makeAluno($alunos)
+    protected function makeAluno($ids)
     {
         $datas = [];
+        $alunos = \App\Models\Pessoa::whereIn('id', $ids)->get();
+
+        
         foreach($alunos as $aluno)
         {
+            $idade = $this->getIdade($aluno->data_de_nascimento);
+            
             $datas[] = [
-                'ano' => $this->faker->randomDigitNot(0),
+                'id' => $aluno->id,
+                'ano_id' => DB::table('anos')->find($idade)->id,
                 'situacao_id' => DB::table('situacao_aluno')->inRandomOrder()->first()->id
             ];
         }
-        $this->insertDatas('alunos', '$datas');
-        $this->aluno_nivel_educacao();
-    }
-
-
-    protected function aluno_nivel_educacao()
-    {
+        $this->insertDatas('alunos', $datas);
     }
 
 
