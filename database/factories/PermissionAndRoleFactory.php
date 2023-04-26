@@ -55,11 +55,11 @@ class PermissionAndRoleFactory extends customFactory
         {
             $model_has_roles[] = [
                 'role_id'=> Role::find(8)->id,
-                'model_type'=> 'Pessoa',
-                'model_id'=> \App\Models\Pessoa::find($aluno)->id
+                'model_type'=> 'App\Models\Pessoa',
+                'model_id'=> $aluno['id']
             ];
         }
-
+dump($model_has_roles);
         $this->insertDatas('model_has_roles', $model_has_roles);
 
     }

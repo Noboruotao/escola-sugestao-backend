@@ -23,7 +23,7 @@ class AcervoFactory extends customFactory
         $acervoSeeder->insertEditoras(5);
         $acervoSeeder->insertAutores(20);
         
-        $acervoSeeder->insertAcervo(100);
+        // $acervoSeeder->insertAcervo(100);
     }
 
 

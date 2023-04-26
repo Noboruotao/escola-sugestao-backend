@@ -18,7 +18,7 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->inserirSituacaoAluno();
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
-        $pessoa_curso->makePessoa(4000);
+        // $pessoa_curso->makePessoa(4000);
     }
 
 

@@ -13,8 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \Database\Factories\PermissionAndRoleFactory::definition();
-        
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
         \Database\Factories\AcervoFactory::definition();
         
         \Database\Factories\PessoaCursoFactory::definition();
@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         \Database\Factories\ClasseFactory::definition();
         
         \Database\Factories\AreaDeConhecimentoFactory::definition();
-        
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        \Database\Factories\PermissionAndRoleFactory::definition();
     }
 }
