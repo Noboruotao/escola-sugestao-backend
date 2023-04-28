@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateAcervosTable extends Migration
 {
@@ -13,6 +14,8 @@ class CreateAcervosTable extends Migration
      */
     public function up()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
         Schema::create('idiomas', function (Blueprint $table){
                     $table->id();
                     $table->string('idioma');
@@ -166,5 +169,7 @@ class CreateAcervosTable extends Migration
         Schema::dropIfExists('idiomas');
         Schema::dropIfExists('editoras');
         Schema::dropIfExists('estados');
+        
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

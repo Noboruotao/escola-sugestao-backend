@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateAreaDeConhecimentosTable extends Migration
 {
@@ -14,6 +15,8 @@ class CreateAreaDeConhecimentosTable extends Migration
      */
     public function up()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         Schema::create('areas_de_conhecimentos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
@@ -25,10 +28,10 @@ class CreateAreaDeConhecimentosTable extends Migration
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
                     ->onDelete('cascade')
-                    ->primary();
+;
             $table->foreignId('area_de_conhecimento_id')
                     ->constrained('areas_de_conhecimentos')
-                    ->primary()
+
                     ->onDelete('cascade');
             $table->float('valor_calculado_por_notas')
                     ->default(NULL)
@@ -45,7 +48,7 @@ class CreateAreaDeConhecimentosTable extends Migration
         Schema::create('parametros_para_sugerir_curso', function (Blueprint $table){
             $table->foreignId('curso_id')
                     ->constrained('cursos')
-                    ->primary()
+
                     ->onDelete('cascade');
             $table->foreignId('area_de_conhecimento_id')
                     ->constrained('areas_de_conhecimentos')
@@ -58,12 +61,12 @@ class CreateAreaDeConhecimentosTable extends Migration
         Schema::create('parametro_para_sugerir_atividade_extracurricular', function (Blueprint $table){
                 $table->foreignId('atividade_extracurricular_id')
                         ->constrained('atividades_extracurriculares')
-                        ->primary()
+
                         ->onDelete('cascade')
                         ->name('parametro_sugerir_ativ_extra_ativi_extra_id_foreign');
                 $table->foreignId('areas_de_conhecimento_id')
                         ->constrained('areas_de_conhecimentos')
-                        ->primary()
+
                         ->onDelete('cascade')
                         ->name('parametro_sugerir_ativ_extra_areas_conhecimentos_id_foreign');
                 $table->float('valor');
@@ -73,25 +76,24 @@ class CreateAreaDeConhecimentosTable extends Migration
         Schema::create('areas_de_conhecimentos_atividades_extracurriculares', function (Blueprint $table){
             $table->foreignId('area_de_conhecimento_id')
                     ->constrained('areas_de_conhecimentos')
-                    ->primary()
+
                     ->onDelete('cascade')
                     ->name('areas_conhecimento_ativ_extra_areas_conhecimento_id_foreign');
             $table->foreignId('atividade_extracurricular_id')
                     ->constrained('atividades_extracurricularres')
-                    ->primary()
+
                     ->onDelete()
                     ->name('areas_conhecimento_ativ_extra_ativ_extra_id_foreign');
         });
 
 
         Schema::create('areas_de_conhecimento_disciplinas', function (Blueprint $table){
-            $table->foreignId('area_de_conhecimento')
+            $table->foreignId('area_de_conhecimento_id')
                     ->constrained('areas_de_conhecimentos')
-                    ->primary()
-                    ->onDelete('cascade');
+                    ->onDelete('cascade')
+                    ->name('areas_conhecimento_disciplina_areas_conhecimento_id_foreign');
             $table->foreignId('disciplina_id')
                     ->constrained('disciplinas')
-                    ->primary()
                     ->onDelete('cascade');
         });
 
@@ -99,16 +101,13 @@ class CreateAreaDeConhecimentosTable extends Migration
         Schema::create('acervos_areas_de_conhecimentos', function (Blueprint $table){
             $table->foreignId('acervo_id')
                     ->constrained('acervos')
-                    ->primary()
+
                     ->onDelete('cascade');
-            $table->foreignId('area_de_conhecimento')
+            $table->foreignId('area_de_conhecimento_id')
                     ->constrained('areas_de_conhecimentos')
-                    ->primary()
+
                     ->onDelete('cascade');
         });
-
-
-
     }
 
     /**
@@ -125,6 +124,7 @@ class CreateAreaDeConhecimentosTable extends Migration
         Schema::dropIfExists('areas_de_conhecimentos_atividades_extracurriculares');
         Schema::dropIfExists('areas_de_conhecimento_disciplinas');
         Schema::dropIfExists('acervos_areas_de_conhecimentos');
-
+        
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

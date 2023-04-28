@@ -59,7 +59,6 @@ class PermissionAndRoleFactory extends customFactory
                 'model_id'=> $aluno['id']
             ];
         }
-dump($model_has_roles);
         $this->insertDatas('model_has_roles', $model_has_roles);
 
     }

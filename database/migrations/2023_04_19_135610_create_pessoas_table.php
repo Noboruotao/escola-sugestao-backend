@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreatePessoasTable extends Migration
 {
@@ -14,6 +15,8 @@ class CreatePessoasTable extends Migration
      */
     public function up()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
         Schema::create('pessoas', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
@@ -86,10 +89,9 @@ class CreatePessoasTable extends Migration
         Schema::create('alunos_bolsas' , function (Blueprint $table){
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
-                    ->primary()->onDelete('cascade');
+                    ->onDelete('cascade');
             $table->foreignId('bolsa_id')
                     ->constrained('bolsas')
-                    ->primary()
                     ->onDelete('cascade');
         });
 
@@ -97,11 +99,9 @@ class CreatePessoasTable extends Migration
         Schema::create('pais_ou_responsaveis', function (Blueprint $table){
             $table->foreignId('pais_ou_responsavel_id')
                     ->constrained('pessoas')
-                    ->primary()
                     ->onDelete('cascade');
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
-                    ->primary()
                     ->inDelete('cascade');
         });
 
@@ -128,5 +128,7 @@ class CreatePessoasTable extends Migration
         Schema::dropIfExists('alunos_bolsas');
         Schema::dropIfExists('nivel_escolar');
         Schema::dropIfExists('pais_ou_responsaveis');
+        
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

@@ -18,7 +18,7 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->inserirSituacaoAluno();
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
-        // $pessoa_curso->makePessoa(4000);
+        $pessoa_curso->makePessoa(4000);
     }
 
 
@@ -326,7 +326,28 @@ class PessoaCursoFactory extends customFactory
             ];
         }
         $this->insertDatas('alunos', $datas);
+        $this->attributeBolsa();
     }
+
+
+    protected function attributeBolsa()
+    {
+        $alunos = \App\Models\Aluno::all();
+
+        $datas = [];
+        foreach($alunos as $aluno)
+        {
+            if(rand(0, 2)==1)
+            {
+                $datas[] = [
+                    'aluno_id'=> $aluno->id,
+                    'bolsa_id'=> DB::table('bolsas')->inRandomOrder()->first()->id
+                ];
+            }
+            
+        }
+        $this->insertDatas('alunos_bolsas', $datas);
+    }    
 
 
     protected function makePais($pais)

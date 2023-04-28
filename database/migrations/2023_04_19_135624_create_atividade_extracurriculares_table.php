@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateAtividadeExtracurricularesTable extends Migration
 {
@@ -13,6 +14,8 @@ class CreateAtividadeExtracurricularesTable extends Migration
      */
     public function up()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
         Schema::create('tipos_de_atividade_extracurricular', function (Blueprint $table){
             $table->id();
             $table->string('nome');
@@ -49,11 +52,9 @@ class CreateAtividadeExtracurricularesTable extends Migration
         Schema::create('aluno_atividade_extracurriculares', function (Blueprint $table){
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
-                    ->primary()
                     ->onDelete('cascade');
             $table->foreignId('atividade_extracurricular_id')
                     ->constrained('atividade_extracurriculares')
-                    ->primary()
                     ->onDelete('cascade')
                     ->name('aluno_ativ_extra_atividade_extracurricular_id_foreign');;
         });
@@ -70,5 +71,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
         Schema::dropIfExists('tipos_de_atividade_extracurricular');
         Schema::dropIfExists('atividades_extracurricular_sugeridas');
         Schema::dropIfExists('aluno_atividade_extracurricular');
+        
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

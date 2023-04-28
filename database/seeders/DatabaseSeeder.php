@@ -23,9 +23,9 @@ class DatabaseSeeder extends Seeder
         
         \Database\Factories\DisciplinaFactory::definition();
         
-        \Database\Factories\ClasseFactory::definition();
-        
         \Database\Factories\AreaDeConhecimentoFactory::definition();
+        
+        \Database\Factories\ClasseFactory::definition();
 
         \Database\Factories\PermissionAndRoleFactory::definition();
     }

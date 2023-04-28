@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Facades\DB;
 
 class CreatePermissionTables extends Migration
 {
@@ -14,6 +15,8 @@ class CreatePermissionTables extends Migration
      */
     public function up()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
         $tableNames = config('permission.table_names');
         $columnNames = config('permission.column_names');
         $teams = config('permission.teams');
@@ -137,5 +140,7 @@ class CreatePermissionTables extends Migration
         Schema::drop($tableNames['model_has_permissions']);
         Schema::drop($tableNames['roles']);
         Schema::drop($tableNames['permissions']);
+        
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
