@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 class AreaDeConhecimentoFactory extends customFactory
 {
@@ -12,6 +13,8 @@ class AreaDeConhecimentoFactory extends customFactory
 
         $areas->insertAreaConhecimento();
         $areas->attributeAreasToAcervo();
+        $areas->attributeDisciplinaToAno();
+
         
     }
 
@@ -296,7 +299,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ["nome" => "Geografia Geral", "areas" =>['Geografia', 'Engenharia']],
             ["nome" => "Geografia Regional", "areas" =>['Geografia', ]],
             ["nome" => "Geografia Ambiental", "areas" =>['Geografia', 'Desenvolvimento Sustentável/Meio Ambiente']],
-            ["nome" => "História das Religiões", "areas" =>['Religião', 'História']],
+            ["nome" => "História das Religiões", "areas" =>['Religião', 'História', 'Geografia']],
             ["nome" => "Teologia", "areas" =>['Religião', 'Parapsicologia e Ocultismo', 'Metafísica']],
             ["nome" => "Filosofia da Religião", "areas" =>['Religião', 'Ciências Sociais']],
             ["nome" => "Mitos e Ritos", "areas" =>['Religião']],
@@ -309,21 +312,20 @@ class AreaDeConhecimentoFactory extends customFactory
             ["nome" => "Comparação de Religiões", "areas" =>['Religião']],
             ["nome" => "Ecumenismo e Diálogo Inter-religioso", "areas" =>['Religião']],
             ["nome" => "Introdução à Sociologia", "areas" =>['Sociologia']],
-            ["nome" => "Sociologia Geral", "areas" =>['Sociologia', 'Administração', 'Estatisticas']],
+            ["nome" => "Sociologia Geral", "areas" =>['Sociologia', 'Administração', 'Estatisticas', 'Geografia']],
             ["nome" => "Sociologia do Trabalho", "areas" =>['Sociologia']],
             ["nome" => "Sociologia da Educação", "areas" =>['Sociologia', 'Educação/Ensino/Pedagologia']],
             ["nome" => "Sociologia Urbana", "areas" =>['Sociologia']],
-            ["nome" => "Sociologia Rural", "areas" =>['Sociologia']],
+            ["nome" => "Sociologia Rural", "areas" =>['Sociologia', 'Geografia']],
             ["nome" => "Sociologia Política", "areas" =>['Sociologia']],
             ["nome" => "Sociologia da Cultura", "areas" =>['Sociologia', 'Etnologia/Etnografia']],
             ["nome" => "Sociologia da Comunicação", "areas" =>['Sociologia', 'Comunicação/Jornalismo', 'Publicidade/Marketing/Relações Públicas']],
             ["nome" => "Sociologia das Relações de Gênero", "areas" =>['Sociologia', 'Estudos de Gênero']],
             ["nome" => "Sociologia das Desigualdades Sociais", "areas" =>['Sociologia', 'Etnologia/Etnografia', 'História']],
-            ["nome" => "Sociologia Ambiental", "areas" =>['Sociologia', 'Desenvolvimento Sustentável/Meio Ambiente']],
+            ["nome" => "Sociologia Ambiental", "areas" =>['Sociologia', 'Desenvolvimento Sustentável/Meio Ambiente', 'Geografia']],
             ["nome" => "Introdução à Economia", "areas" =>[]],
             ["nome" => "Economia Política", "areas" =>['Economia', 'Estatisticas', 'Administração']],
-            ["nome" => "Microeconomia", "areas" =>['Economia', 'Estatisticas']],
-            ["nome" => "Macroeconomia", "areas" =>['Economia', 'Estatisticas']],
+            ["nome" => "Microeconomia", "areas" =>['Economia', 'Estatisticas', 'Geografia']],
             ["nome" => "Economia Brasileira", "areas" =>['Economia', 'Estatisticas']],
             ["nome" => "Economia Internacional", "areas" =>['Economia', 'Estatisticas']],
             ["nome" => "Economia do Setor Público", "areas" =>['Economia', 'Estatisticas', 'Assistência Pública/Governo', 'Asistência Social/Previdência Social/Seguros']],
@@ -882,5 +884,108 @@ class AreaDeConhecimentoFactory extends customFactory
             
         }
         $this->insertDatas('acervos_areas_de_conhecimentos', $datas);
+    }
+
+
+    protected function getDisciplinaPorArea($area)
+    {
+        $area_id = \App\Models\AreasDeConhecimento::where('nome', $area)->first()->id;
+
+        $disciplina_sem_ano = DB::table('disciplinas')
+            ->whereIn('id', function ($query) use ($area_id) {
+                $query->select('disciplina_id')
+                    ->from('areas_de_conhecimento_disciplinas')
+                    ->where('area_de_conhecimento_id', $area_id)
+                    ->distinct();
+            })
+            ->whereNotIn('id', function ($query) {
+                $query->select('disciplina_id')
+                    ->from('anos_disciplinas')
+                    ->distinct();
+            })
+            ->inRandomOrder()
+            ->first();
+
+        if ($disciplina_sem_ano) {
+            return $disciplina_sem_ano->id;
+            // do something with $disciplina_sem_ano_id
+        }
+    }
+
+
+    protected function attributeDisciplinaToAno()
+    {
+        $ano_disciplina  = [];
+
+        $anos = DB::table('anos')
+                ->join('nivel_escolar', 'anos.nivel_escolar_id', '=', 'nivel_escolar.id')
+                ->select('anos.id as id', 'nivel_escolar.nome as nivel_escolar', 'anos.ano')
+                ->get();
+        
+        foreach($anos as $ano)
+        {
+            if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==1){
+                foreach(['Linguagem e Literatura I', 'Matemática I', 'Ciências I', 'Artes Visuais I', 'Música I', 'Educação Física I', 'História e Geografia I'] as $disciplina)
+                {
+                    $ano_disciplina[] = [
+                        'ano_id'=>$ano->id,
+                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                    ];
+                }
+            }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==2){
+                foreach(['Linguagem e Literatura II', 'Matemática II', 'Ciências II', 'Artes Visuais II', 'Música II', 'Educação Física II', 'História e Geografia II'] as $disciplina)
+                {
+                    $ano_disciplina[] = [
+                        'ano_id'=>$ano->id,
+                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                    ];
+                }
+            }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==3){
+                foreach(['Linguagem e Literatura III', 'Matemática III', 'Ciências III', 'Artes Visuais III', 'Música III', 'Educação Física III', 'História e Geografia III'] as $disciplina)
+                {
+                    $ano_disciplina[] = [
+                        'ano_id'=>$ano->id,
+                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                    ];
+                }
+            }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==4){
+                foreach(['Linguagem e Literatura IV', 'Matemática IV', 'Ciências IV', 'Artes Visuais IV', 'Música IV', 'Educação Física IV', 'História e Geografia IV'] as $disciplina)
+                {
+                    $ano_disciplina[] = [
+                        'ano_id'=>$ano->id,
+                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                    ];
+                }
+            }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==5){
+                foreach(['Linguagem e Literatura V', 'Matemática V', 'Ciências V', 'Artes Visuais V', 'Música V', 'Educação Física V', 'História e Geografia V'] as $disciplina)
+                {
+                    $ano_disciplina[] = [
+                        'ano_id'=>$ano->id,
+                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                    ];
+                }
+            }else{
+                for($i=0; $i<14; $i++){
+                    $ano_disciplina[] = [
+                        'ano_id'=> $ano->id,
+                        'disciplina_id'=> $this->getDisciplinaPorArea('Matemática')
+                    ]; 
+                    $ano_disciplina[] = [
+                        'ano_id'=> $ano->id,
+                        'disciplina_id'=> $this->getDisciplinaPorArea('Ciências e Conhecimentos em Geral')
+                    ]; 
+                    $ano_disciplina[] = [
+                        'ano_id'=> $ano->id,
+                        'disciplina_id'=> $this->getDisciplinaPorArea('Geografia')
+                    ]; 
+                    $ano_disciplina[] = [
+                        'ano_id'=> $ano->id,
+                        'disciplina_id'=> $this->getDisciplinaPorArea('História')
+                    ]; 
+                }
+            }
+            dump(end($ano_disciplina));
+        }
+        $this->insertDatas('anos_disciplinas', $ano_disciplina);
     }
 }

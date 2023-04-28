@@ -320,4 +320,10 @@ class DisciplinaFactory extends customFactory
         ];
         $this->verifyTable('disciplinas', $disciplinas);
     }
+
+
+    
+
+
+    
 }

@@ -86,7 +86,7 @@ class CreateDisciplinasTable extends Migration
         });
 
 
-        Schema::create('ano_disciplinas', function (Blueprint $table){
+        Schema::create('anos_disciplinas', function (Blueprint $table){
                 $table->foreignId('ano_id')
                         ->constrained('alunos')
                         ->onDelete('cascade');

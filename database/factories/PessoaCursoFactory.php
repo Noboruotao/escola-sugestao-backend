@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use App\Models\Aluno;
 
 
 class PessoaCursoFactory extends customFactory
@@ -19,6 +20,7 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
         $pessoa_curso->makePessoa(4000);
+        $pessoa_curso->insertMensalidade();
     }
 
 
@@ -332,7 +334,7 @@ class PessoaCursoFactory extends customFactory
 
     protected function attributeBolsa()
     {
-        $alunos = \App\Models\Aluno::all();
+        $alunos = Aluno::all();
 
         $datas = [];
         foreach($alunos as $aluno)
@@ -344,7 +346,6 @@ class PessoaCursoFactory extends customFactory
                     'bolsa_id'=> DB::table('bolsas')->inRandomOrder()->first()->id
                 ];
             }
-            
         }
         $this->insertDatas('alunos_bolsas', $datas);
     }    
@@ -362,5 +363,21 @@ class PessoaCursoFactory extends customFactory
         }
         $this->insertDatas('pais_ou_responsaveis', $datas);
     
+    }
+
+
+    protected function insertMensalidade()
+    {
+        $datas = [];
+        $alunos = Aluno::all();
+
+        foreach($alunos as $aluno)
+        {
+            $datas[] = [
+                'aluno_id'=> $aluno->id,
+                'valor'=> Aluno::getValorMensalidade($id=$aluno->id)
+            ];
+        }
+        $this->insertDatas('mensalidades', $datas);       
     }
 }

@@ -40,18 +40,12 @@ class PermissionAndRoleFactory extends customFactory
             }
         }
     }
-    
-
-    protected function getAlunos()
-    {
-        return \App\Models\Aluno::select('id')->get()->toArray();
-    }
 
 
     protected function attributeRolesToAlunos()
     {
         $model_has_roles =[];
-        foreach($this->getAlunos() as $aluno)
+        foreach(\App\Models\Aluno::all()->toArray() as $aluno)
         {
             $model_has_roles[] = [
                 'role_id'=> Role::find(8)->id,
@@ -60,8 +54,46 @@ class PermissionAndRoleFactory extends customFactory
             ];
         }
         $this->insertDatas('model_has_roles', $model_has_roles);
-
     }
 
 
+    protected function attributeRolesToProfessor()
+    {
+        $model_has_roles =[];
+        foreach(\App\Models\Professor::all()->toArray() as $professor)
+        {
+            if(count($model_has_roles)==0){
+                $model_has_roles[] = [
+                    'role_id'=> 1,
+                    'model_type'=> 'App\Models\Pessoa',
+                    'model_id'=> $professor['id']
+                ];    
+            }else if(count($model_has_roles)==1){
+                $model_has_roles[] = [
+                    'role_id'=> 2,
+                    'model_type'=> 'App\Models\Pessoa',
+                    'model_id'=> $professor['id']
+                ];    
+            }else if(count($model_has_roles)==2){
+                $model_has_roles[] = [
+                    'role_id'=> 3,
+                    'model_type'=> 'App\Models\Pessoa',
+                    'model_id'=> $professor['id']
+                ];    
+            }else{
+                $model_has_roles[] = [
+                    'role_id'=> Role::whereIn('id', [4, 5, 6, 7])->inRandomOrder()->first()->id,
+                    'model_type'=> 'App\Models\Pessoa',
+                    'model_id'=> $professor['id']
+                ];
+            }
+        }
+        $this->insertDatas('model_has_roles', $model_has_roles);
+    }
+
+
+    protected function insertPermissions()
+    {
+        
+    }
 }
