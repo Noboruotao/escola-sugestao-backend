@@ -36,11 +36,10 @@ class CreatePessoasTable extends Migration
         });
 
 
-        Schema::create('professores', function (Blueprint $table){
+        Schema::create('professors', function (Blueprint $table){
             $table->foreignId('id')
                     ->constrained('pessoas')
                     ->onDelete('cascade');
-            $table->text('formacao_academica');
             $table->text('experiencia_profissional');
         });
 
@@ -86,7 +85,7 @@ class CreatePessoasTable extends Migration
         });
 
 
-        Schema::create('alunos_bolsas' , function (Blueprint $table){
+        Schema::create('aluno_bolsa' , function (Blueprint $table){
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
                     ->onDelete('cascade');
@@ -121,11 +120,11 @@ class CreatePessoasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('pessoas');
-        Schema::dropIfExists('professores');
+        Schema::dropIfExists('professors');
         Schema::dropIfExists('situacao_aluno');
         Schema::dropIfExists('alunos');
         Schema::dropIfExists('bolsas');
-        Schema::dropIfExists('alunos_bolsas');
+        Schema::dropIfExists('aluno_bolsa');
         Schema::dropIfExists('nivel_escolar');
         Schema::dropIfExists('pais_ou_responsaveis');
         

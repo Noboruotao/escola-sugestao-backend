@@ -26,7 +26,7 @@ class CreateClassesTable extends Migration
         });
 
 
-        Schema::create('alunos_classes', function (Blueprint $table){
+        Schema::create('aluno_classe', function (Blueprint $table){
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
                     ->onDelete('cascade');
@@ -45,7 +45,7 @@ class CreateClassesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('classes');
-        Schema::dropIfExists('alunos_classes');
+        Schema::dropIfExists('aluno_classe');
         
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

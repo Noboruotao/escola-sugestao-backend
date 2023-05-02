@@ -20,12 +20,17 @@ class Aluno extends Model
     }
 
 
-    public function getValorMensalidade($id, $valor_bruto=1500)
+    public function ano()
     {
-        return $valor_bruto - \Illuminate\Support\Facades\DB::table('alunos')
-        ->where('alunos.id', $id)
-        ->join('alunos_bolsas', 'alunos_bolsas.aluno_id', '=', 'alunos.id')
-        ->join('bolsas', 'alunos_bolsas.bolsa_id', '=', 'bolsas.id')
-        ->sum('bolsas.valor');
+        return $this->belongsTo(Ano::class, 'ano_id', 'id');
     }
+
+
+    public function situacao()
+    {
+        return $this->belongsTo(SituacaoAluno::class, 'situacao_id', 'id');
+    }
+
+
+    
 }

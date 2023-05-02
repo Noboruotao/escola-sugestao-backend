@@ -19,7 +19,7 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->inserirSituacaoAluno();
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
-        $pessoa_curso->makePessoa(4);
+        $pessoa_curso->makePessoa(4000);
         $pessoa_curso->insertMensalidade();
     }
 
@@ -248,7 +248,7 @@ class PessoaCursoFactory extends customFactory
             $prim_nome = $this->faker->firstName();
             $last_nome = $this->faker->lastName();
             $data_nascimento = $this->faker->dateTimeBetween('-'.$this->faker->biasedNumberBetween(2, 50, function($x) {
-                return 11 - $x;
+                return 18 - $x;
             }).' years', '-1 years')->format('Y-m-d');
 
             
@@ -298,16 +298,20 @@ class PessoaCursoFactory extends customFactory
     protected function makeProfessor($ids)
     {
         $datas = [];
+        $cursos = [];
         foreach($ids as $professor)
         {
-            $curso = DB::table('cursos')->inRandomOrder()->first()->nome;
+            $curso = DB::table('cursos')->inRandomOrder()->first();
+
+            $cursos[] = ['professor_id'=>$professor, 'curso_id'=>$curso->id];
+
             $datas[] = [
                 'id' =>$professor,
-                'formacao_academica' => 'Formado em '. $curso,
-                'experiencia_profissional' => 'Tem experiencia em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso.' por '.$this->faker->numberBetween(3, 40).' anos',
+                'experiencia_profissional' => 'Tem experiência em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso->nome.' por '.($this->faker->numberBetween(1, $this->getIdade(\App\Models\Pessoa::find($professor)->data_de_nascimento)-18)).' anos',
             ];
         }
-        $this->insertDatas('professores', $datas);
+        $this->insertDatas('professors', $datas);
+        $this->insertDatas('curso_professor', $cursos);
     }
 
 
@@ -347,7 +351,7 @@ class PessoaCursoFactory extends customFactory
                 ];
             }
         }
-        $this->insertDatas('alunos_bolsas', $datas);
+        $this->insertDatas('aluno_bolsa', $datas);
     }    
 
 
@@ -375,7 +379,7 @@ class PessoaCursoFactory extends customFactory
         {
             $datas[] = [
                 'aluno_id'=> $aluno->id,
-                'valor'=> Aluno::getValorMensalidade($id=$aluno->id)
+                'valor'=> \App\Models\Bolsa::getValorMensalidade($id=$aluno->id)
             ];
         }
         $this->insertDatas('mensalidades', $datas);       

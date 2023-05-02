@@ -8,6 +8,22 @@ class ClasseFactory extends customFactory
 {
     public function definition()
     {
+        $classe = new ClasseFactory();
+
+        $classe->professorLeciona();
         
+    }
+
+
+    protected function insertClasse()
+    {
+        
+    }
+
+
+    protected function professorLeciona()
+    {
+       $professores = \App\Models\Professor::inRandomOrder()->first();
+       dump($professores->cursos[0]->areas[0]->nome);
     }
 }

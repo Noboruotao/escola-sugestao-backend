@@ -172,13 +172,13 @@ class AreaDeConhecimentoFactory extends customFactory
             ["nome" => "História Medieval", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
             ["nome" => "História Moderna", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
             ["nome" => "História Contemporânea", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
-            ["nome" => "História da América Latina", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
-            ["nome" => "História do Brasil I", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
-            ["nome" => "História do Brasil II", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
-            ["nome" => "História do Brasil III", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
-            ["nome" => "História do Brasil IV", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
-            ["nome" => "História da África", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
-            ["nome" => "História da Ásia", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História']],
+            ["nome" => "História da América Latina", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História', 'Geografia']],
+            ["nome" => "História do Brasil I", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História', 'Geografia']],
+            ["nome" => "História do Brasil II", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História', 'Geografia']],
+            ["nome" => "História do Brasil III", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História', 'Geografia']],
+            ["nome" => "História do Brasil IV", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História', 'Geografia']],
+            ["nome" => "História da África", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História', 'Geografia']],
+            ["nome" => "História da Ásia", "areas" =>['Sociologia', 'Política', 'Economia', 'Etnologia/Etnografia', 'História', 'Geografia']],
             ["nome" => "História da Ciência", "areas" =>['História', 'Ciências e Conhecimentos em Geral', 'Engenharia']],
             ["nome" => "História da Arte", "areas" =>['História', 'Artes Plásticas', 'Desenho', 'Pintura', 'Música', 'Artes Gráficas', 'Teatro', 'Dança', ]],
             ["nome" => "História do Cinema", "areas" =>['História', 'Cinema']],
@@ -218,8 +218,8 @@ class AreaDeConhecimentoFactory extends customFactory
             ["nome" => "Literatura em Língua Inglesa", "areas" =>['Linguística', 'Linguagem Inglesa', 'Escolas Literárias']],
             ["nome" => "Tradução em Língua Inglesa", "areas" =>['Linguística', 'Linguagem Inglesa']],
             ["nome" => "Cultura dos Países de Língua Inglesa", "areas" =>['Linguística', 'Linguagem Inglesa', 'Sociologia']],
-            ["nome" => "Língua Inglesa para Negócios", "areas" =>['Linguística', 'Linguagem Inglesa', 'Publicidade/Marketing/Relações Públicas']],
-            ["nome" => "Língua Inglesa para Viagens", "areas" =>['Linguística', 'Linguagem Inglesa']],
+            ["nome" => "Língua Inglesa para Negócios", "areas" =>['Linguística', 'Linguagem Inglesa', 'Publicidade/Marketing/Relações Públicas', 'Geografia']],
+            ["nome" => "Língua Inglesa para Viagens", "areas" =>['Linguística', 'Linguagem Inglesa', 'Geografia']],
             ["nome" => "Preparação para Exames de Proficiência em Língua Inglesa", "areas" =>['Linguística', 'Linguagem Inglesa']],
             ["nome" => "Língua Inglesa como Segunda Língua", "areas" =>['Linguística', 'Linguagem Inglesa']],
             ["nome" => "Linguagem e Tecnologia em Inglês", "areas" =>['Linguística', 'Linguagem Inglesa']],
@@ -316,9 +316,9 @@ class AreaDeConhecimentoFactory extends customFactory
             ["nome" => "Sociologia Geral", "areas" =>['Sociologia', 'Administração', 'Estatisticas', 'Geografia']],
             ["nome" => "Sociologia do Trabalho", "areas" =>['Sociologia']],
             ["nome" => "Sociologia da Educação", "areas" =>['Sociologia', 'Educação/Ensino/Pedagologia']],
-            ["nome" => "Sociologia Urbana", "areas" =>['Sociologia']],
-            ["nome" => "Sociologia Rural", "areas" =>['Sociologia', 'Geografia']],
-            ["nome" => "Sociologia Política", "areas" =>['Sociologia']],
+            ["nome" => "Sociologia Urbana", "areas" =>['Sociologia', 'Geografia']],
+            ["nome" => "Sociologia Rural", "areas" =>['Sociologia', 'Geografia', 'Geografia']],
+            ["nome" => "Sociologia Política", "areas" =>['Sociologia', 'Geografia']],
             ["nome" => "Sociologia da Cultura", "areas" =>['Sociologia', 'Etnologia/Etnografia']],
             ["nome" => "Sociologia da Comunicação", "areas" =>['Sociologia', 'Comunicação/Jornalismo', 'Publicidade/Marketing/Relações Públicas']],
             ["nome" => "Sociologia das Relações de Gênero", "areas" =>['Sociologia', 'Estudos de Gênero']],
@@ -425,13 +425,13 @@ class AreaDeConhecimentoFactory extends customFactory
                 foreach($relacao['areas'] as $areas_de_conhecimento_nome)
                 {
                     $datas[]=[
-                        'area_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', $areas_de_conhecimento_nome)->first()->id,
+                        'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', $areas_de_conhecimento_nome)->first()->id,
                         'disciplina_id' => $disciplina->id
                     ];
                 }
             };
         }
-        $this->insertDatas('areas_de_conhecimento_disciplinas', $datas);
+        $this->insertDatas('areas_de_conhecimento_disciplina', $datas);
 
 
     
@@ -448,7 +448,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ],
             [
                 'nome' => 'Arquitetura e Urbanismo',
-                'areas'=> [['Estatisticas'=>6], ['Engenharia'=>8], ['Geografia'=>7]]
+                'areas'=> [['Arquitetura'=>7], ['Engenharia'=>7], ['Geografia'=>7]]
             ],
             [
                 'nome' => 'Biologia',
@@ -456,7 +456,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ],
             [
                 'nome' => 'Ciências Contábeis',
-                'areas'=> [['Estatisticas'=>7], ['Economia'=> 8] ]
+                'areas'=> [['Economia'=> 8], ['Estatisticas'=>7] ]
             ],
             [
                 'nome' => 'Direito',
@@ -476,11 +476,11 @@ class AreaDeConhecimentoFactory extends customFactory
             ],
             [
                 'nome' => 'Engenharia de Computação',
-                'areas'=> [['Engenharia'=>6], ['Ciência e Tecnologia dos Computadores'=> 7]]
+                'areas'=> [['Ciência e Tecnologia dos Computadores'=> 7], ['Engenharia'=>6]]
             ],
             [
                 'nome' => 'Engenharia Elétrica',
-                'areas'=> [['Engenharia'=>6], ['Eletrônica'=>7]]
+                'areas'=> [['Eletrônica'=>7], ['Engenharia'=>6]]
             ],
             [
                 'nome' => 'Engenharia Mecânica',
@@ -528,7 +528,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ],
             [
                 'nome' => 'Relações Internacionais',
-                'areas'=> [['Publicidade/Marketing/Relações Públicas'=>7], ['Etnologia/Etnografia'=>8] ]
+                'areas'=> [['Publicidade/Marketing/Relações Públicas'=>8], ['Etnologia/Etnografia'=>8] ]
             ],
             [
                 'nome' => 'Serviço Social',
@@ -550,7 +550,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 {
                     $datas[] = [
                         'curso_id'=> $curso_info->id,
-                        'area_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', key($area))->first()->id,
+                        'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', key($area))->first()->id,
                         'valor'=>$area[key($area)]
                     ];
                 }
@@ -725,12 +725,12 @@ class AreaDeConhecimentoFactory extends customFactory
             foreach($atividade['areas'] as $area)
             {
                 $datas[] = [
-                    'area_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', $area)->first()->id,
+                    'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', $area)->first()->id,
                     'atividade_extracurricular_id'=>$ativ_extra->id
                 ];
             }
         }
-        $this->insertDatas('areas_de_conhecimentos_atividades_extracurriculares', $datas);
+        $this->insertDatas('areas_de_conhecimento_atividades_extracurricular', $datas);
     }
 
 
@@ -878,11 +878,11 @@ class AreaDeConhecimentoFactory extends customFactory
         {
             $datas[] =[
                 'acervo_id'=> $acervo->id,
-                'area_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::inRandomOrder()->first()->id
+                'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::inRandomOrder()->first()->id
             ];
             
         }
-        $this->insertDatas('acervos_areas_de_conhecimentos', $datas);
+        $this->insertDatas('acervo_areas_de_conhecimento', $datas);
     }
 
 
@@ -893,20 +893,19 @@ class AreaDeConhecimentoFactory extends customFactory
         $disciplina_sem_ano = DB::table('disciplinas')
             ->whereIn('id', function ($query) use ($area_id) {
                 $query->select('disciplina_id')
-                    ->from('areas_de_conhecimento_disciplinas')
-                    ->where('area_de_conhecimento_id', $area_id)
+                    ->from('areas_de_conhecimento_disciplina')
+                    ->where('areas_de_conhecimento_id', $area_id)
                     ->distinct();
             })
             ->whereNotIn('id', function ($query) {
                 $query->select('disciplina_id')
-                    ->from('anos_disciplinas')
+                    ->from('ano_disciplina')
                     ->distinct();
             })
             ->inRandomOrder()
             ->first();
 
         if ($disciplina_sem_ano) {
-            dump($disciplina_sem_ano->nome);
             return $disciplina_sem_ano->id;
         }
     }
@@ -920,7 +919,6 @@ class AreaDeConhecimentoFactory extends customFactory
                 ->join('nivel_escolar', 'anos.nivel_escolar_id', '=', 'nivel_escolar.id')
                 ->select('anos.id as id', 'nivel_escolar.nome as nivel_escolar', 'anos.ano')
                 ->get();
-                dump($anos);
         
         foreach($anos as $ano)
         {
@@ -982,7 +980,7 @@ class AreaDeConhecimentoFactory extends customFactory
                         'disciplina_id'=> $this->getDisciplinaPorArea('História')
                     ]; 
             }
-            $this->insertDatas('anos_disciplinas', $ano_disciplina);
+            $this->insertDatas('ano_disciplina', $ano_disciplina);
             $ano_disciplina = array();
         }
 

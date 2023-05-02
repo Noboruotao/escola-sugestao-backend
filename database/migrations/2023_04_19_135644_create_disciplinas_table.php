@@ -30,7 +30,7 @@ class CreateDisciplinasTable extends Migration
         });
 
 
-        Schema::create('alunos_Disciplinas', function (Blueprint $table){
+        Schema::create('aluno_Disciplina', function (Blueprint $table){
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
                     ->onDelete('cascade');
@@ -45,7 +45,7 @@ class CreateDisciplinasTable extends Migration
         });
 
 
-        Schema::create('disciplinas_professores', function (Blueprint $table){
+        Schema::create('disciplina_professor', function (Blueprint $table){
             $table->foreignId('professor_id')
                     ->constrained('professores')
                     ->onDelete('cascade');
@@ -86,7 +86,7 @@ class CreateDisciplinasTable extends Migration
         });
 
 
-        Schema::create('anos_disciplinas', function (Blueprint $table){
+        Schema::create('ano_disciplina', function (Blueprint $table){
                 $table->foreignId('ano_id')
                         ->constrained('alunos')
                         ->onDelete('cascade');
@@ -104,13 +104,13 @@ class CreateDisciplinasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('disciplinas');
-        Schema::dropIfExists('alunos_Disciplinas');
+        Schema::dropIfExists('aluno_Disciplina');
         Schema::dropIfExists('situacao_da_disciplina');
-        Schema::dropIfExists('disciplinas_professores');
+        Schema::dropIfExists('disciplina_professor');
         Schema::dropIfExists('notas');
         Schema::dropIfExists('tipos_de_avaliacoes');
         Schema::dropIfExists('materiais_recomendados');
-        Schema::dropIfExists('ano_disciplinas');
+        Schema::dropIfExists('ano_disciplina');
         
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

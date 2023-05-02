@@ -24,7 +24,7 @@ class CreateCursosTable extends Migration
         });
 
 
-        Schema::create('cursos_sugeridos', function (Blueprint $table){
+        Schema::create('curso_sugerido', function (Blueprint $table){
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
                     ->onDelete('cascade');
@@ -34,6 +34,15 @@ class CreateCursosTable extends Migration
         });
 
 
+        Schema::create('curso_professor', function (Blueprint $table){
+            $table->foreignId('professor_id')
+                    ->constrained('professores')
+                    ->onDelete('cascade');
+            $table->foreignId('curso_id')
+                    ->constrained('cursos')
+                    ->onDelete('cascade');
+        
+        });
         
     }
 
@@ -46,6 +55,7 @@ class CreateCursosTable extends Migration
     {
         Schema::dropIfExists('cursos');
         Schema::dropIfExists('cursos_sugeridos');
+        Schema::dropIfExists('curso_professors');
         
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Disciplina extends Model
+class Nacionalidade extends Model
 {
     use HasFactory;
+    public $timestamps = false;
 
 
-    public function areas()
+    public function idioma()
     {
-        return $this->belongsToMany(AreasDeConhecimento::class);
+        return $this->belongsTo(Idioma::class, 'idioma_id', 'id');
     }
 }

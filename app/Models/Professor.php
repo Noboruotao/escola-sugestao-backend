@@ -9,7 +9,7 @@ class Professor extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $table = 'professores';
+    protected $table = 'professors';
 
 
     /**
@@ -18,5 +18,11 @@ class Professor extends Model
     public function pessoa()
     {
         return $this->belongsTo(Pessoa::class, 'id', 'id');
+    }
+
+
+    public function cursos()
+    {
+        return $this->belongsToMany(Curso::class, 'curso_professor');
     }
 }

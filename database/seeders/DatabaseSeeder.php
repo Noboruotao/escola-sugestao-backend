@@ -13,20 +13,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-
-        \Database\Factories\AcervoFactory::definition();
-        
-        \Database\Factories\PessoaCursoFactory::definition();
-        
-        \Database\Factories\AtividadeExtracurricularFactory::definition();
-        
-        \Database\Factories\DisciplinaFactory::definition();
-        
-        \Database\Factories\AreaDeConhecimentoFactory::definition();
+        // app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+// 
+        // \Database\Factories\AcervoFactory::definition();
+        // 
+        // \Database\Factories\PessoaCursoFactory::definition();
+        // 
+        // \Database\Factories\AtividadeExtracurricularFactory::definition();
+        // 
+        // \Database\Factories\DisciplinaFactory::definition();
+        // 
+        // \Database\Factories\AreaDeConhecimentoFactory::definition();
         
         \Database\Factories\ClasseFactory::definition();
 
-        \Database\Factories\PermissionAndRoleFactory::definition();
+        // \Database\Factories\PermissionAndRoleFactory::definition();
     }
 }

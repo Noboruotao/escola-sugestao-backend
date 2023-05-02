@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Disciplina extends Model
+class Ano extends Model
 {
     use HasFactory;
 
 
-    public function areas()
+    public function nivelEscolar()
     {
-        return $this->belongsToMany(AreasDeConhecimento::class);
+        return $this->belongsTo(NivelEscolar::class, 'nivel_escolar_id', 'id');
     }
 }
