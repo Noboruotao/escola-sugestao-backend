@@ -141,6 +141,7 @@ class AreaDeConhecimentoFactory extends customFactory
         $this->attributeAreasToDisciplina();
         $this->parametroAreasToCurso();
         $this->attributeAreasToAtivExtra();
+        $this->parametroAreasAtivExtra();
     }
 
     protected function attributeAreasToDisciplina()
@@ -226,54 +227,54 @@ class AreaDeConhecimentoFactory extends customFactory
             ["nome" => "Fonética e Fonologia da Língua Inglesa", "areas" =>['Linguística', 'Linguagem Inglesa']],
             ["nome" => "Sintaxe da Língua Inglesa", "areas" =>['Linguística', 'Linguagem Inglesa']],
             ["nome" => "Leitura e Produção Textual em Inglês", "areas" =>['Linguística', 'Linguagem Inglesa', 'Críticas Literárias']],
-            ["nome" => "Microbiologia", "areas" =>['Microbiologia', 'Parapsicologia e Ocultismo','Ciências Biólogicas']],
-            ["nome" => "Biologia Molecular", "areas" =>['Microbiologia', 'Biologia Geral','Ciências Biólogicas', 'Citologia']],
-            ["nome" => "Genética", "areas" =>['Genética', 'Ciências Biólogicas', 'Citologia']],
-            ["nome" => "Ecologia", "areas" =>['Ciências Biólogicas', 'Desenvolvimento Sustentável/Meio Ambiente']],
-            ["nome" => "Botânica", "areas" =>['Ciências Biólogicas', 'Botânica']],
-            ["nome" => "Zoologia", "areas" =>['Ciências Biólogicas', 'Zoologia']],
+            ["nome" => "Microbiologia", "areas" =>['Microbiologia', 'Parapsicologia e Ocultismo','Ciências Biólogicas', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Biologia Molecular", "areas" =>['Microbiologia', 'Biologia Geral','Ciências Biólogicas', 'Citologia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Genética", "areas" =>['Genética', 'Ciências Biólogicas', 'Citologia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Ecologia", "areas" =>['Ciências Biólogicas', 'Desenvolvimento Sustentável/Meio Ambiente', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Botânica", "areas" =>['Ciências Biólogicas', 'Botânica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Zoologia", "areas" =>['Ciências Biólogicas', 'Zoologia', 'Ciências e Conhecimentos em Geral']],
             ["nome" => "Imunologia", "areas" =>['Ciências Biólogicas', 'Microbiologia', 'Virologia']],
-            ["nome" => "Biotecnologia", "areas" =>['Ciências Biólogicas', 'Biotecnologia/Biofísica', 'Biotecnologia', 'Citologia']],
-            ["nome" => "Histologia", "areas" =>['Ciências Biólogicas', 'Citologia', 'Biotecnologia/Biofísica', 'Biotecnologia']],
-            ["nome" => "Embriologia", "areas" =>['Ciências Biólogicas', 'Educação/Ensino/Pedagologia', 'Medicina']],
-            ["nome" => "Biologia Celular", "areas" =>['Ciências Biólogicas', 'Citologia']],
-            ["nome" => "Parasitologia", "areas" =>['Ciências Biólogicas', 'Zoologia']],
-            ["nome" => "Evolução", "areas" =>['Ciências Biólogicas', 'Antropologia']],
-            ["nome" => "Bioestatística", "areas" =>['Ciências Biólogicas', 'Estatisticas']],
-            ["nome" => "Mecânica Clássica", "areas" =>['Física', 'Engenharia Mecânica']],
-            ["nome" => "Termodinâmica", "areas" =>['Física', 'Engenharia Hidraulica', 'Quimica']],
-            ["nome" => "Eletromagnetismo", "areas" =>['Física', 'Engenharia Eletrica']],
-            ["nome" => "Óptica", "areas" =>['Física', ]],
-            ["nome" => "Física Moderna", "areas" =>['Física', 'Engenharia']],
-            ["nome" => "Física Nuclear", "areas" =>['Física']],
-            ["nome" => "Física de Partículas", "areas" =>['Física']],
+            ["nome" => "Biotecnologia", "areas" =>['Ciências Biólogicas', 'Biotecnologia/Biofísica', 'Biotecnologia', 'Citologia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Histologia", "areas" =>['Ciências Biólogicas', 'Citologia', 'Biotecnologia/Biofísica', 'Biotecnologia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Embriologia", "areas" =>['Ciências Biólogicas', 'Educação/Ensino/Pedagologia', 'Medicina', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Biologia Celular", "areas" =>['Ciências Biólogicas', 'Citologia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Parasitologia", "areas" =>['Ciências Biólogicas', 'Zoologia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Evolução", "areas" =>['Ciências Biólogicas', 'Antropologia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Bioestatística", "areas" =>['Ciências Biólogicas', 'Estatisticas', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Mecânica Clássica", "areas" =>['Física', 'Engenharia Mecânica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Termodinâmica", "areas" =>['Física', 'Engenharia Hidraulica', 'Quimica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Eletromagnetismo", "areas" =>['Física', 'Engenharia Eletrica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Óptica", "areas" =>['Física', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Física Moderna", "areas" =>['Física', 'Engenharia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Física Nuclear", "areas" =>['Física', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Física de Partículas", "areas" =>['Física', 'Ciências e Conhecimentos em Geral']],
             ["nome" => "Astrofísica", 'areas'=>['Física', 'Astronomia', 'Ciências e Conhecimentos em Geral']],
-            ["nome" => "Física Computacional", "areas" =>['Física', 'Ciência e Tecnologia dos Computadores']],
-            ["nome" => "Mecânica Quântica", "areas" =>['Física']],
-            ["nome" => "Relatividade", "areas" =>['Física']],
-            ["nome" => "Física dos Materiais", "areas" =>['Física', 'Quimica', 'Engenharia']],
-            ["nome" => "Física Experimental", "areas" =>['Física']],
-            ["nome" => "Física Teórica", "areas" =>['Física']],
-            ["nome" => "Biofísica", "areas" =>['Física', 'Ciências Biólogicas']],
-            ["nome" => "Física Médica", "areas" =>['Física']],
-            ["nome" => "Física Ambiental", "areas" =>['Física', 'Ecologia', 'Desenvolvimento Sustentável/Meio Ambiente', 'Engenharia']],
-            ["nome" => "Química Geral", "areas" =>['Quimica']],
-            ["nome" => "Química Orgânica", "areas" =>['Quimica', 'Ciências Biólogicas']],
-            ["nome" => "Química Inorgânica", "areas" =>['Quimica', 'Ciências Biólogicas']],
-            ["nome" => "Físico-Química", "areas" =>['Quimica', 'Física']],
-            ["nome" => "Química Analítica", "areas" =>['Quimica', 'Estatisticas']],
-            ["nome" => "Química Ambiental", "areas" =>['Quimica', 'Desenvolvimento Sustentável/Meio Ambiente', 'Ecologia']],
-            ["nome" => "Bioquímica", "areas" =>['Quimica', 'Ciências Biólogicas']],
-            ["nome" => "Química dos Materiais", "areas" =>['Quimica', 'Mineralogia']],
-            ["nome" => "Química Forense", "areas" =>['Quimica', 'Ciências Biólogicas', 'Citologia', 'Medicina']],
-            ["nome" => "Química Industrial", "areas" =>['Quimica', 'Tecnologia Química']],
-            ["nome" => "Química de Alimentos", "areas" =>['Quimica']],
-            ["nome" => "Química Medicinal", "areas" =>['Quimica', 'Medicina']],
-            ["nome" => "Química de Polímeros", "areas" =>['Quimica']],
-            ["nome" => "Química Computacional", "areas" =>['Quimica']],
-            ["nome" => "Eletroquímica", "areas" =>['Quimica']],
-            ["nome" => "Química Nuclear", "areas" =>['Quimica']],
-            ["nome" => "Química Quântica", "areas" =>['Quimica']],
+            ["nome" => "Física Computacional", "areas" =>['Física', 'Ciência e Tecnologia dos Computadores', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Mecânica Quântica", "areas" =>['Física', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Relatividade", "areas" =>['Física', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Física dos Materiais", "areas" =>['Física', 'Quimica', 'Engenharia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Física Experimental", "areas" =>['Física', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Física Teórica", "areas" =>['Física', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Biofísica", "areas" =>['Física', 'Ciências Biólogicas', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Física Médica", "areas" =>['Física', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Física Ambiental", "areas" =>['Física', 'Ecologia', 'Desenvolvimento Sustentável/Meio Ambiente', 'Engenharia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Geral", "areas" =>['Quimica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Orgânica", "areas" =>['Quimica', 'Ciências Biólogicas', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Inorgânica", "areas" =>['Quimica', 'Ciências Biólogicas', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Físico-Química", "areas" =>['Quimica', 'Física', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Analítica", "areas" =>['Quimica', 'Estatisticas', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Ambiental", "areas" =>['Quimica', 'Desenvolvimento Sustentável/Meio Ambiente', 'Ecologia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Bioquímica", "areas" =>['Quimica', 'Ciências Biólogicas', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química dos Materiais", "areas" =>['Quimica', 'Mineralogia', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Forense", "areas" =>['Quimica', 'Ciências Biólogicas', 'Citologia', 'Medicina', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Industrial", "areas" =>['Quimica', 'Tecnologia Química', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química de Alimentos", "areas" =>['Quimica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Medicinal", "areas" =>['Quimica', 'Medicina', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química de Polímeros", "areas" =>['Quimica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Computacional", "areas" =>['Quimica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Eletroquímica", "areas" =>['Quimica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Nuclear", "areas" =>['Quimica', 'Ciências e Conhecimentos em Geral']],
+            ["nome" => "Química Quântica", "areas" =>['Quimica', 'Ciências e Conhecimentos em Geral']],
             ["nome" => "Introdução à Filosofia", "areas" =>['Filosofia', 'Teoria e filosofia da História']],
             ["nome" => "Filosofia da Ciência", "areas" =>['Filosofia', 'Ciências e Conhecimentos em Geral']],
             ["nome" => "Ética", "areas" =>['Filosofia', 'Moral/Ética']],
@@ -286,7 +287,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ["nome" => "Hermenêutica", "areas" =>['Filosofia', 'Metafísica', 'Religião', 'Parapsicologia e Ocultismo']],
             ["nome" => "Epistemologia", "areas" =>['Filosofia', 'Moral/Ética']],
             ["nome" => "Ontologia", "areas" =>['Filosofia',]],
-            ["nome" => "Geografia Física", "areas" =>['Geografia', 'Mineralogia', 'Petrologia',]],
+            ["nome" => "Geografia Física", "areas" =>['Geografia', 'Mineralogia', 'Petrologia', 'Ciências e Conhecimentos em Geral']],
             ["nome" => "Geografia Humana", "areas" =>['Geografia', 'Geologia Econômica', 'Planejamento Regional', 'Ciências da Terra', 'Mineralogia']],
             ["nome" => "Geografia Econômica", "areas" =>['Geografia', 'Geologia Econômica','Planejamento Regional', 'Ciências Sociais', 'Economia']],
             ["nome" => "Cartografia", "areas" =>['Geografia', 'Geodesia']],
@@ -298,7 +299,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ["nome" => "Geografia do Brasil", "areas" =>['Geografia', ]],
             ["nome" => "Geografia Geral", "areas" =>['Geografia', 'Engenharia']],
             ["nome" => "Geografia Regional", "areas" =>['Geografia', ]],
-            ["nome" => "Geografia Ambiental", "areas" =>['Geografia', 'Desenvolvimento Sustentável/Meio Ambiente']],
+            ["nome" => "Geografia Ambiental", "areas" =>['Geografia', 'Desenvolvimento Sustentável/Meio Ambiente', 'Ciências e Conhecimentos em Geral']],
             ["nome" => "História das Religiões", "areas" =>['Religião', 'História', 'Geografia']],
             ["nome" => "Teologia", "areas" =>['Religião', 'Parapsicologia e Ocultismo', 'Metafísica']],
             ["nome" => "Filosofia da Religião", "areas" =>['Religião', 'Ciências Sociais']],
@@ -738,11 +739,11 @@ class AreaDeConhecimentoFactory extends customFactory
         $datas = [];
 
         $atividades = [
-            ['nome' => 'Ginástica Rítmica', 'areas'=>['Anatomia Humana'=>8, 'Música'=>8]],
+            ['nome' => 'Ginástica Rítmica', 'areas'=>['Anatomia Humana'=>8, 'Música'=>5]],
             ['nome' => 'Atletismo', 'areas'=>['Anatomia Humana'=>8]],
             ['nome' => 'Ginástica Artística', 'areas'=>['Anatomia Humana'=>8]],
             ['nome' => 'Escalada', 'areas'=>['Anatomia Humana'=>8]],
-            ['nome' => 'Patinagem Artística', 'areas'=>['Anatomia Humana'=>8, 'Dança'=>8]],
+            ['nome' => 'Patinagem Artística', 'areas'=>['Anatomia Humana'=>8, 'Dança'=>5]],
 
             ['nome' => 'Teatro', 'areas'=>['Teatro'=>5]],
             ['nome' => 'Música', 'areas'=>['Música'=>5]],
@@ -752,7 +753,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ['nome' => 'Orquestra', 'areas'=>['Música'=>5]],
             ['nome' => 'Artes visuais', 'areas'=>['Artes Gráficas'=>5]],
             ['nome' => 'Balé', 'areas'=>['Dança'=>5]],
-            ['nome' => 'Pintura', 'areas'=>['Pintura', 'Desenho'=>5]],
+            ['nome' => 'Pintura', 'areas'=>['Pintura'=>3, 'Desenho'=>5]],
 
             ['nome' => 'Clube de Debate', 'areas'=>['Linguística'=>5, 'Críticas Literárias'=>8]],
             ['nome' => 'Model United Nations', 'areas'=>['Linguística'=>5, 'Críticas Literárias'=>8]],
@@ -764,8 +765,8 @@ class AreaDeConhecimentoFactory extends customFactory
             ['nome' => 'Concurso Literário', 'areas'=>['Linguística'=>8, 'Críticas Literárias'=>8]],
 
             ['nome' => 'Empreendedorismo Social', 'areas'=>['Economia'=>8, 'Administração'=>6]],
-            ['nome' => 'Desenvolvimento de Projetos Empresariais','areas'=>['Economia'=>7, 'Administração'=>8]],
-            ['nome' => 'Participação em Competições de Empreendedorismo','areas'=>['Economia'=>8, 'Administração'=>8]],
+            ['nome' => 'Desenvolvimento de Projetos Empresariais','areas'=>['Economia'=>7, 'Administração'=>7]],
+            ['nome' => 'Participação em Competições de Empreendedorismo','areas'=>['Economia'=>8, 'Administração'=>7]],
             ['nome' => 'Estudo de Casos Empresariais','areas'=>['Economia'=>7, 'Administração'=>6]],
             ['nome' => 'Palestras sobre Empreendedorismo','areas'=>['Economia'=>6, 'Administração'=>6]],
             ['nome' => 'Networking com Empreendedores','areas'=>['Economia'=>8, 'Administração'=>8]],
@@ -839,7 +840,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ['nome' => 'Grupo de estudos de Cibersegurança', 'areas'=>['Ciência e Tecnologia dos Computadores'=> 8, 'Ciência de Dados/Análise de Dados'=> 7]],
             ['nome' => 'Grupo de estudos de Análise de Dados', 'areas'=>['Ciência e Tecnologia dos Computadores'=> 5, 'Ciência de Dados/Análise de Dados'=>5]],
             ['nome' => 'Olimpíada de Programação', 'areas'=>['Ciência e Tecnologia dos Computadores'=> 8, 'Inteligência Artificial'=> 8]],
-            ["nome" => "Oficina de jogos digitais", 'areas'=>['Ciência e Tecnologia dos Computadores'=> 7, 'Inteligência Artificial', 'Recreação/Entretenimento/Jogos']],
+            ["nome" => "Oficina de jogos digitais", 'areas'=>['Ciência e Tecnologia dos Computadores'=> 7, 'Inteligência Artificial'=>5, 'Recreação/Entretenimento/Jogos'=>3]],
             
             ['nome' => 'Clube de robótica', 'areas'=>['Ciência e Tecnologia dos Computadores'=> 7, 'Engenharia'=> 7]],
             ['nome' => 'Oficina de programação de robôs', 'areas'=>['Ciência e Tecnologia dos Computadores'=> 7, 'Engenharia'=> 7, 'Inteligência Artificial'=> 6]],
@@ -853,17 +854,15 @@ class AreaDeConhecimentoFactory extends customFactory
         {
         
             $ativ_extra = \App\Models\AtividadesExtracurriculares::where('nome', $atividade['nome'])->first();
-            foreach($atividade['areas'] as $area)
+            foreach($atividade['areas'] as $key=>$value)
             {
                 $datas[] = [
-                    'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', key($area))->first()->id,
+                    'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', $key)->first()->id,
                     'atividade_extracurricular_id'=>$ativ_extra->id,
-                    'valor'=> $area
+                    'valor'=> $value
                 ];
-            
             }
         }
-        dump($datas);
 
         $this->insertDatas('parametro_para_sugerir_atividade_extracurricular', $datas);
     
@@ -907,8 +906,8 @@ class AreaDeConhecimentoFactory extends customFactory
             ->first();
 
         if ($disciplina_sem_ano) {
+            dump($disciplina_sem_ano->nome);
             return $disciplina_sem_ano->id;
-            // do something with $disciplina_sem_ano_id
         }
     }
 
@@ -921,6 +920,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 ->join('nivel_escolar', 'anos.nivel_escolar_id', '=', 'nivel_escolar.id')
                 ->select('anos.id as id', 'nivel_escolar.nome as nivel_escolar', 'anos.ano')
                 ->get();
+                dump($anos);
         
         foreach($anos as $ano)
         {
@@ -965,7 +965,6 @@ class AreaDeConhecimentoFactory extends customFactory
                     ];
                 }
             }else{
-                for($i=0; $i<14; $i++){
                     $ano_disciplina[] = [
                         'ano_id'=> $ano->id,
                         'disciplina_id'=> $this->getDisciplinaPorArea('Matemática')
@@ -982,10 +981,11 @@ class AreaDeConhecimentoFactory extends customFactory
                         'ano_id'=> $ano->id,
                         'disciplina_id'=> $this->getDisciplinaPorArea('História')
                     ]; 
-                }
             }
-            dump(end($ano_disciplina));
+            $this->insertDatas('anos_disciplinas', $ano_disciplina);
+            $ano_disciplina = array();
         }
-        $this->insertDatas('anos_disciplinas', $ano_disciplina);
+
+        
     }
 }

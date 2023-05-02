@@ -19,7 +19,7 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->inserirSituacaoAluno();
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
-        $pessoa_curso->makePessoa(4000);
+        $pessoa_curso->makePessoa(4);
         $pessoa_curso->insertMensalidade();
     }
 
@@ -207,12 +207,12 @@ class PessoaCursoFactory extends customFactory
     protected function insertAno()
     {
         $data = [];
-        foreach([[1, 5], [2,9], [3, 3],[4,3], [5, 1]] as $nivel)
+        foreach([['Ensino Infantil', 5], ['Ensino Fundamental',9], ['Ensino Médio', 3],['Cursos Técnicos', 3], ['Cursos Preparatórios', 1]] as $nivel)
         {
             for($i=1; $i<=$nivel[1]; $i++)
             {
                 $data[] = [
-                    'nivel_escolar_id'=> DB::table('nivel_escolar')->find($nivel[0])->id,
+                    'nivel_escolar_id'=> DB::table('nivel_escolar')->where('nome', $nivel[0])->first()->id,
                     'ano'=> $i
                 ];
             }
