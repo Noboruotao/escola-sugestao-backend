@@ -14,4 +14,10 @@ class Ano extends Model
     {
         return $this->belongsTo(NivelEscolar::class, 'nivel_escolar_id', 'id');
     }
+
+
+    public function alunos()
+    {
+        return $this->hasMany(Aluno::class);
+    }
 }

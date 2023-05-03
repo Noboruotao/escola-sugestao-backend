@@ -25,4 +25,25 @@ class Professor extends Model
     {
         return $this->belongsToMany(Curso::class, 'curso_professor');
     }
+
+
+    public function getCursos()
+    {
+        return $this->cursos()->pluck('nome');
+    }
+
+
+    public function professorAreas()
+    {
+        $areasDoCurso = collect([]);
+        $cursos = $this->cursos;
+
+        foreach($cursos as $curso)
+        {
+            foreach($curso->areas as $area){
+                $areasDoCurso->push($area);
+            }
+        }
+        return $areasDoCurso;
+    }
 }

@@ -178,6 +178,7 @@ class PessoaCursoFactory extends customFactory
             ['situacao'=>'Afastado'],
             ['situacao'=>'Transferido'],
             ['situacao'=>'Cancelado'],
+            ['situacao'=>'Em Andamento'],
         ];
         $this->verifyTable('situacao_aluno', $situacao);
     }

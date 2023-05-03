@@ -14,4 +14,12 @@ class Disciplina extends Model
     {
         return $this->belongsToMany(AreasDeConhecimento::class);
     }
+
+
+    public function anos()
+    {
+        return $this->belongsToMany(Ano::class);
+    }
+
+
 }

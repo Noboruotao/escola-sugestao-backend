@@ -19,7 +19,7 @@ class CreateClassesTable extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('professor_id')
-                    ->constrained('professores');
+                    ->constrained('professors');
             $table->foreignId('disciplina_id')
                     ->constrained('disciplinas');
             $table->timestamps();

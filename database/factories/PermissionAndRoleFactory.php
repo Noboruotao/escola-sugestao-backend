@@ -15,6 +15,8 @@ class PermissionAndRoleFactory extends customFactory
 
         $rolesPermission->seedRoles();
         $rolesPermission->attributeRolesToAlunos();
+        $rolesPermission->attributeRolesToProfessor();
+        $rolesPermission->attributeRolesToPais();
         
     }
 
@@ -48,7 +50,7 @@ class PermissionAndRoleFactory extends customFactory
         foreach(\App\Models\Aluno::all()->toArray() as $aluno)
         {
             $model_has_roles[] = [
-                'role_id'=> Role::find(8)->id,
+                'role_id'=> 8,
                 'model_type'=> 'App\Models\Pessoa',
                 'model_id'=> $aluno['id']
             ];
@@ -92,8 +94,20 @@ class PermissionAndRoleFactory extends customFactory
     }
 
 
-    protected function insertPermissions()
+    protected function attributeRolesToPais()
     {
+        $model_has_roles = [];
+        $pais = \App\Models\Pessoa::whereDoesntHave('Roles')->get();
+        foreach($pais as $pai)
+        {
+            $model_has_roles[] = [
+                'role_id'=> 8,
+                'model_type'=> 'App\Models\Pessoa',
+                'model_id'=> $pai->id
+            ];
+        }
+
+        $this->insertDatas('model_has_roles', $model_has_roles);
         
     }
 }

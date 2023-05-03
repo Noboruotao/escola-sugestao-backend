@@ -14,4 +14,10 @@ class Curso extends Model
     {
         return $this->belongsToMany(AreasDeConhecimento::class, 'parametros_para_sugerir_curso');
     }
+
+
+    public function getAreas()
+    {
+        return $this->areas()->pluck('nome');
+    }
 }
