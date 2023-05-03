@@ -20,10 +20,10 @@ class AcervoFactory extends customFactory
         $acervoSeeder->insertIdiomas();
         $acervoSeeder->insertEstados();
 
-        $acervoSeeder->insertEditoras(5);
-        $acervoSeeder->insertAutores(20);
+        $acervoSeeder->insertEditoras(200);
+        $acervoSeeder->insertAutores(150);
         
-        $acervoSeeder->insertAcervo(100);
+        $acervoSeeder->insertAcervo(1000);
     }
 
 

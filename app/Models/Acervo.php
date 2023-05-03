@@ -49,4 +49,10 @@ class Acervo extends Model
     {
         return $this->belongsTo(SituacaoAcervo::class, 'situacao_id', 'id');
     }
+
+
+    public function areas()
+    {
+        return $this->belongsToMany(AreasDeConhecimento::class);
+    }
 }

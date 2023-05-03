@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\AreasDeConhecimento;
 use Illuminate\Support\Facades\DB;
 
 class AreaDeConhecimentoFactory extends customFactory
@@ -14,8 +15,7 @@ class AreaDeConhecimentoFactory extends customFactory
         $areas->insertAreaConhecimento();
         $areas->attributeAreasToAcervo();
         $areas->attributeDisciplinaToAno();
-
-        
+        $areas->materialSugerido();
     }
 
 
@@ -425,7 +425,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 foreach($relacao['areas'] as $areas_de_conhecimento_nome)
                 {
                     $datas[]=[
-                        'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', $areas_de_conhecimento_nome)->first()->id,
+                        'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', $areas_de_conhecimento_nome)->first()->id,
                         'disciplina_id' => $disciplina->id
                     ];
                 }
@@ -550,7 +550,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 {
                     $datas[] = [
                         'curso_id'=> $curso_info->id,
-                        'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', key($area))->first()->id,
+                        'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', key($area))->first()->id,
                         'valor'=>$area[key($area)]
                     ];
                 }
@@ -725,7 +725,7 @@ class AreaDeConhecimentoFactory extends customFactory
             foreach($atividade['areas'] as $area)
             {
                 $datas[] = [
-                    'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', $area)->first()->id,
+                    'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', $area)->first()->id,
                     'atividade_extracurricular_id'=>$ativ_extra->id
                 ];
             }
@@ -857,7 +857,7 @@ class AreaDeConhecimentoFactory extends customFactory
             foreach($atividade['areas'] as $key=>$value)
             {
                 $datas[] = [
-                    'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::where('nome', $key)->first()->id,
+                    'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', $key)->first()->id,
                     'atividade_extracurricular_id'=>$ativ_extra->id,
                     'valor'=> $value
                 ];
@@ -876,11 +876,13 @@ class AreaDeConhecimentoFactory extends customFactory
 
         foreach($acervos as $acervo)
         {
-            $datas[] =[
-                'acervo_id'=> $acervo->id,
-                'areas_de_conhecimento_id'=> \App\Models\AreasDeConhecimento::inRandomOrder()->first()->id
-            ];
-            
+            foreach( AreasDeConhecimento::limit( $this->faker->randomDigitNot(0) )->inRandomOrder()->get() as $area )
+            {
+                $datas[] =[
+                    'acervo_id'=> $acervo->id,
+                    'areas_de_conhecimento_id'=> $area->id
+                ];
+            }
         }
         $this->insertDatas('acervo_areas_de_conhecimento', $datas);
     }
@@ -888,7 +890,7 @@ class AreaDeConhecimentoFactory extends customFactory
 
     protected function getDisciplinaPorArea($area)
     {
-        $area_id = \App\Models\AreasDeConhecimento::where('nome', $area)->first()->id;
+        $area_id = AreasDeConhecimento::where('nome', $area)->first()->id;
 
         $disciplina_sem_ano = DB::table('disciplinas')
             ->whereIn('id', function ($query) use ($area_id) {
@@ -985,5 +987,31 @@ class AreaDeConhecimentoFactory extends customFactory
         }
 
         
+    }
+
+
+    protected function materialSugerido()
+    {
+        $datas = [];
+
+        $acervos = \App\Models\Acervo::all();
+        $disciplinas = \App\Models\Disciplina::all();
+
+        foreach($acervos as $acervo)
+        {
+            $acervoAreas = $acervo->areas;
+            foreach($disciplinas as $disciplina)
+            {
+                if( count( $acervoAreas->intersect($disciplina->areas) ) >=3 || count( $acervoAreas->intersect($disciplina->areas) ) == count($acervoAreas))
+                {
+                    $datas[] = [
+                        'disciplina_id'=> $disciplina->id,
+                        'acervo_id'=> $acervo->id
+                    ];
+                    
+                }
+            }
+        }
+        $this->insertDatas('materiais_sugeridos', $datas);
     }
 }

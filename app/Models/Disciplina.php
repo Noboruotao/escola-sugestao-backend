@@ -22,4 +22,10 @@ class Disciplina extends Model
     }
 
 
+    public function disciplinas()
+    {
+        return $this->hasMany(Disciplina::class);
+    }
+
+
 }

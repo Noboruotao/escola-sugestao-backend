@@ -13,7 +13,6 @@ class DisciplinaFactory extends customFactory
         $disciplina->insertTipoAvaliacao();
         $disciplina->insertSituacaoDisciplina();
         $disciplina->insertDisciplinas();
-        
     }
 
 
@@ -23,6 +22,7 @@ class DisciplinaFactory extends customFactory
             ['nome'=>'Primeira Avaliação Semestral(P1)'],
             ['nome'=>'Segunda Avaliação Semestral(P2)'],
             ['nome'=>'Entrega de Trabalho'],
+            ['nome'=>'Prova de Recuperação'],
         ];
         $this->verifyTable('tipos_de_avaliacoes', $datas);
     }

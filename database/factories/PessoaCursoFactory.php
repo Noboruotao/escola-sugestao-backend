@@ -14,12 +14,13 @@ class PessoaCursoFactory extends customFactory
     public function definition()
     {
         $pessoa_curso = new PessoaCursoFactory();
+
         $pessoa_curso->inserirCursos();
         $pessoa_curso->insertBolsas();
         $pessoa_curso->inserirSituacaoAluno();
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
-        $pessoa_curso->makePessoa(4000);
+        $pessoa_curso->makePessoa(5000);
         $pessoa_curso->insertMensalidade();
     }
 
@@ -252,6 +253,25 @@ class PessoaCursoFactory extends customFactory
                 return 18 - $x;
             }).' years', '-1 years')->format('Y-m-d');
 
+            do{
+                $cpf = $this->faker->cpf();
+                foreach($pessoas as $pessoa)
+                {
+                    if( $pessoa['cpf']== $cpf ){
+                        $cpf=null;
+                    };
+                }
+            }while( $cpf == null );
+
+            do{
+                $rg = $this->faker->rg();
+                foreach($pessoas as $pessoa)
+                {
+                    if( $pessoa['rg']== $rg ){
+                        $rg=null;
+                    };
+                }
+            }while( $rg == null );
             
             $idade = $this->getIdade($data_nascimento);
 
@@ -262,8 +282,8 @@ class PessoaCursoFactory extends customFactory
                 'email' => $prim_nome.'.'.$this->faker->email(),
                 'data_de_nascimento' => $data_nascimento,
                 'genero' =>$this->faker->randomElement(['Masculino', 'Feminino']),
-                'cpf' => $this->faker->cpf(),
-                'rg' => $this->faker->rg(),
+                'cpf' => $cpf,
+                'rg' => $rg,
                 'endereco' => $this->faker->address(),
                 'telefone' => (rand(0, 1))? $this->faker->landline(): null,
                 'celular' => (rand(0, 1))? $this->faker->cellphone(): null,
@@ -329,7 +349,7 @@ class PessoaCursoFactory extends customFactory
             $datas[] = [
                 'id' => $aluno->id,
                 'ano_id' => DB::table('anos')->find($idade)->id,
-                'situacao_id' => DB::table('situacao_aluno')->inRandomOrder()->first()->id
+                'situacao_id' => $this->faker->randomElement([1, 3, 5, 10, 11])
             ];
         }
         $this->insertDatas('alunos', $datas);
@@ -359,15 +379,18 @@ class PessoaCursoFactory extends customFactory
     protected function makePais($pais)
     {
         $datas = [];
-        foreach($pais as $pai)
+        foreach(\App\Models\Aluno::all() as $aluno)
         {
-            $datas[] = [
-                'pais_ou_responsavel_id' => $pai,
-                'aluno_id' => DB::table('alunos')->inRandomOrder()->first()->id,
-            ];
+            foreach( $this->faker->randomElements($pais, $count = rand(1, 2) ) as $pai )
+            {
+                $datas[] = [
+                    'pais_ou_responsavel_id' => $pai,
+                    'aluno_id' => $aluno->id,
+                ];
+            }
+        
         }
         $this->insertDatas('pais_ou_responsaveis', $datas);
-    
     }
 
 

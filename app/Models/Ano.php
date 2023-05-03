@@ -20,4 +20,10 @@ class Ano extends Model
     {
         return $this->hasMany(Aluno::class);
     }
+
+
+    public function disciplinas()
+    {
+        return $this->belongsToMany(Disciplina::class);
+    }
 }

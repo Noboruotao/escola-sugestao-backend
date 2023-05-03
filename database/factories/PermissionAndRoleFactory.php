@@ -17,7 +17,6 @@ class PermissionAndRoleFactory extends customFactory
         $rolesPermission->attributeRolesToAlunos();
         $rolesPermission->attributeRolesToProfessor();
         $rolesPermission->attributeRolesToPais();
-        
     }
 
 

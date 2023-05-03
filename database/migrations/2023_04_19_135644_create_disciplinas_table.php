@@ -63,7 +63,7 @@ class CreateDisciplinasTable extends Migration
 
         Schema::create('notas', function (Blueprint $table){
             $table->id();
-            $table->foreignId('aluno->id')
+            $table->foreignId('aluno_id')
                     ->constrained('alunos');
             $table->foreignId('tipo_de_avaliacao_id')
                     ->constrained('tipos_de_avaliacoes');

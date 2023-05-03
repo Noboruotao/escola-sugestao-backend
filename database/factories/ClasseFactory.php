@@ -13,7 +13,6 @@ class ClasseFactory extends customFactory
 
         $classe->insertClasse();
         $classe->alunoClasse();
-        
     }
 
 

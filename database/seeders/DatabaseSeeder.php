@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
         
         \Database\Factories\ClasseFactory::definition();
 
+        \Database\Factories\NotaFactory::definition();
+
         \Database\Factories\PermissionAndRoleFactory::definition();
     }
 }

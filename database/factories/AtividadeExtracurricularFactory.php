@@ -14,9 +14,6 @@ class AtividadeExtracurricularFactory extends customFactory
 
         $ativExtra->insertTipoAtivExtra();
         $ativExtra->insertAtivExtra();
-
-
-        
     }
 
 
