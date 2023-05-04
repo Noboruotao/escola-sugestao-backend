@@ -8,6 +8,7 @@ class DisciplinaFactory extends customFactory
 {
     public function definition()
     {
+        dump('Starting Disciplina seeding');
         $disciplina = new DisciplinaFactory();
 
         $disciplina->insertTipoAvaliacao();

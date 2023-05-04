@@ -32,5 +32,21 @@ class Aluno extends Model
     }
 
 
+    public function disciplinas()
+    {
+        return $this->belongsToMany(Disciplina::class)->withPivot('situacao_id', 'nota_final');
+    }
+
+
+    public function getAlunoArea()
+    {
+        $disciplinas = $this->disciplinas;
+        $areas = collect();
+        foreach($disciplinas as $disciplina)
+        {
+            $areas = $areas->merge($disciplina->areas->diff($areas));
+        }
+        return $areas;
     
+    }
 }

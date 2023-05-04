@@ -9,9 +9,11 @@ class NotaFactory extends customFactory
     
     public function definition()
     {
+        dump('Starting Nota seeding');
         $notas = new NotaFactory();
 
         $notas->insertNotas();
+        // $notas->inserirAlunoArea();
         
     }
 
@@ -28,8 +30,8 @@ class NotaFactory extends customFactory
                 $disciplinas = \App\Models\Ano::find($i)->disciplinas;
                 foreach($disciplinas as $disciplina)
                 {
-                    $notaP1 = $this->faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 10);
-                    $notaP2 = $this->faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 10);
+                    $notaP1 = (($this->faker->biasedNumberBetween($min = 0, $max = 1000, $function = 'sqrt') ) / 100.0);
+                    $notaP2 = (($this->faker->biasedNumberBetween($min = 0, $max = 1000, $function = 'sqrt') ) / 100.0);
 
                     $nota_Final = ($notaP1 * 4 + $notaP2 * 6)/10;
                     
@@ -52,14 +54,45 @@ class NotaFactory extends customFactory
                     $aluno_disciplina[] = [
                         'aluno_id'=> $aluno->id,
                         'disciplina_id'=> $disciplina->id,
-                        'situacao_id'=>($nota_Final>5)? 1: 2,
+                        'situacao_id'=>($nota_Final>=5)? 1: 2,
                         'nota_final'=> $nota_Final
                     ];
-
                 }
             }
         }
         $this->insertDatas('aluno_disciplina', $aluno_disciplina);
         $this->insertDatas('notas', $notas);
+    }
+
+
+    protected function inserirAlunoArea()
+    {
+        $alunos = \App\Models\Aluno::all();
+
+        $aluno_area = [];
+
+        foreach($alunos as $aluno)
+        {
+            foreach( $aluno->getAlunoArea() as $area)
+            {
+                $soma = 0;
+                $num_disciplina = 0;
+                foreach($aluno->disciplinas as $disciplina)
+                {
+                    if( $disciplina->hasArea($area->nome) )
+                    {
+                        $soma += $disciplina->pivot->nota_final;
+                        $num_disciplina ++;                        
+                    }                    
+                }
+
+                $aluno_area[] = [
+                    'aluno_id'=> $aluno->id,
+                    'area_de_conhecimento_id'=> $area->id,
+                    'valor_calculado_por_notas'=> ($soma/$num_disciplina)
+                ];
+            }
+            $this->insertDatas('aluno_areas_de_conhecimento', $aluno_area);
+        }
     }
 }

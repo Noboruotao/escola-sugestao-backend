@@ -11,6 +11,7 @@ class AcervoFactory extends customFactory
     
     public function definition()
     {
+        dump('Starting Acervo seeding');
         $acervoSeeder = new AcervoFactory();
 
         $acervoSeeder->insertTipoAcervo();

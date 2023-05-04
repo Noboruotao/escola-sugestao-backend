@@ -11,6 +11,7 @@ class PermissionAndRoleFactory extends customFactory
     
     public function definition()
     {
+        dump('Starting Permission seeding');
         $rolesPermission = new PermissionAndRoleFactory();
 
         $rolesPermission->seedRoles();

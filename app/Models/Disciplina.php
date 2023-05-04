@@ -22,10 +22,14 @@ class Disciplina extends Model
     }
 
 
-    public function disciplinas()
+
+    public function hasArea($nome)
     {
-        return $this->hasMany(Disciplina::class);
+        $areas = $this->areas();
+
+        if( is_string($nome) )
+        {
+            return $areas->where('nome', $nome)->first();
+        }
     }
-
-
 }

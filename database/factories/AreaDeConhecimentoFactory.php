@@ -10,6 +10,7 @@ class AreaDeConhecimentoFactory extends customFactory
 {
     public function definition()
     {
+        dump('Starting Area de Conhecimento seeding');
         $areas = new AreaDeConhecimentoFactory();
 
         $areas->insertAreaConhecimento();

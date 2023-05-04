@@ -9,6 +9,7 @@ class ClasseFactory extends customFactory
 {
     public function definition()
     {
+        dump('Starting Classe seeding');
         $classe = new ClasseFactory();
 
         $classe->insertClasse();

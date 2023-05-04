@@ -10,6 +10,7 @@ class AtividadeExtracurricularFactory extends customFactory
 {
     public function definition()
     {
+        dump('Starting Atividade Extracurricular seeding');
         $ativExtra = new AtividadeExtracurricularFactory();
 
         $ativExtra->insertTipoAtivExtra();

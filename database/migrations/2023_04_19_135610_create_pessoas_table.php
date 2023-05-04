@@ -109,6 +109,7 @@ class CreatePessoasTable extends Migration
             $table->id();
             $table->foreignId('aluno_id');
             $table->float('valor');
+            $table->date('pago');
         });
     }
 

@@ -13,6 +13,7 @@ class PessoaCursoFactory extends customFactory
     
     public function definition()
     {
+        dump('Starting Pessoa seeding');
         $pessoa_curso = new PessoaCursoFactory();
 
         $pessoa_curso->inserirCursos();
@@ -20,7 +21,7 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->inserirSituacaoAluno();
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
-        $pessoa_curso->makePessoa(5000);
+        $pessoa_curso->makePessoa(2000);
         $pessoa_curso->insertMensalidade();
     }
 
@@ -349,7 +350,7 @@ class PessoaCursoFactory extends customFactory
             $datas[] = [
                 'id' => $aluno->id,
                 'ano_id' => DB::table('anos')->find($idade)->id,
-                'situacao_id' => $this->faker->randomElement([1, 3, 5, 10, 11])
+                'situacao_id' => $this->faker->randomElement([1, 3, 11])
             ];
         }
         $this->insertDatas('alunos', $datas);
