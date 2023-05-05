@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\AreasDeConhecimento;
 use Illuminate\Support\Facades\DB;
+use App\Models\Disciplina;
 
 class AreaDeConhecimentoFactory extends customFactory
 {
@@ -14,7 +15,13 @@ class AreaDeConhecimentoFactory extends customFactory
         $areas = new AreaDeConhecimentoFactory();
 
         $areas->insertAreaConhecimento();
+        $areas->attributeAreasToDisciplina();
+        $areas->parametroAreasToCurso();
+
+        $areas->attributeAreasToAtivExtra();
+        $areas->parametroAreasAtivExtra();
         $areas->attributeAreasToAcervo();
+
         $areas->attributeDisciplinaToAno();
         $areas->materialSugerido();
     }
@@ -22,6 +29,7 @@ class AreaDeConhecimentoFactory extends customFactory
 
     protected function insertAreaConhecimento()
     {
+        echo "    start insertAreaConhecimento()". PHP_EOL;
         $areas_de_conhecimento = [
             ['nome'=> 'Ciências e Conhecimentos em Geral'],
             ['nome'=> 'Documentação'],
@@ -139,10 +147,6 @@ class AreaDeConhecimentoFactory extends customFactory
             ['nome'=> 'Teoria e filosofia da História'],
         ];
         $this->insertDatas('areas_de_conhecimentos', $areas_de_conhecimento);
-        $this->attributeAreasToDisciplina();
-        $this->parametroAreasToCurso();
-        $this->attributeAreasToAtivExtra();
-        $this->parametroAreasAtivExtra();
     }
 
     protected function attributeAreasToDisciplina()
@@ -420,7 +424,7 @@ class AreaDeConhecimentoFactory extends customFactory
 
         foreach($area_disciplina as $relacao)
         {
-            $disciplina = \App\Models\Disciplina::where('nome', $relacao['nome'])->first();
+            $disciplina = Disciplina::where('nome', $relacao['nome'])->first();
 
             if( count($relacao['areas'])!=0 ){
                 foreach($relacao['areas'] as $areas_de_conhecimento_nome)
@@ -930,7 +934,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 {
                     $ano_disciplina[] = [
                         'ano_id'=>$ano->id,
-                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
                     ];
                 }
             }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==2){
@@ -938,7 +942,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 {
                     $ano_disciplina[] = [
                         'ano_id'=>$ano->id,
-                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
                     ];
                 }
             }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==3){
@@ -946,7 +950,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 {
                     $ano_disciplina[] = [
                         'ano_id'=>$ano->id,
-                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
                     ];
                 }
             }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==4){
@@ -954,7 +958,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 {
                     $ano_disciplina[] = [
                         'ano_id'=>$ano->id,
-                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
                     ];
                 }
             }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==5){
@@ -962,7 +966,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 {
                     $ano_disciplina[] = [
                         'ano_id'=>$ano->id,
-                        'disciplina_id'=> \App\Models\Disciplina::where('nome', $disciplina)->first()->id
+                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
                     ];
                 }
             }else{
@@ -996,7 +1000,7 @@ class AreaDeConhecimentoFactory extends customFactory
         $datas = [];
 
         $acervos = \App\Models\Acervo::all();
-        $disciplinas = \App\Models\Disciplina::all();
+        $disciplinas = Disciplina::all();
 
         foreach($acervos as $acervo)
         {

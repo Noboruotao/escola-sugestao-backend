@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Aluno;
+use App\Models\Pessoa;
 
 
 class PessoaCursoFactory extends customFactory
 {
-    
-    public function definition()
+    public function definition($num_pessoas = 1000)
     {
         dump('Starting Pessoa seeding');
         $pessoa_curso = new PessoaCursoFactory();
@@ -21,7 +21,7 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->inserirSituacaoAluno();
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
-        $pessoa_curso->makePessoa(2000);
+        $pessoa_curso->makePessoa($num_pessoas);
         $pessoa_curso->insertMensalidade();
     }
 
@@ -32,102 +32,151 @@ class PessoaCursoFactory extends customFactory
      */
     protected function inserirCursos()
     {
+        echo "    start inserirCursos()". PHP_EOL;
         $cursos = [
             [
                 'nome' => 'Administração',
-                'descricao' => 'Forma profissionais para gerenciamento de organizações, setores ou departamentos de empresas.'
+                'descricao' => 'Forma profissionais para gerenciamento de organizações, setores ou departamentos de empresas.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Arquitetura e Urbanismo',
-                'descricao' => 'Estuda a concepção e construção de espaços urbanos, edifícios e paisagens.'
+                'descricao' => 'Estuda a concepção e construção de espaços urbanos, edifícios e paisagens.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Biologia',
-                'descricao' => 'Curso que estuda os seres vivos, desde a sua estrutura até suas relações com o meio ambiente.'
+                'descricao' => 'Curso que estuda os seres vivos, desde a sua estrutura até suas relações com o meio ambiente.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Ciências Contábeis',
-                'descricao' => 'Forma profissionais especializados em controlar e analisar as finanças de empresas, organizações e governos.'
+                'descricao' => 'Forma profissionais especializados em controlar e analisar as finanças de empresas, organizações e governos.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Direito',
-                'descricao' => 'Estuda as leis e normas jurídicas, e forma profissionais aptos para atuar como advogados, juízes, promotores, entre outros.'
+                'descricao' => 'Estuda as leis e normas jurídicas, e forma profissionais aptos para atuar como advogados, juízes, promotores, entre outros.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Economia',
-                'descricao' => 'Curso que estuda as relações de produção, distribuição e consumo de bens e serviços.'
+                'descricao' => 'Curso que estuda as relações de produção, distribuição e consumo de bens e serviços.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Educação Física',
-                'descricao' => 'Estuda o corpo humano, a prática de exercícios físicos e esportes, e forma profissionais para atuar como professores, treinadores, entre outros.'
+                'descricao' => 'Estuda o corpo humano, a prática de exercícios físicos e esportes, e forma profissionais para atuar como professores, treinadores, entre outros.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Engenharia Civil',
-                'descricao' => 'Estuda a construção de edifícios, rodovias, pontes, entre outros, e forma profissionais para projetar e gerenciar essas obras.'
+                'descricao' => 'Estuda a construção de edifícios, rodovias, pontes, entre outros, e forma profissionais para projetar e gerenciar essas obras.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Engenharia de Computação',
-                'descricao' => 'Estuda a concepção e desenvolvimento de sistemas computacionais, hardware e software, e forma profissionais para trabalhar em áreas de tecnologia.'
+                'descricao' => 'Estuda a concepção e desenvolvimento de sistemas computacionais, hardware e software, e forma profissionais para trabalhar em áreas de tecnologia.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Engenharia Elétrica',
-                'descricao' => 'Estuda a geração, transmissão e distribuição de energia elétrica, além de sistemas eletrônicos e de automação, e forma profissionais para projetar e gerenciar essas áreas.'
+                'descricao' => 'Estuda a geração, transmissão e distribuição de energia elétrica, além de sistemas eletrônicos e de automação, e forma profissionais para projetar e gerenciar essas áreas.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Engenharia Mecânica',
-                'descricao' => 'Estuda máquinas, motores, equipamentos e sistemas mecânicos, e forma profissionais para projetar e gerenciar essas áreas.'
+                'descricao' => 'Estuda máquinas, motores, equipamentos e sistemas mecânicos, e forma profissionais para projetar e gerenciar essas áreas.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Enfermagem',
-                'descricao' => 'Estuda a prevenção e tratamento de doenças, e forma profissionais para atuar como enfermeiros em hospitais, clínicas, unidades de saúde, entre outros.'
+                'descricao' => 'Estuda a prevenção e tratamento de doenças, e forma profissionais para atuar como enfermeiros em hospitais, clínicas, unidades de saúde, entre outros.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Farmácia',
-                'descricao' => 'Estuda medicamentos, fármacos, cosméticos e alimentos, e forma profissionais para atuar em farmácias, indústrias farmacêuticas, laboratórios, entre outros.'
+                'descricao' => 'Estuda medicamentos, fármacos, cosméticos e alimentos, e forma profissionais para atuar em farmácias, indústrias farmacêuticas, laboratórios, entre outros.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Fisioterapia',
-                'descricao' => 'Estuda a reabilitação física, prevenção de lesões e tratamento de doenças relacionadas ao corpo humano, e forma profissionais para atuar em clínicas, hospitais, unidades de saúde, entre outros.'
+                'descricao' => 'Estuda a reabilitação física, prevenção de lesões e tratamento de doenças relacionadas ao corpo humano, e forma profissionais para atuar em clínicas, hospitais, unidades de saúde, entre outros.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Jornalismo',
-                'descricao' => 'Curso que forma profissionais para atuar no mercado jornalístico, produzindo conteúdos para diversos meios de comunicação, como jornais, revistas, TV, rádio e internet.'
+                'descricao' => 'Curso que forma profissionais para atuar no mercado jornalístico, produzindo conteúdos para diversos meios de comunicação, como jornais, revistas, TV, rádio e internet.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Medicina',
-                'descricao' => 'Curso que forma médicos capacitados a diagnosticar e tratar doenças e lesões em seres humanos.'
+                'descricao' => 'Curso que forma médicos capacitados a diagnosticar e tratar doenças e lesões em seres humanos.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Nutrição',
-                'descricao' => 'Curso que forma nutricionistas para planejar, supervisionar e avaliar dietas para indivíduos e coletividades.'
+                'descricao' => 'Curso que forma nutricionistas para planejar, supervisionar e avaliar dietas para indivíduos e coletividades.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Odontologia',
-                'descricao' => 'Curso que forma dentistas capacitados a diagnosticar e tratar doenças e lesões na cavidade bucal.'
+                'descricao' => 'Curso que forma dentistas capacitados a diagnosticar e tratar doenças e lesões na cavidade bucal.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Psicologia',
-                'descricao' => 'Curso que forma psicólogos para diagnosticar e tratar distúrbios mentais e emocionais, além de estudar o comportamento humano.'
+                'descricao' => 'Curso que forma psicólogos para diagnosticar e tratar distúrbios mentais e emocionais, além de estudar o comportamento humano.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Publicidade e Propaganda',
-                'descricao' => 'Curso que forma profissionais para atuar no mercado publicitário, planejando, criando e divulgando campanhas publicitárias para produtos, marcas e serviços.'
+                'descricao' => 'Curso que forma profissionais para atuar no mercado publicitário, planejando, criando e divulgando campanhas publicitárias para produtos, marcas e serviços.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Química',
-                'descricao' => 'Curso que forma químicos capacitados a desenvolver e aperfeiçoar processos químicos e produtos para diversos fins.'
+                'descricao' => 'Curso que forma químicos capacitados a desenvolver e aperfeiçoar processos químicos e produtos para diversos fins.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Relações Internacionais',
-                'descricao' => 'Curso que forma profissionais capazes de analisar as relações entre países, organizações e empresas internacionais, buscando soluções para problemas globais.'
+                'descricao' => 'Curso que forma profissionais capazes de analisar as relações entre países, organizações e empresas internacionais, buscando soluções para problemas globais.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Serviço Social',
-                'descricao' => 'Curso que forma assistentes sociais para atuar no planejamento e execução de políticas públicas e de ações sociais para pessoas e grupos em situação de vulnerabilidade.'
+                'descricao' => 'Curso que forma assistentes sociais para atuar no planejamento e execução de políticas públicas e de ações sociais para pessoas e grupos em situação de vulnerabilidade.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
             [
                 'nome' => 'Veterinária',
-                'descricao' => 'Curso que forma médicos veterinários capacitados a diagnosticar e tratar doenças em animais, além de promover a saúde e o bem-estar animal.'
+                'descricao' => 'Curso que forma médicos veterinários capacitados a diagnosticar e tratar doenças em animais, além de promover a saúde e o bem-estar animal.',
+                'created_at'=>now(),
+                'updated_at'=>now()
             ],
         ];
         $this->verifyTable('cursos', $cursos);
@@ -140,6 +189,7 @@ class PessoaCursoFactory extends customFactory
      */
     protected function insertBolsas()
     {
+        echo "    start insertBolsas()". PHP_EOL;
         $bolsas = [
             ['nome' => 'Bolsa de estudo para alunos de escolas públicas',
             'valor' =>300],
@@ -169,6 +219,7 @@ class PessoaCursoFactory extends customFactory
      */
     protected function inserirSituacaoAluno()
     {
+        echo "    start inserirSituacaoAluno()". PHP_EOL;
         $situacao = [
             ['situacao'=>'Matriculado'],
             ['situacao'=>'Formado'],
@@ -192,6 +243,7 @@ class PessoaCursoFactory extends customFactory
      */
     protected function insertNivelEscolar()
     {
+        echo "    start insertNivelEscolar()". PHP_EOL;
         $nivel_escolar = [
             ['nome' => 'Ensino Infantil'],
             ['nome' => 'Ensino Fundamental'],
@@ -209,6 +261,7 @@ class PessoaCursoFactory extends customFactory
      */
     protected function insertAno()
     {
+        echo "    start insertAno()". PHP_EOL;
         $data = [];
         foreach([['Ensino Infantil', 5], ['Ensino Fundamental',9], ['Ensino Médio', 3],['Cursos Técnicos', 3], ['Cursos Preparatórios', 1]] as $nivel)
         {
@@ -242,6 +295,7 @@ class PessoaCursoFactory extends customFactory
      */
     protected function makePessoa($numero_de_pessoa)
     {
+        echo "    start makePessoa()". PHP_EOL;
         $pessoas = [];
         $alunos = [];
         $professores = [];
@@ -288,7 +342,9 @@ class PessoaCursoFactory extends customFactory
                 'endereco' => $this->faker->address(),
                 'telefone' => (rand(0, 1))? $this->faker->landline(): null,
                 'celular' => (rand(0, 1))? $this->faker->cellphone(): null,
-                'senha' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                'senha' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password,
+                'created_at'=>now(),
+                'updated_at'=>now()
             ];
             $numero_de_pessoa--;
             
@@ -305,7 +361,7 @@ class PessoaCursoFactory extends customFactory
             
         }
 
-        $this->insertDatas('pessoas', $pessoas);
+        $this->verifyTable('pessoas', $pessoas);
 
         $this->makeProfessor($professores);
         $this->makeAluno($alunos);
@@ -319,6 +375,7 @@ class PessoaCursoFactory extends customFactory
      */
     protected function makeProfessor($ids)
     {
+        echo "    start makeProfessor()". PHP_EOL;
         $datas = [];
         $cursos = [];
         foreach($ids as $professor)
@@ -329,7 +386,7 @@ class PessoaCursoFactory extends customFactory
 
             $datas[] = [
                 'id' =>$professor,
-                'experiencia_profissional' => 'Tem experiência em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso->nome.' por '.($this->faker->numberBetween(1, $this->getIdade(\App\Models\Pessoa::find($professor)->data_de_nascimento)-18)).' anos',
+                'experiencia_profissional' => 'Tem experiência em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso->nome.' por '.($this->faker->numberBetween(1, $this->getIdade(Pessoa::find($professor)->data_de_nascimento)-18)).' anos',
             ];
         }
         $this->insertDatas('professors', $datas);
@@ -339,8 +396,9 @@ class PessoaCursoFactory extends customFactory
 
     protected function makeAluno($ids)
     {
+        echo "    start makeAluno()". PHP_EOL;
         $datas = [];
-        $alunos = \App\Models\Pessoa::whereIn('id', $ids)->get();
+        $alunos = Pessoa::whereIn('id', $ids)->get();
 
         
         foreach($alunos as $aluno)
@@ -379,8 +437,9 @@ class PessoaCursoFactory extends customFactory
 
     protected function makePais($pais)
     {
+        echo "    start makePais()". PHP_EOL;
         $datas = [];
-        foreach(\App\Models\Aluno::all() as $aluno)
+        foreach(Aluno::all() as $aluno)
         {
             foreach( $this->faker->randomElements($pais, $count = rand(1, 2) ) as $pai )
             {
@@ -397,6 +456,7 @@ class PessoaCursoFactory extends customFactory
 
     protected function insertMensalidade()
     {
+        echo "    start insertMensalidade()". PHP_EOL;
         $datas = [];
         $alunos = Aluno::all();
 

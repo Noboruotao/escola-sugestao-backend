@@ -47,6 +47,5 @@ class Aluno extends Model
             $areas = $areas->merge($disciplina->areas->diff($areas));
         }
         return $areas;
-    
     }
 }

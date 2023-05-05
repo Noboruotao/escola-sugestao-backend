@@ -20,6 +20,7 @@ class AtividadeExtracurricularFactory extends customFactory
 
     protected function insertTipoAtivExtra()
     {
+        echo "    start insertTipoAtivExtra()". PHP_EOL;
         $datas = [
             ["nome" => "Esportes"],
             ["nome" => "Artes"],
@@ -45,6 +46,7 @@ class AtividadeExtracurricularFactory extends customFactory
 
     protected function insertAtivExtra()
     {
+        echo "    start insertAtivExtra()". PHP_EOL;
         $atividades = [
             ['nome' => 'Futebol', 'tipo_id' => 1],
             ['nome' => 'Vôlei', 'tipo_id' => 1],

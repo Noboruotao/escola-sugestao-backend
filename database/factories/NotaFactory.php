@@ -13,13 +13,14 @@ class NotaFactory extends customFactory
         $notas = new NotaFactory();
 
         $notas->insertNotas();
-        // $notas->inserirAlunoArea();
+        $notas->inserirAlunoArea();
         
     }
 
 
     protected function insertNotas()
     {
+        echo "    start insertNotas()". PHP_EOL;
         $notas = [];
         $aluno_disciplina = [];
 
@@ -67,32 +68,35 @@ class NotaFactory extends customFactory
 
     protected function inserirAlunoArea()
     {
-        $alunos = \App\Models\Aluno::all();
-
+        echo "    start inserirAlunoArea()". PHP_EOL;
         $aluno_area = [];
 
-        foreach($alunos as $aluno)
+        foreach(\App\Models\Aluno::all() as $aluno)
         {
+            // echo "        inserirAlunoArea(".$aluno->pessoa->nome.", id=".$aluno->id.")". PHP_EOL;
             foreach( $aluno->getAlunoArea() as $area)
             {
                 $soma = 0;
                 $num_disciplina = 0;
                 foreach($aluno->disciplinas as $disciplina)
                 {
-                    if( $disciplina->hasArea($area->nome) )
+                    if( $disciplina->hasArea($area->nome))
                     {
                         $soma += $disciplina->pivot->nota_final;
                         $num_disciplina ++;                        
                     }                    
                 }
-
-                $aluno_area[] = [
-                    'aluno_id'=> $aluno->id,
-                    'area_de_conhecimento_id'=> $area->id,
-                    'valor_calculado_por_notas'=> ($soma/$num_disciplina)
-                ];
+                if($soma!=0){
+                    $aluno_area[] = [
+                        'aluno_id'=> $aluno->id,
+                        'area_de_conhecimento_id'=> $area->id,
+                        'valor_calculado_por_notas'=> ($soma/$num_disciplina)
+                    ];
+                }
+                
             }
-            $this->insertDatas('aluno_areas_de_conhecimento', $aluno_area);
         }
+        echo "        INSERT inserirAlunoArea()". PHP_EOL;
+        $this->insertDatas('aluno_areas_de_conhecimento', $aluno_area);
     }
 }

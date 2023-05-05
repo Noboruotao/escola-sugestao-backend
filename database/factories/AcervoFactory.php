@@ -8,8 +8,7 @@ use Illuminate\Support\Str;
 
 class AcervoFactory extends customFactory
 {
-    
-    public function definition()
+    public function definition($num_editoras = 50, $num_autores = 150, $num_acervos = 500)
     {
         dump('Starting Acervo seeding');
         $acervoSeeder = new AcervoFactory();
@@ -17,14 +16,15 @@ class AcervoFactory extends customFactory
         $acervoSeeder->insertTipoAcervo();
         $acervoSeeder->insertEstadoAcervo();
         $acervoSeeder->insertSituacaoAcervo();
+        
         $acervoSeeder->insertCategoriaAcervo();
         $acervoSeeder->insertIdiomas();
         $acervoSeeder->insertEstados();
 
-        $acervoSeeder->insertEditoras(200);
-        $acervoSeeder->insertAutores(150);
+        $acervoSeeder->insertEditoras($num_editoras);
+        $acervoSeeder->insertAutores($num_autores);
         
-        $acervoSeeder->insertAcervo(1000);
+        $acervoSeeder->insertAcervo($num_acervos);
     }
 
 
@@ -34,6 +34,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertTipoAcervo()
     {
+        echo "    start insertTipoAcervo()". PHP_EOL;
         $tipos_acervo = [
                     ['tipo'=>'Livro', 'multa'=>0.6],
                     ['tipo'=>'Periódicos', 'multa'=>0.6],
@@ -55,6 +56,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertEstadoAcervo()
     {
+        echo "    start insertEstadoAcervo()". PHP_EOL;
         $estados_acervo = [
             ['estado'=>'Bom'],
             ['estado'=>'Ótimo'],
@@ -75,6 +77,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertSituacaoAcervo()
     {
+        echo "    start insertSituacaoAcervo()". PHP_EOL;
         $situacao_acervo = [
             ['situacao'=>'Disponível'],
             ['situacao'=>'Emprestado'],
@@ -94,6 +97,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertCategoriaAcervo()
     {
+        echo "    start insertCategoriaAcervo()". PHP_EOL;
         $categorias_acervo = [
             ['categoria' => 'Ação e Aventura'],
             ['categoria' => 'Arte e Música'],
@@ -136,6 +140,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertIdiomas()
     {
+        echo "    start insertIdiomas()". PHP_EOL;
         $idiomas = [
             ['idioma' => 'Português'],
             ['idioma' => 'Inglês'],
@@ -154,6 +159,7 @@ class AcervoFactory extends customFactory
         ];
         $this->verifyTable('idiomas', $idiomas);
 
+        echo "    start insertNacionalidades()". PHP_EOL;
         $nacionalidades = [
             ['nacionalidade' => 'Brasil', 
             'idioma_oficial_id' => array_search(['idioma'=>'Português'], $idiomas)+1],
@@ -197,6 +203,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertEstados()
     {
+        echo "    start insertEstados()". PHP_EOL;
         $estados = [
             ['estado' => 'Acre', 'sigla' => 'AC'],
             ['estado' => 'Alagoas', 'sigla' => 'AL'],
@@ -236,6 +243,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertEditoras($numero_de_editoras=10)
     {
+        echo "    start insertEditoras()". PHP_EOL;
         $editoras = [];
         while($numero_de_editoras > 0)
         {
@@ -261,6 +269,8 @@ class AcervoFactory extends customFactory
      */
     protected function insertAutores($numero_de_autores=10)
     {
+        echo "    start insertAutores()". PHP_EOL;
+
         $autores = $this->makeAutores($numero_de_autores);
         $this->insertDatas('autores', $autores);
 
@@ -318,13 +328,13 @@ class AcervoFactory extends customFactory
         {
             $nacionalidade = DB::table('nacionalidades')->inRandomOrder()->first()->id;
             $faker = \Faker\Factory::create( $this->getLocale($nacionalidade) );
-            $data_de_nascimento = $faker->date($format='Y-m-d',);
+            $data_de_nascimento = $faker->dateTimeBetween('-90 years', '-18 years')->format('Y-m-d');
 
             $autores[] = [
                 'nome' => Str::transliterate ($faker->name),
                 'nacionalidade_id' => $nacionalidade,
                 'data_de_nascimento' => $data_de_nascimento,
-                'data_de_falecimento' => (rand(0, 1) ===1)?$faker->date($format='Y-m-d', $min=$data_de_nascimento, $max='now'): null
+                'data_de_falecimento' => (rand(0, 1) ===1)?$faker->dateTimeBetween($data_de_nascimento, 'now')->format('Y-m-d'): null
             ];
 
             $numero_de_autores--;
@@ -338,6 +348,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertAcervo($numero_de_acervos=10)
     {
+        echo "    start insertAcervo()". PHP_EOL;
         $acervos = $this->makeAcervo($numero_de_acervos);
         $this->insertDatas('acervos', $acervos);
     }
@@ -370,7 +381,9 @@ class AcervoFactory extends customFactory
                 'estado_id' => DB::table('estado_do_acervo')->inRandomOrder()->first()->id,
                 'situacao_id' => DB::table('situacao_do_acervo')->inRandomOrder()->first()->id,
                 'IBNS' => ($tipo_acervo==1)? $this->faker->numerify('###-#-##-######-#'): NULL,
-                'ano_de_publicacao' => $this->faker->date($format='Y', $max='now')
+                'ano_de_publicacao' => $this->faker->date($format='Y', $max='now'),
+                'created_at'=>now(),
+                'updated_at'=>now()
             ];
             $numero_de_acervos--;
         }

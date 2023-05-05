@@ -19,6 +19,7 @@ class ClasseFactory extends customFactory
 
     protected function insertClasse()
     {
+        echo "    start insertClasse()". PHP_EOL;
         $datas = [];
         $disciplinas = \App\Models\Disciplina::all();
         foreach($disciplinas as $disciplina)
@@ -29,7 +30,9 @@ class ClasseFactory extends customFactory
                 {
                     $datas[] = [
                         'professor_id'=> $professor->id,
-                        'disciplina_id'=> $disciplina->id
+                        'disciplina_id'=> $disciplina->id,
+                        'created_at'=>now(),
+                        'updated_at'=>now()
                     ];
                 }    
 

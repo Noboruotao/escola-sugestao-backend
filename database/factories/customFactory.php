@@ -31,7 +31,7 @@ abstract class customFactory extends Factory
             return $data;
         });
 
-        foreach(array_chunk($data->toArray(), 2000) as $data_parts)
+        foreach(array_chunk($data->toArray(), 200) as $data_parts)
         {
             DB::table($table)->insert($data_parts);    
         }
