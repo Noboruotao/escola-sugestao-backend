@@ -31,7 +31,7 @@ class CreateAcervosTable extends Migration
         });
 
 
-        Schema::create('autores', function (Blueprint $table){
+        Schema::create('autors', function (Blueprint $table){
             $table->id();
             $table->string('nome');
             $table->foreignId('nacionalidade_id')
@@ -119,6 +119,7 @@ class CreateAcervosTable extends Migration
                     ->onDelete('cascade');
             $table->string('IBNS', 21)->nullable();
             $table->string('ano_de_publicacao', 4);
+            $table->string('capa')->nullable()->default(null);
             $table->timestamps();
         });
 

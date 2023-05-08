@@ -31,6 +31,7 @@ class CreatePessoasTable extends Migration
             $table->string('telefone', 20)->nullable();
             $table->string('celular', 20)->nullable();
             $table->string('senha');
+            $table->string('foto')->nullable()->default(null);
             $table->timestamps();
             $table->softDeletes();
         });

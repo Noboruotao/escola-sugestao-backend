@@ -14,7 +14,12 @@ class NotaFactory extends customFactory
 
         $notas->insertNotas();
         $notas->inserirAlunoArea();
-        
+    }
+
+
+    protected function gerarRandomNota()
+    {
+        return (($this->faker->biasedNumberBetween($min = 0, $max = 1000, $function = 'sqrt') ) / 100.0);
     }
 
 
@@ -31,11 +36,9 @@ class NotaFactory extends customFactory
                 $disciplinas = \App\Models\Ano::find($i)->disciplinas;
                 foreach($disciplinas as $disciplina)
                 {
-                    $notaP1 = (($this->faker->biasedNumberBetween($min = 0, $max = 1000, $function = 'sqrt') ) / 100.0);
-                    $notaP2 = (($this->faker->biasedNumberBetween($min = 0, $max = 1000, $function = 'sqrt') ) / 100.0);
+                    $notaP1 = $this->gerarRandomNota();
+                    $notaP2 = $this->gerarRandomNota();
 
-                    $nota_Final = ($notaP1 * 4 + $notaP2 * 6)/10;
-                    
                     $notas[] = [
                         'aluno_id'=>$aluno->id,
                         'tipo_de_avaliacao_id'=> 1,
@@ -51,6 +54,37 @@ class NotaFactory extends customFactory
                         'nota'=> $notaP2,
                         'peso_da_nota'=> 6
                     ];
+
+                    if( ($notaP1 * 4 + $notaP2 * 6)/10 )
+                    {
+                        if( $notaP1 < $notaP2 )
+                        {
+                            $notaSub = $this->gerarRandomNota();
+                            $notaP1 = ($notaSub>$notaP1)?$notaSub: $notaP1;
+                            $notas[] = [
+                                'aluno_id'=>$aluno->id,
+                                'tipo_de_avaliacao_id'=> 4,
+                                'disciplina_id'=> $disciplina->id,
+                                'nota'=> $notaP1,
+                                'peso_da_nota'=> 4
+                            ];
+
+                        }else{
+
+                            $notaSub = $this->gerarRandomNota();
+                            $notaP2 = ($notaSub>$notaP2)?$notaSub: $notaP2;
+                            $notas[] = [
+                                'aluno_id'=>$aluno->id,
+                                'tipo_de_avaliacao_id'=> 4,
+                                'disciplina_id'=> $disciplina->id,
+                                'nota'=> $notaP2,
+                                'peso_da_nota'=> 6
+                            ];
+
+                        }
+
+                        $nota_Final = ($notaP1 * 4 + $notaP2 * 6)/10;
+                    }
 
                     $aluno_disciplina[] = [
                         'aluno_id'=> $aluno->id,
@@ -73,7 +107,6 @@ class NotaFactory extends customFactory
 
         foreach(\App\Models\Aluno::all() as $aluno)
         {
-            // echo "        inserirAlunoArea(".$aluno->pessoa->nome.", id=".$aluno->id.")". PHP_EOL;
             foreach( $aluno->getAlunoArea() as $area)
             {
                 $soma = 0;

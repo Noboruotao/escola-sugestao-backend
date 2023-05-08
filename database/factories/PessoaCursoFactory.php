@@ -329,6 +329,21 @@ class PessoaCursoFactory extends customFactory
             }while( $rg == null );
             
             $idade = $this->getIdade($data_nascimento);
+            $genero = $this->faker->randomElement(['Masculino', 'Feminino']);
+
+            if($idade < 10 && $genero == 'Masculino'){
+                $foto = public_path('images/pessoa_foto/boy_'.$this->faker->randomElement(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']).'.png');
+            }else if($idade < 10 && $genero == 'Feminino'){
+                $foto = public_path('images/pessoa_foto/girl_'.$this->faker->randomElement(['13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']).'.png');
+            }else if($idade < 18 && $genero == 'Masculino'){
+                $foto = public_path('images/pessoa_foto/youngman_'.$this->faker->randomElement(['25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36']).'.png');
+            }else if($idade < 18 && $genero == 'Feminino'){
+                $foto = public_path('images/pessoa_foto/youngwoman_'.$this->faker->randomElement(['37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48']).'.png');
+            }else if($genero == 'Masculino'){
+                $foto = public_path('images/pessoa_foto/man_'.$this->faker->randomElement(['49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60']).'.png');
+            }else if($genero == 'Feminino'){
+                $foto = public_path('images/pessoa_foto/woman_'.$this->faker->randomElement(['61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72']).'.png');
+            }
 
             $pessoas[] = [
                 'nome' => $prim_nome . ' ' . $last_nome,
@@ -336,13 +351,14 @@ class PessoaCursoFactory extends customFactory
                 'ultimo_nome' => $last_nome,
                 'email' => $prim_nome.'.'.$this->faker->email(),
                 'data_de_nascimento' => $data_nascimento,
-                'genero' =>$this->faker->randomElement(['Masculino', 'Feminino']),
+                'genero' => $genero,
                 'cpf' => $cpf,
                 'rg' => $rg,
                 'endereco' => $this->faker->address(),
                 'telefone' => (rand(0, 1))? $this->faker->landline(): null,
                 'celular' => (rand(0, 1))? $this->faker->cellphone(): null,
                 'senha' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password,
+                'foto'=> $foto,
                 'created_at'=>now(),
                 'updated_at'=>now()
             ];

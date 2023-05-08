@@ -8,6 +8,9 @@ use Illuminate\Support\Str;
 
 class AcervoFactory extends customFactory
 {
+    /**
+     * $num_editoras: numero de Editoras para 
+     */
     public function definition($num_editoras = 50, $num_autores = 150, $num_acervos = 500)
     {
         dump('Starting Acervo seeding');
@@ -272,8 +275,7 @@ class AcervoFactory extends customFactory
         echo "    start insertAutores()". PHP_EOL;
 
         $autores = $this->makeAutores($numero_de_autores);
-        $this->insertDatas('autores', $autores);
-
+        $this->insertDatas('autors', $autores);
     }
 
 
@@ -361,7 +363,7 @@ class AcervoFactory extends customFactory
     protected function makeAcervo($numero_de_acervos)
     {
         $acervos =[];
-        $tipos_acervo_qnt = DB::table('tipo_de_acervo')->count();
+        $tipos_acervo_qnt = \App\models\TipoAcervo::count();
 
         while($numero_de_acervos>0)
         {
@@ -369,19 +371,40 @@ class AcervoFactory extends customFactory
                 return 11 - $x;
             });
 
+            if($tipo_acervo == 1){
+                $capa = public_path('images/acervo_capa/book.png');
+            }else if($tipo_acervo == 2){
+                $capa = public_path('images/acervo_capa/book1_green.png');
+            }else if($tipo_acervo == 3){
+                $capa = public_path('images/acervo_capa/book2_orange.png');
+            }else if($tipo_acervo == 4){
+                $capa = public_path('images/acervo_capa/media_disc_silver.png');
+            }else if($tipo_acervo == 5){
+                $capa = public_path('images/acervo_capa/map_book.png');
+            }else if($tipo_acervo == 6){
+                $capa = public_path('images/acervo_capa/media_digital.png');
+            }else if($tipo_acervo == 7){
+                $capa = public_path('images/acervo_capa/book_kamishibai_set.png');
+            }else if($tipo_acervo == 8){
+                $capa = public_path('images/acervo_capa/book3_blue.png');
+            }else if($tipo_acervo == 9){
+                $capa = public_path('images/acervo_capa/book_yoko.png');
+            }
+
             $acervos[] = [
                 'titulo' => $this->faker->sentence($nbWords = 4, $variableNbWords = true),
                 'resumo' => $this->faker->paragraph(3),
                 'tradutor' => $this->faker->name(),
-                'autor_id' =>   DB::table('autores')->inRandomOrder()->first()->id,
-                'idiomas_id' => DB::table('idiomas')->inRandomOrder()->first()->id,
-                'editora_id' => DB::table('editoras')->inRandomOrder()->first()->id,
-                'categoria_id' => DB::table('categorias')->inRandomOrder()->first()->id,
+                'autor_id' =>   \App\Models\Autor::inRandomOrder()->first()->id,
+                'idiomas_id' => \App\Models\Idioma::where('idioma', 'Português')->first()->id,
+                'editora_id' => \App\Models\Editora::inRandomOrder()->first()->id,
+                'categoria_id' => \App\Models\Categoria::inRandomOrder()->first()->id,
                 'tipo_id' => $tipo_acervo,
-                'estado_id' => DB::table('estado_do_acervo')->inRandomOrder()->first()->id,
-                'situacao_id' => DB::table('situacao_do_acervo')->inRandomOrder()->first()->id,
+                'estado_id' => \App\Models\EstadoAcervo::inRandomOrder()->first()->id,
+                'situacao_id' => \App\Models\SituacaoAcervo::inRandomOrder()->first()->id,
                 'IBNS' => ($tipo_acervo==1)? $this->faker->numerify('###-#-##-######-#'): NULL,
                 'ano_de_publicacao' => $this->faker->date($format='Y', $max='now'),
+                'capa'=> $capa,
                 'created_at'=>now(),
                 'updated_at'=>now()
             ];

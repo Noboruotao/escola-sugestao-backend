@@ -37,7 +37,6 @@ class ClasseFactory extends customFactory
                 }    
 
             }while( end($datas)['disciplina_id'] != $disciplina->id );
-            
         }
         $this->insertDatas('classes', $datas);
     }
@@ -45,6 +44,8 @@ class ClasseFactory extends customFactory
 
     protected function alunoClasse()
     {
+        echo "    start alunoClasse()". PHP_EOL;
+
        $datasAlunoClasse = [];
        $datasAlunoDisciplina = [];
        
@@ -69,7 +70,6 @@ class ClasseFactory extends customFactory
                         'disciplina_id'=> $disciplina->id,
                         'situacao_id'=> 11
                     ];
-                    
                 }
             }
         }

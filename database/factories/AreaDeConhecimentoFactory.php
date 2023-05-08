@@ -23,7 +23,7 @@ class AreaDeConhecimentoFactory extends customFactory
         $areas->attributeAreasToAcervo();
 
         $areas->attributeDisciplinaToAno();
-        $areas->materialSugerido();
+        $areas->insertMaterialSugerido();
     }
 
 
@@ -146,13 +146,14 @@ class AreaDeConhecimentoFactory extends customFactory
             ['nome'=> 'História'],
             ['nome'=> 'Teoria e filosofia da História'],
         ];
-        $this->insertDatas('areas_de_conhecimentos', $areas_de_conhecimento);
+        $this->verifyTable('areas_de_conhecimentos', $areas_de_conhecimento);
     }
+
 
     protected function attributeAreasToDisciplina()
     {
+        echo "    start attributeAreasToDisciplina()". PHP_EOL; 
         $datas =[];
-
         $area_disciplina = [
             ["nome" => "Cálculo I", "areas" =>['Matemática', 'Estatisticas', 'Física']],
             ["nome" => "Cálculo II", "areas" =>['Matemática', 'Estatisticas', 'Física']],
@@ -436,15 +437,14 @@ class AreaDeConhecimentoFactory extends customFactory
                 }
             };
         }
-        $this->insertDatas('areas_de_conhecimento_disciplina', $datas);
-
-
-    
+        $this->verifyTable('areas_de_conhecimento_disciplina', $datas);
     }
 
 
     protected function parametroAreasToCurso()
     {
+        echo "    start parametroAreasToCurso()". PHP_EOL; 
+
         $datas = [];
         $cursos = [
             [
@@ -561,14 +561,14 @@ class AreaDeConhecimentoFactory extends customFactory
                 }
             }
         }
-        $this->insertDatas('parametros_para_sugerir_curso', $datas);
+        $this->verifyTable('parametros_para_sugerir_curso', $datas);
     }
 
 
     protected function attributeAreasToAtivExtra()
     {
+        echo "    start attributeAreasToAtivExtra()". PHP_EOL; 
         $datas = [];
-
         $atividades = [
             ['nome' => 'Futebol', 'areas'=>['Anatomia Humana']],
             ['nome' => 'Vôlei', 'areas'=>['Anatomia Humana']],
@@ -735,14 +735,15 @@ class AreaDeConhecimentoFactory extends customFactory
                 ];
             }
         }
-        $this->insertDatas('areas_de_conhecimento_atividades_extracurricular', $datas);
+        $this->verifyTable('areas_de_conhecimento_atividades_extracurricular', $datas);
     }
 
 
     protected function parametroAreasAtivExtra()
     {
-        $datas = [];
+        echo "    start parametroAreasAtivExtra()". PHP_EOL; 
 
+        $datas = [];
         $atividades = [
             ['nome' => 'Ginástica Rítmica', 'areas'=>['Anatomia Humana'=>8, 'Música'=>5]],
             ['nome' => 'Atletismo', 'areas'=>['Anatomia Humana'=>8]],
@@ -868,14 +869,14 @@ class AreaDeConhecimentoFactory extends customFactory
                 ];
             }
         }
-
-        $this->insertDatas('parametro_para_sugerir_atividade_extracurricular', $datas);
-    
+        $this->verifyTable('parametro_para_sugerir_atividade_extracurricular', $datas);
     }
 
 
     protected function attributeAreasToAcervo()
     {
+        echo "    start attributeAreasToAcervo()". PHP_EOL; 
+
         $acervos = \App\Models\Acervo::all();
         $datas = [];
 
@@ -889,14 +890,13 @@ class AreaDeConhecimentoFactory extends customFactory
                 ];
             }
         }
-        $this->insertDatas('acervo_areas_de_conhecimento', $datas);
+        $this->verifyTable('acervo_areas_de_conhecimento', $datas);
     }
 
 
     protected function getDisciplinaPorArea($area)
     {
         $area_id = AreasDeConhecimento::where('nome', $area)->first()->id;
-
         $disciplina_sem_ano = DB::table('disciplinas')
             ->whereIn('id', function ($query) use ($area_id) {
                 $query->select('disciplina_id')
@@ -911,15 +911,25 @@ class AreaDeConhecimentoFactory extends customFactory
             })
             ->inRandomOrder()
             ->first();
-
+        
         if ($disciplina_sem_ano) {
             return $disciplina_sem_ano->id;
         }
     }
 
 
+    protected function attributeDisciplinaToAnoDatas($ano, $disciplina)
+    {
+        return [
+            'ano_id'=>$ano->id,
+            'disciplina_id'=> $disciplina
+        ];
+    }
+
+
     protected function attributeDisciplinaToAno()
     {
+        echo "    start attributeDisciplinaToAno()". PHP_EOL; 
         $ano_disciplina  = [];
 
         $anos = DB::table('anos')
@@ -932,71 +942,43 @@ class AreaDeConhecimentoFactory extends customFactory
             if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==1){
                 foreach(['Linguagem e Literatura I', 'Matemática I', 'Ciências I', 'Artes Visuais I', 'Música I', 'Educação Física I', 'História e Geografia I'] as $disciplina)
                 {
-                    $ano_disciplina[] = [
-                        'ano_id'=>$ano->id,
-                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
-                    ];
+                    $ano_disciplina[] =$this->attributeDisciplinaToAnoDatas($ano, Disciplina::where('nome', $disciplina)->first()->id );
                 }
             }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==2){
                 foreach(['Linguagem e Literatura II', 'Matemática II', 'Ciências II', 'Artes Visuais II', 'Música II', 'Educação Física II', 'História e Geografia II'] as $disciplina)
                 {
-                    $ano_disciplina[] = [
-                        'ano_id'=>$ano->id,
-                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
-                    ];
+                    $ano_disciplina[] = $this->attributeDisciplinaToAnoDatas($ano, Disciplina::where('nome', $disciplina)->first()->id );
                 }
             }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==3){
                 foreach(['Linguagem e Literatura III', 'Matemática III', 'Ciências III', 'Artes Visuais III', 'Música III', 'Educação Física III', 'História e Geografia III'] as $disciplina)
                 {
-                    $ano_disciplina[] = [
-                        'ano_id'=>$ano->id,
-                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
-                    ];
+                    $ano_disciplina[] = $this->attributeDisciplinaToAnoDatas($ano, Disciplina::where('nome', $disciplina)->first()->id );
                 }
             }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==4){
                 foreach(['Linguagem e Literatura IV', 'Matemática IV', 'Ciências IV', 'Artes Visuais IV', 'Música IV', 'Educação Física IV', 'História e Geografia IV'] as $disciplina)
                 {
-                    $ano_disciplina[] = [
-                        'ano_id'=>$ano->id,
-                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
-                    ];
+                    $ano_disciplina[] = $this->attributeDisciplinaToAnoDatas($ano, Disciplina::where('nome', $disciplina)->first()->id );
                 }
             }else if($ano->nivel_escolar=='Ensino Infantil' && $ano->ano==5){
                 foreach(['Linguagem e Literatura V', 'Matemática V', 'Ciências V', 'Artes Visuais V', 'Música V', 'Educação Física V', 'História e Geografia V'] as $disciplina)
                 {
-                    $ano_disciplina[] = [
-                        'ano_id'=>$ano->id,
-                        'disciplina_id'=> Disciplina::where('nome', $disciplina)->first()->id
-                    ];
+                    $ano_disciplina[] = $this->attributeDisciplinaToAnoDatas($ano, Disciplina::where('nome', $disciplina)->first()->id );
                 }
             }else{
-                    $ano_disciplina[] = [
-                        'ano_id'=> $ano->id,
-                        'disciplina_id'=> $this->getDisciplinaPorArea('Matemática')
-                    ]; 
-                    $ano_disciplina[] = [
-                        'ano_id'=> $ano->id,
-                        'disciplina_id'=> $this->getDisciplinaPorArea('Ciências e Conhecimentos em Geral')
-                    ]; 
-                    $ano_disciplina[] = [
-                        'ano_id'=> $ano->id,
-                        'disciplina_id'=> $this->getDisciplinaPorArea('Geografia')
-                    ]; 
-                    $ano_disciplina[] = [
-                        'ano_id'=> $ano->id,
-                        'disciplina_id'=> $this->getDisciplinaPorArea('História')
-                    ]; 
+                foreach(['Matemática', 'Ciências e Conhecimentos em Geral', 'Geografia', 'História'] as $area)
+                {
+                    $ano_disciplina[] = $this->attributeDisciplinaToAnoDatas($ano, $this->getDisciplinaPorArea($area) );
+                }
             }
             $this->insertDatas('ano_disciplina', $ano_disciplina);
             $ano_disciplina = array();
         }
-
-        
     }
 
 
-    protected function materialSugerido()
+    protected function insertMaterialSugerido()
     {
+        echo "    start insertMaterialSugerido()". PHP_EOL; 
         $datas = [];
 
         $acervos = \App\Models\Acervo::all();

@@ -56,6 +56,8 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributeRolesToAlunos()
     {
+        echo "    start attributeRolesToAlunos()". PHP_EOL;
+
         $model_has_roles =[];
         foreach(\App\Models\Aluno::all()->toArray() as $aluno)
         {
@@ -71,6 +73,8 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributeRolesToProfessor()
     {
+        echo "    start attributeRolesToProfessor()". PHP_EOL;
+
         $model_has_roles =[];
         foreach(\App\Models\Professor::all()->toArray() as $professor)
         {
@@ -106,6 +110,8 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributeRolesToPais()
     {
+        echo "    start attributeRolesToPais()". PHP_EOL;
+
         $model_has_roles = [];
         $pais = \App\Models\Pessoa::whereDoesntHave('Roles')->get();
         foreach($pais as $pai)
@@ -122,6 +128,7 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function insertPermissions()
     {
+        echo "    start insertPermissions()". PHP_EOL;
         $datas = [];
 
         $bases = [
@@ -171,8 +178,26 @@ class PermissionAndRoleFactory extends customFactory
     }
 
 
+    protected function attributePermissionToRoleDatas($rolePermission)
+    {
+        foreach($rolePermission as $role)
+        {
+            foreach($role['permissions'] as $permission)
+            {
+                $datas[] = [
+                    'permission_id'=> Permission::where('name', $permission)->value('id'),
+                    'role_id'=> Role::where('name', $role['name'])->value('id')
+                ];
+            }
+        }
+        return $datas;
+    }
+
+
     protected function attributePermissionToRole()
     {
+        echo "    start attributePermissionToRole()". PHP_EOL;
+
         $datas = [];
 
         $rolePermission = [
@@ -381,18 +406,6 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
         ];
-
-        foreach($rolePermission as $role)
-        {
-            foreach($role['permissions'] as $permission)
-            {
-                $datas[] = [
-                    'permission_id'=> Permission::where('name', $permission)->value('id'),
-                    'role_id'=> Role::where('name', $role['name'])->value('id')
-                ];
-            }
-        }
-        $this->verifyTable('role_has_permissions', $datas);
-    
+        $this->verifyTable('role_has_permissions', $this->attributePermissionToRoleDatas($rolePermission));
     }
 }
