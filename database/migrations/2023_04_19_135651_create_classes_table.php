@@ -22,8 +22,7 @@ class CreateClassesTable extends Migration
                     ->constrained('professors');
             $table->foreignId('disciplina_id')
                     ->constrained('disciplinas');
-            $table->integer('presença')->default(100);
-            $table->integer('faltas')->default(0);
+            
             $table->timestamps();
         });
 
@@ -35,6 +34,8 @@ class CreateClassesTable extends Migration
             $table->foreignId('classe_id')
                     ->constrained('classes')
                     ->onDelete('cascade');
+            $table->integer('presença')->default(100);
+            $table->integer('faltas')->default(0);
         });
 
     }

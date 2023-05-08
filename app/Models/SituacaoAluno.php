@@ -10,5 +10,9 @@ class SituacaoAluno extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'situacao_aluno';
+
+    protected $fillable = [
+        'situacao'
+    ];
     
 }

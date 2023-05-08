@@ -9,6 +9,16 @@ class Disciplina extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'nome',
+        'carga_horaria',
+    ];
+
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at',
+    ];
 
     public function areas()
     {

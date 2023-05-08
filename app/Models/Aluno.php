@@ -10,6 +10,7 @@ class Aluno extends Model
     use HasFactory;
     public $timestamps = false;
 
+    protected $fillable = ['id', 'ano_id', 'situacao_id'];
 
     /**
      * acessar os dados de Pessoa com mesmo id

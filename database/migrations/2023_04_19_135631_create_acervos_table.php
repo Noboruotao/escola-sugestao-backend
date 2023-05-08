@@ -17,9 +17,9 @@ class CreateAcervosTable extends Migration
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         
         Schema::create('idiomas', function (Blueprint $table){
-                    $table->id();
-                    $table->string('idioma');
-                });
+                $table->id();
+                $table->string('idioma');
+        });
 
 
         Schema::create('nacionalidades', function (Blueprint $table){
@@ -99,7 +99,7 @@ class CreateAcervosTable extends Migration
             $table->foreignId('autor_id')
                     ->constrained('autores')
                     ->onDelete('cascade');
-            $table->foreignId('idiomas_id')
+            $table->foreignId('idioma_id')
                     ->constrained('idiomas')
                     ->onDelete('cascade');
             $table->foreignId('editora_id')

@@ -10,7 +10,7 @@ class Bolsa extends Model
     use HasFactory;
     public $timestamps = false;
 
-
+    protected $fillable = ['nome', 'valor'];
 
 
     public function getValorMensalidade($id, $valor_bruto=1500)

@@ -10,4 +10,9 @@ class TipoAcervo extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'tipo_de_acervo';
+
+    protected $fillable = [
+        'tipo',
+        'multa'
+    ];
 }

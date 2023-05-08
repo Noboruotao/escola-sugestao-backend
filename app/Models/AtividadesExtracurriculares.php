@@ -13,4 +13,14 @@ class AtividadesExtracurriculares extends Model
     protected $table = 'atividade_extracurriculares';
     use SoftDeletes;
 
+    protected $fillable = [
+        'nome',
+        'tipo_id',
+        'ativo'
+    ];
+
+    protected $guarded = [
+        'id'
+    ];
+    
 }

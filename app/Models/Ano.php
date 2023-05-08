@@ -9,10 +9,15 @@ class Ano extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['nivel_escolar_id', 'ano'];
+
+    protected $guarded = ['id'];
+
+
 
     public function nivelEscolar()
     {
-        return $this->belongsTo(NivelEscolar::class, 'nivel_escolar_id', 'id');
+        return $this->belongsTo(NivelEscolar::class);
     }
 
 

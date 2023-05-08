@@ -10,6 +10,17 @@ class Nacionalidade extends Model
     use HasFactory;
     public $timestamps = false;
 
+    protected $fillable = [
+        'nacionalidade',
+        'idioma_oficial_id',
+    ];
+
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at',
+    ];
+
 
     public function idioma()
     {

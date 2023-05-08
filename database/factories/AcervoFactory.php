@@ -372,23 +372,23 @@ class AcervoFactory extends customFactory
             });
 
             if($tipo_acervo == 1){
-                $capa = public_path('images/acervo_capa/book.png');
+                $capa = 'images/acervo_capa/book.png';
             }else if($tipo_acervo == 2){
-                $capa = public_path('images/acervo_capa/book1_green.png');
+                $capa = 'images/acervo_capa/book1_green.png';
             }else if($tipo_acervo == 3){
-                $capa = public_path('images/acervo_capa/book2_orange.png');
+                $capa = 'images/acervo_capa/book2_orange.png';
             }else if($tipo_acervo == 4){
-                $capa = public_path('images/acervo_capa/media_disc_silver.png');
+                $capa = 'images/acervo_capa/media_disc_silver.png';
             }else if($tipo_acervo == 5){
-                $capa = public_path('images/acervo_capa/map_book.png');
+                $capa = 'images/acervo_capa/map_book.png';
             }else if($tipo_acervo == 6){
-                $capa = public_path('images/acervo_capa/media_digital.png');
+                $capa = 'images/acervo_capa/media_digital.png';
             }else if($tipo_acervo == 7){
-                $capa = public_path('images/acervo_capa/book_kamishibai_set.png');
+                $capa = 'images/acervo_capa/book_kamishibai_set.png';
             }else if($tipo_acervo == 8){
-                $capa = public_path('images/acervo_capa/book3_blue.png');
+                $capa = 'images/acervo_capa/book3_blue.png';
             }else if($tipo_acervo == 9){
-                $capa = public_path('images/acervo_capa/book_yoko.png');
+                $capa = 'images/acervo_capa/book_yoko.png';
             }
 
             $acervos[] = [
@@ -396,7 +396,7 @@ class AcervoFactory extends customFactory
                 'resumo' => $this->faker->paragraph(3),
                 'tradutor' => $this->faker->name(),
                 'autor_id' =>   \App\Models\Autor::inRandomOrder()->first()->id,
-                'idiomas_id' => \App\Models\Idioma::where('idioma', 'Português')->first()->id,
+                'idioma_id' => \App\Models\Idioma::where('idioma', 'Português')->first()->id,
                 'editora_id' => \App\Models\Editora::inRandomOrder()->first()->id,
                 'categoria_id' => \App\Models\Categoria::inRandomOrder()->first()->id,
                 'tipo_id' => $tipo_acervo,

@@ -15,4 +15,34 @@ class Pessoa extends Authenticatable
     use hasRoles;
     use SoftDeletes;
 
+    protected $fillable = [
+        'nome',
+        'primeiro_nome',
+        'ultimo_nome',
+        'email',
+        'data_de_nascimento',
+        'genero',
+        'cpf',
+        'rg',
+        'endereco',
+        'telefone',
+        'celular',
+        'senha',
+        'foto',
+        'usuario'
+    ];
+
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
+    protected $casts = [
+        'data_de_nascimento' => 'date',
+        'telefone' => 'string',
+        'celular' => 'string',
+    ];
+    
 }

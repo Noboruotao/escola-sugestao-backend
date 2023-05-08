@@ -10,4 +10,6 @@ class EstadoAcervo extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'estado_do_acervo';
+
+    protected $fillable = ['estado'];
 }

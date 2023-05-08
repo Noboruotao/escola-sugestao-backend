@@ -9,6 +9,21 @@ class Acervo extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'titulo',
+        'resumo',
+        'tradutor',
+        'autor_id',
+        'idioma_id',
+        'editora_id',
+        'categoria_id',
+        'tipo_id',
+        'estado_id',
+        'situacao_id',
+        'IBNS',
+        'ano_de_publicacao'
+    ];
+
     public function autor()
     {
         return $this->belongsTo(Autor::class, 'autor_id', 'id');

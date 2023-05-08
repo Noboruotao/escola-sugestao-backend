@@ -9,4 +9,6 @@ class AreasDeConhecimento extends Model
 {
     use HasFactory;
     protected $table = 'areas_de_conhecimentos';
+
+    protected $fillable = ['nome'];
 }

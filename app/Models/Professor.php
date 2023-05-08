@@ -10,6 +10,10 @@ class Professor extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'professors';
+    
+    protected $fillable = [
+        'experiencia_profissional'
+    ];
 
 
     /**

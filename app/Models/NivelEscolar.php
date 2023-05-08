@@ -10,4 +10,8 @@ class NivelEscolar extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'nivel_escolar';
+
+    protected $fillable = [
+        'nome'
+    ];
 }
