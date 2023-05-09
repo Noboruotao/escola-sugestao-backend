@@ -44,5 +44,11 @@ class Pessoa extends Authenticatable
         'telefone' => 'string',
         'celular' => 'string',
     ];
+
+
+    public function getPessoaByUsuario($usuario)
+    {
+        return Pessoa::where('usuario', $usuario)->first();
+    }
     
 }

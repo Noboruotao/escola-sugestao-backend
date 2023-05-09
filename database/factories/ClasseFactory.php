@@ -68,7 +68,7 @@ class ClasseFactory extends customFactory
                     $datasAlunoDisciplina[] = [
                         'aluno_id'=> $aluno->id,
                         'disciplina_id'=> $disciplina->id,
-                        'situacao_id'=> 11
+                        'situacao_id'=> 5
                     ];
                 }
             }

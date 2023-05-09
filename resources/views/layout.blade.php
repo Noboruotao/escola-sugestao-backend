@@ -9,14 +9,12 @@
 </head>
 
 <body>
-      @include('layout/header')
-      @include('layout/menu')
-    <div class="container mb-3">
-      @yield('content')
-    </div>
-    <footer class="footer bg-dark  fixed-bottom">
-      @include('layout/footer')
-    </footer>
+    @include('layout/header_test')
+    @include('layout/menu')
+    
+    @yield('content')
+
+    @include('layout/footer')
 
 
 </body>
