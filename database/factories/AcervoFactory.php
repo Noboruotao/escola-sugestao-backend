@@ -33,7 +33,7 @@ class AcervoFactory extends customFactory
 
     /**
      * manda a array com os dados do tipo de acervo 
-     * para verifyTable()customFactory
+     * para insertDatas()customFactory
      */
     protected function insertTipoAcervo()
     {
@@ -49,13 +49,13 @@ class AcervoFactory extends customFactory
                     ['tipo'=>'Acervo de Referência', 'multa'=>0.6],
                     ['tipo'=>'Coleções Especiais', 'multa'=>0.6]
                 ];
-        $this->verifyTable('tipo_de_acervo', $tipos_acervo);
+        $this->insertDatas('tipo_de_acervo', $tipos_acervo);
     }
 
 
     /**
      * manda o array com os dados do estado 
-     * do acervo para verifyTable()customFactory
+     * do acervo para insertDatas()customFactory
      */
     protected function insertEstadoAcervo()
     {
@@ -70,13 +70,13 @@ class AcervoFactory extends customFactory
             ['estado'=>'Debuiado'],
         ];
 
-        $this->verifyTable('estado_do_acervo', $estados_acervo);
+        $this->insertDatas('estado_do_acervo', $estados_acervo);
     }
 
 
     /**
      * manda o array com os dados da situação 
-     * do acervo para verifyTable()customFactory
+     * do acervo para insertDatas()customFactory
      */
     protected function insertSituacaoAcervo()
     {
@@ -90,13 +90,13 @@ class AcervoFactory extends customFactory
             ['situacao'=>'Extraviado'],
             ['situacao'=>'Descartado'],
         ];
-        $this->verifyTable('situacao_do_acervo', $situacao_acervo);
+        $this->insertDatas('situacao_do_acervo', $situacao_acervo);
     }  
     
     
     /**
      * manda o array com os dados da categoria 
-     * do acervo para verifyTable()customFactory
+     * do acervo para insertDatas()customFactory
      */
     protected function insertCategoriaAcervo()
     {
@@ -133,13 +133,13 @@ class AcervoFactory extends customFactory
             ['categoria' => 'Terror'],
             ['categoria' => 'Viagem'],
         ];
-        $this->verifyTable('categorias', $categorias_acervo);
+        $this->insertDatas('categorias', $categorias_acervo);
     }
 
 
     /**
      * manda o array com os dados de idiomas
-     * para a função customFactory::verifyTable
+     * para a função customFactory::insertDatas
      */
     protected function insertIdiomas()
     {
@@ -160,7 +160,7 @@ class AcervoFactory extends customFactory
             ['idioma' => 'Grego'],
             ['idioma' => 'Latim']
         ];
-        $this->verifyTable('idiomas', $idiomas);
+        $this->insertDatas('idiomas', $idiomas);
 
         echo "    start insertNacionalidades()". PHP_EOL;
         $nacionalidades = [
@@ -196,13 +196,13 @@ class AcervoFactory extends customFactory
             'idioma_oficial_id' => array_search(['idioma'=>'Latim'], $idiomas)+1],
         ];
 
-        $this->verifyTable('nacionalidades', $nacionalidades);
+        $this->insertDatas('nacionalidades', $nacionalidades);
     }
 
 
     /**
      * manda o array com os dados dos Estados Brasileiros
-     * para a função customFactory::verifyTable
+     * para a função customFactory::insertDatas
      */
     protected function insertEstados()
     {
@@ -236,13 +236,13 @@ class AcervoFactory extends customFactory
             ['estado' => 'Sergipe', 'sigla' => 'SE'],
             ['estado' => 'Tocantins', 'sigla' => 'TO'],
         ];
-        $this->verifyTable('estados', $estados);
+        $this->insertDatas('estados', $estados);
     }
 
 
     /**
      * manda o array com os dados de editoras
-     * para a função customFactory::verifyTable
+     * para a função customFactory::insertDatas
      */
     protected function insertEditoras($numero_de_editoras=10)
     {
@@ -268,7 +268,7 @@ class AcervoFactory extends customFactory
 
     /**
      * manda o array com os dados de autores
-     * para a função customFactory::verifyTable
+     * para a função customFactory::insertDatas
      */
     protected function insertAutores($numero_de_autores=10)
     {

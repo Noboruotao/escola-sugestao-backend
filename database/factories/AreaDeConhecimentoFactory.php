@@ -146,7 +146,7 @@ class AreaDeConhecimentoFactory extends customFactory
             ['nome'=> 'História'],
             ['nome'=> 'Teoria e filosofia da História'],
         ];
-        $this->verifyTable('areas_de_conhecimentos', $areas_de_conhecimento);
+        $this->insertDatas('areas_de_conhecimentos', $areas_de_conhecimento);
     }
 
 
@@ -437,7 +437,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 }
             };
         }
-        $this->verifyTable('areas_de_conhecimento_disciplina', $datas);
+        $this->insertDatas('areas_de_conhecimento_disciplina', $datas);
     }
 
 
@@ -561,7 +561,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 }
             }
         }
-        $this->verifyTable('parametros_para_sugerir_curso', $datas);
+        $this->insertDatas('parametros_para_sugerir_curso', $datas);
     }
 
 
@@ -735,7 +735,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 ];
             }
         }
-        $this->verifyTable('areas_de_conhecimento_atividades_extracurricular', $datas);
+        $this->insertDatas('areas_de_conhecimento_atividades_extracurricular', $datas);
     }
 
 
@@ -869,7 +869,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 ];
             }
         }
-        $this->verifyTable('parametro_para_sugerir_atividade_extracurricular', $datas);
+        $this->insertDatas('parametro_para_sugerir_atividade_extracurricular', $datas);
     }
 
 
@@ -890,7 +890,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 ];
             }
         }
-        $this->verifyTable('acervo_areas_de_conhecimento', $datas);
+        $this->insertDatas('acervo_areas_de_conhecimento', $datas);
     }
 
 

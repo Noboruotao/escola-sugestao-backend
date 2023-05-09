@@ -36,4 +36,15 @@ abstract class customFactory extends Factory
             DB::table($table)->insert($data_parts);    
         }
     }
+
+
+    /**
+     * retorna idade
+     * @string: date('Y-m-d')
+     * @return int
+     */
+    protected function getIdade($data_nascimento)
+    {
+        return $age = Carbon::parse($data_nascimento)->age;
+    }
 }

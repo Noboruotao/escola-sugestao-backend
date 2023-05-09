@@ -50,7 +50,7 @@ class PermissionAndRoleFactory extends customFactory
                 'updated_at'=> now()
             ];
         }
-        $this->verifyTable('roles', $datas);
+        $this->insertDatas('roles', $datas);
     }
 
 
@@ -93,6 +93,12 @@ class PermissionAndRoleFactory extends customFactory
             }else if(count($model_has_roles)==2){
                 $model_has_roles[] = [
                     'role_id'=> 3,
+                    'model_type'=> 'App\Models\Pessoa',
+                    'model_id'=> $professor['id']
+                ];    
+            }else if(count($model_has_roles)==3){
+                $model_has_roles[] = [
+                    'role_id'=> 7,
                     'model_type'=> 'App\Models\Pessoa',
                     'model_id'=> $professor['id']
                 ];    
@@ -174,7 +180,7 @@ class PermissionAndRoleFactory extends customFactory
                 ];
             }
         }
-        $this->verifyTable('permissions', $datas);
+        $this->insertDatas('permissions', $datas);
     }
 
 
@@ -406,6 +412,6 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
         ];
-        $this->verifyTable('role_has_permissions', $this->attributePermissionToRoleDatas($rolePermission));
+        $this->insertDatas('role_has_permissions', $this->attributePermissionToRoleDatas($rolePermission));
     }
 }

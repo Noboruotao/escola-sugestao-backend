@@ -28,9 +28,9 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         try {
-            $credencials = $request->only('usuario', 'senha');
+            $credencials = $request->only('cpf', 'senha');
 
-            $pessoa = $this->pessoa->getPessoaByUsuario($credencials['usuario']);
+            $pessoa = $this->pessoa->getPessoaByCpf($credencials['cpf']);
             
             if (!is_null($pessoa) && password_verify( $credencials['senha'], $pessoa->senha) )
             {

@@ -29,7 +29,6 @@ class Pessoa extends Authenticatable
         'celular',
         'senha',
         'foto',
-        'usuario'
     ];
 
     protected $guarded = [
@@ -46,9 +45,18 @@ class Pessoa extends Authenticatable
     ];
 
 
-    public function getPessoaByUsuario($usuario)
+    
+    public function getPessoaByCpf($cpf)
     {
-        return Pessoa::where('usuario', $usuario)->first();
+        return Pessoa::where('cpf', $cpf)->first();
     }
     
+
+    protected function getPessoaByRole($role_name)
+    {
+        return  Pessoa::whereNotNull('deleted_at')
+            ->whereHas('roles', function ($query) use ($role_name) {
+                $query->where('name', $role_name);
+            })->get();
+    }
 }

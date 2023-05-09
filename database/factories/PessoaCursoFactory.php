@@ -29,7 +29,7 @@ class PessoaCursoFactory extends customFactory
 
 
     /**
-     * manda array para customFactory::verifyTable()
+     * manda array para customFactory::insertDatas()
      * @return array
      */
     protected function inserirCursos()
@@ -181,12 +181,12 @@ class PessoaCursoFactory extends customFactory
                 'updated_at'=>now()
             ],
         ];
-        $this->verifyTable('cursos', $cursos);
+        $this->insertDatas('cursos', $cursos);
     }
 
 
     /**
-     * manda array para customFactory::verifyTable()
+     * manda array para customFactory::insertDatas()
      * @return array
      */
     protected function insertBolsas()
@@ -211,12 +211,12 @@ class PessoaCursoFactory extends customFactory
             'valor' =>500],
             
         ];
-        $this->verifyTable('bolsas', $bolsas);
+        $this->insertDatas('bolsas', $bolsas);
     }
 
 
     /**
-     * manda array para customFactory::verifyTable()
+     * manda array para customFactory::insertDatas()
      * @return array
      */
     protected function inserirSituacaoAluno()
@@ -235,12 +235,12 @@ class PessoaCursoFactory extends customFactory
             ['situacao'=>'Cancelado'],
             ['situacao'=>'Em Andamento'],
         ];
-        $this->verifyTable('situacao_aluno', $situacao);
+        $this->insertDatas('situacao_aluno', $situacao);
     }
 
 
     /**
-     * manda array para customFactory::verifyTable()
+     * manda array para customFactory::insertDatas()
      * @return array
      */
     protected function insertNivelEscolar()
@@ -258,7 +258,7 @@ class PessoaCursoFactory extends customFactory
 
 
     /**
-     * manda array para customFactory::verifyTable()
+     * manda array para customFactory::insertDatas()
      * @return array
      */
     protected function insertAno()
@@ -275,18 +275,7 @@ class PessoaCursoFactory extends customFactory
                 ];
             }
         }
-        $this->verifyTable('anos', $data);
-    }
-
-
-    /**
-     * retorna idade
-     * @string: date('Y-m-d')
-     * @return int
-     */
-    protected function getIdade($data_nascimento)
-    {
-        return $age = Carbon::parse($data_nascimento)->age;
+        $this->insertDatas('anos', $data);
     }
 
 
@@ -361,7 +350,6 @@ class PessoaCursoFactory extends customFactory
                 'celular' => (rand(0, 1))? $this->faker->cellphone(): null,
                 'senha' => \Illuminate\Support\Facades\Hash::make('password'),
                 'foto'=> $foto,
-                'usuario'=> $prim_nome.'.'.$last_nome,
                 'created_at'=>now(),
                 'updated_at'=>now()
             ];
@@ -380,7 +368,7 @@ class PessoaCursoFactory extends customFactory
             
         }
 
-        $this->verifyTable('pessoas', $pessoas);
+        $this->insertDatas('pessoas', $pessoas);
 
         $this->makeProfessor($professores);
         $this->makeAluno($alunos);

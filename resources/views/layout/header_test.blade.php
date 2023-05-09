@@ -34,7 +34,7 @@
         @else
           <form class="d-flex mt-3 mt-lg-0" action="{{  route('login')  }}" method="POST">
             @csrf
-            <input class="form-control me-2" name="usuario" value="{{ $pessoa->usuario }}">
+            <input class="form-control me-2" name="cpf" value="{{ $pessoa->cpf }}">
             <input class="form-control" name="senha" value="password" hidden>
             <button class="btn btn-outline-success" type="submit">Login</button>
           </form>

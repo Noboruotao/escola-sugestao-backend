@@ -24,7 +24,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'usuario' => 'required',
+            'cpf' => 'required|max:14',
             'senha' => 'required'
         ];
     }
