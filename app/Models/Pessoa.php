@@ -54,9 +54,6 @@ class Pessoa extends Authenticatable
 
     protected function getPessoaByRole($role_name)
     {
-        return  Pessoa::whereNotNull('deleted_at')
-            ->whereHas('roles', function ($query) use ($role_name) {
-                $query->where('name', $role_name);
-            })->get();
+        return  Pessoa::role($role_name)->get();
     }
 }

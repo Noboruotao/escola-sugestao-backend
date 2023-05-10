@@ -28,7 +28,7 @@ class CreateAreaDeConhecimentosTable extends Migration
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
                     ->onDelete('cascade');
-            $table->foreignId('area_de_conhecimento_id')
+            $table->foreignId('areas_de_conhecimento_id')
                     ->constrained('areas_de_conhecimentos')
                     ->onDelete('cascade');
             $table->float('valor_calculado_por_notas')

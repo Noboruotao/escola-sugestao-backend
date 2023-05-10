@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
 use App\Models\Aluno;
 use App\Models\Pessoa;
 
@@ -355,11 +354,10 @@ class PessoaCursoFactory extends customFactory
             ];
             $numero_de_pessoa--;
             
-
             if( $idade<18 ){
                 $alunos[] = count($pessoas);
             }else{
-                if($this->faker->randomDigit()<1){
+                if($this->faker->randomDigit()<1 || count($professores)<4){
                     $professores[] = count($pessoas);
                 }else{
                     $pais[] = count($pessoas);

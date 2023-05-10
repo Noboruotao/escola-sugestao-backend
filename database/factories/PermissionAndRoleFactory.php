@@ -135,9 +135,7 @@ class PermissionAndRoleFactory extends customFactory
     protected function insertPermissions()
     {
         echo "    start insertPermissions()". PHP_EOL;
-        $datas = [];
-
-        $bases = [
+        $datas = collect([
             'acervo',
             'aluno',
             'ano',
@@ -167,19 +165,16 @@ class PermissionAndRoleFactory extends customFactory
             'role',
             'mensalidade',
             'presenca'
-        ];
-        foreach($bases as $base)
-        {
-            foreach(['.create', '.read', '.update', '.delete', '.*'] as $action)
-            {
-                $datas[] = [
+        ])->flatMap(function ($base) {
+            return collect(['.create', '.read', '.update', '.delete', '.*'])->map(function ($action) use ($base) {
+                return [
                     'name'=> $base.$action,
                     'guard_name'=> \Spatie\Permission\Guard::getDefaultName(static::class),
                     'created_at'=>now(),
                     'updated_at'=> now()
                 ];
-            }
-        }
+            });
+        });
         $this->insertDatas('permissions', $datas);
     }
 

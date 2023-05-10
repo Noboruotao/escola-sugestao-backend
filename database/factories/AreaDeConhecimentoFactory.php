@@ -982,11 +982,12 @@ class AreaDeConhecimentoFactory extends customFactory
         $datas = [];
 
         $acervos = \App\Models\Acervo::all();
-        $disciplinas = Disciplina::all();
 
         foreach($acervos as $acervo)
         {
             $acervoAreas = $acervo->areas;
+            $disciplinas = new Disciplina();
+            $disciplinas = $disciplinas->hasAreasDeConhecimento($acervoAreas->pluck('id'));
             foreach($disciplinas as $disciplina)
             {
                 if( count( $acervoAreas->intersect($disciplina->areas) ) >=3 || count( $acervoAreas->intersect($disciplina->areas) ) == count($acervoAreas))

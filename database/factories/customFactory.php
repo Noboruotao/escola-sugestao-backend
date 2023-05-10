@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 abstract class customFactory extends Factory
 {

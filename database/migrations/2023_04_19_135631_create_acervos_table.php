@@ -129,7 +129,7 @@ class CreateAcervosTable extends Migration
             $table->foreignId('acervo_id')
                     ->constrained('acervos')
                     ->onDelete('cascade');
-            $table->foreignId('bibliotecario')
+            $table->foreignId('bibliotecario_id')
                     ->constrained('pessoas')
                     ->onDelete('cascade');
             $table->foreignId('leitor_id')
@@ -137,6 +137,8 @@ class CreateAcervosTable extends Migration
                     ->onDelete('cascade');
             $table->date('data_de_emprestimo');
             $table->date('data_de_devolucao')->default(NULL)->nullable();
+            $table->timestamps();
+
         });
 
 

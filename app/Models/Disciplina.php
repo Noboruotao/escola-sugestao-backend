@@ -33,13 +33,13 @@ class Disciplina extends Model
 
 
 
-    public function hasArea($nome)
+    public function hasAreasDeConhecimento($areaDeConhecimentoIds)
     {
-        $areas = $this->areas();
-
-        if( is_string($nome) )
-        {
-            return $areas->where('nome', $nome)->first();
-        }
+        $areaDeConhecimentoIds = collect($areaDeConhecimentoIds)->flatten();
+        return $this->whereIn('id', function ($query) use ($areaDeConhecimentoIds) {
+            $query->select('disciplina_id')
+                  ->from('areas_de_conhecimento_disciplina')
+                  ->whereIn('areas_de_conhecimento_id', $areaDeConhecimentoIds);
+        })->get();
     }
 }
