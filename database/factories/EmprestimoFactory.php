@@ -14,7 +14,7 @@ class EmprestimoFactory extends customFactory
         dump('Starting Emprestimo seeding');
         $emprestimos = new EmprestimoFactory();
         
-        $emprestimos->makeEmprestimos();
+        // $emprestimos->makeEmprestimos();
         // $emprestimos->attributeAcervoValueToAluno();
 
     }
@@ -30,7 +30,7 @@ class EmprestimoFactory extends customFactory
 
         foreach($pessoas as $pessoa)
         {
-            foreach(\App\Models\Acervo::inRandomOrder()->limit($this->faker->numberBetween($min = 0, $max = 20))->get() as $acervo)
+            foreach(\App\Models\Acervo::inRandomOrder()->limit($this->faker->numberBetween($min = 0, $max = 5))->get() as $acervo)
             {
                 $data_de_emprestimo = $this->faker->dateTimeBetween($startDate = '-3 years', $endDate = '-1 week', $timezone = null);
                 $datas[] = [
@@ -65,31 +65,25 @@ class EmprestimoFactory extends customFactory
 
         foreach(Aluno::whereIn('id', Emprestimo::distinct('leitor_id')->pluck('leitor_id'))->get() as $leitor)
         {
-            $acervos_do_aluno = \App\Models\Acervo::whereIn('id', Emprestimo::where('leitor_id', $leitor->id)->pluck('acervo_id')->toArray())->get();
-            $areas_acervo = $this->getAreasFromAcervos($acervos_do_aluno);
-            $areas_aluno = $leitor->areasDeConhecimento;
-
-            foreach($areas_acervo as $area)
+            $areas_do_aluno = $leitor->areas;
+            $acervos = \App\Models\Acervo::whereIn('id', Emprestimo::where('leitor_id', $leitor->id)->pluck('acervo_id')->toArray())->get();
+            foreach($acervos as $acervo)
             {
-                if($areas_aluno->where('nome', $area->nome))
+                foreach($acervo->areas as $area)
                 {
-                    $valor_acervo = $areas_aluno->where('nome', $area->nome);
-                    dump($valor_acervo);
-                    $valor_acervo->pivot->valor_calculado_pelo_emprestimo_de_acervo += 0.4;
-                    $valor_acervo->save();
-                }else{
-                    $this->insertDatas('aluno_areas_de_conhecimento', [[
-                        'aluno_id'=> $leitor->id,
-                        'areas_de_conhecimento_id'=>$area->id,
-                        'valor_calculado_pelo_emprestimo_de_acervo'=> 0.4
-                    ]]);
+                    if ($areas_do_aluno->contains('id', $area->id)) {
+                        $area_do_aluno = $areas_do_aluno->firstWhere('id', $area->id);
+                        $area_do_aluno->pivot->valor_calculado_pelo_emprestimo_de_acervo += 0.4;
+                        $area_do_aluno->pivot->update(['valor_calculado_pelo_emprestimo_de_acervo' => $area_do_aluno->pivot->valor_calculado_pelo_emprestimo_de_acervo]);
+                    }else{
+                        $this->insertDatas('aluno_areas_de_conhecimento', [[
+                                'aluno_id'=> $leitor->id,
+                                'areas_de_conhecimento_id'=> $area->id,
+                                'valor_calculado_pelo_emprestimo_de_acervo'=> 0.4
+                            ]]);
+                    }
                 }
-            
             }
-
-           
-                    
         }
     }
-
 }

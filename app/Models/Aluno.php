@@ -39,7 +39,7 @@ class Aluno extends Model
     }
 
 
-    public function areasDeConhecimento()
+    public function areas()
     {
         return $this->belongsToMany(AreasDeConhecimento::class, 'aluno_areas_de_conhecimento')->withPivot('valor_calculado_por_notas', 'valor_calculado_pelo_emprestimo_de_acervo', 'valor_respondido_pelo_aluno');
     }
