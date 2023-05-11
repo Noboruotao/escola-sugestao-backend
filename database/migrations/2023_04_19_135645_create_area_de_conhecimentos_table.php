@@ -37,6 +37,9 @@ class CreateAreaDeConhecimentosTable extends Migration
             $table->float('valor_calculado_pelo_emprestimo_de_acervo')
                     ->default(NULL)
                     ->nullable();
+            $table->float('valor_calculado_por_atividade_extracurricular')
+                    ->default(NULL)
+                    ->nullable();
             $table->float('valor_respondido_pelo_aluno')
                     ->default(NULL)
                     ->nullable();
