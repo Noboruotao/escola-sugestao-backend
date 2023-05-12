@@ -14,6 +14,8 @@ class NotaFactory extends customFactory
 
         $notas->insertNotas();
         $notas->inserirAlunoArea();
+        $notas->attributeAtivExtraAreasToAluno();
+
     }
 
 
@@ -128,5 +130,20 @@ class NotaFactory extends customFactory
         }
         echo "        INSERT inserirAlunoArea()". PHP_EOL;
         $this->insertDatas('aluno_areas_de_conhecimento', $aluno_area);
+    }
+
+
+    protected function attributeAtivExtraAreasToAluno()
+    {
+        echo "    start attributeAtivExtraAreasToAluno()". PHP_EOL; 
+
+        $alunos = \App\Models\Aluno::all();
+        foreach($alunos as $aluno)
+        {
+            foreach($aluno->atividades_extracurriculares as $ativExtra)
+            {
+                \App\Models\AtividadesExtracurriculares::updateAlunoAreas($aluno, $ativExtra);
+            }
+        }
     }
 }

@@ -59,7 +59,7 @@ class CreateAreaDeConhecimentosTable extends Migration
 
 
         Schema::create('parametro_para_sugerir_atividade_extracurricular', function (Blueprint $table){
-                $table->foreignId('atividade_extracurricular_id')
+                $table->foreignId('atividades_extracurriculares_id')
                         ->constrained('atividades_extracurriculares')
                         ->onDelete('cascade')
                         ->name('parametro_sugerir_ativ_extra_ativi_extra_id_foreign');
@@ -76,7 +76,7 @@ class CreateAreaDeConhecimentosTable extends Migration
                     ->constrained('areas_de_conhecimentos')
                     ->onDelete('cascade')
                     ->name('areas_conhecimentos_ativ_extra_areas_conhecimentos_id_foreign');
-            $table->foreignId('atividade_extracurricular_id')
+            $table->foreignId('atividades_extracurriculares_id')
                     ->constrained('atividades_extracurricularres')
                     ->onDelete()
                     ->name('areas_conhecimentos_ativ_extra_ativ_extra_id_foreign');

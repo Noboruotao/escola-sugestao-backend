@@ -49,11 +49,11 @@ class CreateAtividadeExtracurricularesTable extends Migration
         });
 
 
-        Schema::create('aluno_atividade_extracurriculares', function (Blueprint $table){
+        Schema::create('aluno_atividades_extracurriculares', function (Blueprint $table){
             $table->foreignId('aluno_id')
                     ->constrained('alunos')
                     ->onDelete('cascade');
-            $table->foreignId('atividade_extracurricular_id')
+            $table->foreignId('atividades_extracurriculares_id')
                     ->constrained('atividade_extracurriculares')
                     ->onDelete('cascade')
                     ->name('aluno_ativ_extra_atividade_extracurricular_id_foreign');
@@ -68,7 +68,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('atividade_extracurriculares');
+        Schema::dropIfExists('atividades_extracurriculares');
         Schema::dropIfExists('tipos_de_atividade_extracurricular');
         Schema::dropIfExists('atividades_extracurricular_sugeridas');
         Schema::dropIfExists('aluno_atividade_extracurricular');

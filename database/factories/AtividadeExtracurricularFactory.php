@@ -220,12 +220,12 @@ class AtividadeExtracurricularFactory extends customFactory
                 {
                     $datas[] = [
                         'aluno_id'=> $aluno->id,
-                        'atividade_extracurricular_id'=>$ativ_extra->id,
+                        'atividades_extracurriculares_id'=>$ativ_extra->id,
                         'ativo'=> ($atividade_extracurriculares->last() === $ativ_extra)? 1: null
                     ];
                 }
             }
         }
-        $this->insertDatas('aluno_atividade_extracurriculares', $datas);
+        $this->insertDatas('aluno_atividades_extracurriculares', $datas);
     }
 }

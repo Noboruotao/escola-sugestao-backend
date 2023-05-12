@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\AreasDeConhecimento;
 use Illuminate\Support\Facades\DB;
 use App\Models\Disciplina;
+use App\Models\AtividadesExtracurriculares;
 
 class AreaDeConhecimentoFactory extends customFactory
 {
@@ -726,12 +727,12 @@ class AreaDeConhecimentoFactory extends customFactory
         foreach($atividades as $atividade)
         {
         
-            $ativ_extra = \App\Models\AtividadesExtracurriculares::where('nome', $atividade['nome'])->first();
+            $ativ_extra = AtividadesExtracurriculares::where('nome', $atividade['nome'])->first();
             foreach($atividade['areas'] as $area)
             {
                 $datas[] = [
                     'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', $area)->first()->id,
-                    'atividade_extracurricular_id'=>$ativ_extra->id
+                    'atividades_extracurriculares_id'=>$ativ_extra->id
                 ];
             }
         }
@@ -859,12 +860,12 @@ class AreaDeConhecimentoFactory extends customFactory
         foreach($atividades as $atividade)
         {
         
-            $ativ_extra = \App\Models\AtividadesExtracurriculares::where('nome', $atividade['nome'])->first();
+            $ativ_extra = AtividadesExtracurriculares::where('nome', $atividade['nome'])->first();
             foreach($atividade['areas'] as $key=>$value)
             {
                 $datas[] = [
                     'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', $key)->first()->id,
-                    'atividade_extracurricular_id'=>$ativ_extra->id,
+                    'atividades_extracurriculares_id'=>$ativ_extra->id,
                     'valor'=> $value
                 ];
             }
@@ -1002,7 +1003,4 @@ class AreaDeConhecimentoFactory extends customFactory
         }
         $this->insertDatas('materiais_sugeridos', $datas);
     }
-
-
-    
 }
