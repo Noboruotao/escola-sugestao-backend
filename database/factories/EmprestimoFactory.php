@@ -16,7 +16,7 @@ class EmprestimoFactory extends customFactory
         $emprestimos = new EmprestimoFactory();
         
         $emprestimos->makeEmprestimos();
-        $emprestimos->attributeAcervoValueToAluno();
+        $emprestimos->attributeAcervoAreasToAluno();
         $emprestimos->insertMultas();
 
     }
@@ -62,9 +62,9 @@ class EmprestimoFactory extends customFactory
     }
 
 
-    protected function attributeAcervoValueToAluno()
+    protected function attributeAcervoAreasToAluno()
     {
-        echo "    start attributeAcervoValueToAluno()". PHP_EOL;
+        echo "    start attributeAcervoAreasToAluno()". PHP_EOL;
 
         foreach(Aluno::whereIn('id', Emprestimo::distinct('leitor_id')->pluck('leitor_id'))->get() as $leitor)
         {

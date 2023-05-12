@@ -1002,4 +1002,7 @@ class AreaDeConhecimentoFactory extends customFactory
         }
         $this->insertDatas('materiais_sugeridos', $datas);
     }
+
+
+    
 }

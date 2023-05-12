@@ -15,6 +15,7 @@ class AtividadeExtracurricularFactory extends customFactory
 
         $ativExtra->insertTipoAtivExtra();
         $ativExtra->insertAtivExtra();
+        $ativExtra->attributeAtivExtraToAluno();
     }
 
 
@@ -202,5 +203,29 @@ class AtividadeExtracurricularFactory extends customFactory
               
         ];
         $this->insertDatas('atividade_extracurriculares', $atividades);
+    }
+
+
+    protected function attributeAtivExtraToAluno()
+    {
+        $alunos = \App\Models\Aluno::all();
+        $datas = [];
+        foreach($alunos as $aluno)
+        {
+            if($this->faker->randomDigit()<3)
+            {
+                $num_de_ativ = rand(1, 2);
+                $atividade_extracurriculares = \App\Models\AtividadesExtracurriculares::limit($num_de_ativ)->inRandomOrder()->get();
+                foreach($atividade_extracurriculares as $ativ_extra)
+                {
+                    $datas[] = [
+                        'aluno_id'=> $aluno->id,
+                        'atividade_extracurricular_id'=>$ativ_extra->id,
+                        'ativo'=> ($atividade_extracurriculares->last() === $ativ_extra)? 1: null
+                    ];
+                }
+            }
+        }
+        $this->insertDatas('aluno_atividade_extracurriculares', $datas);
     }
 }

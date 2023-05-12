@@ -22,5 +22,16 @@ class AtividadesExtracurriculares extends Model
     protected $guarded = [
         'id'
     ];
+
+
+    public function areas()
+    {
+        return $this->belongsToMany(AreasDeConhecimento::class, 'parametro_para_sugerir_atividade_extracurricular')->withPivot('valor');
+    } 
     
+    
+    public function alunos()
+    {
+        return $this->belongsToMany(alunos::class)->withPivot('ativo');
+    }
 }

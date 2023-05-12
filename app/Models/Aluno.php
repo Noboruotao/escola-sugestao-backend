@@ -45,6 +45,12 @@ class Aluno extends Model
     }
 
 
+    public function atividades_extracurriculares()
+    {
+        return $this->belongsToMany(AtividadesExtracurriculares::class)->withPivot('ativo');
+    }
+
+
     public function getAlunoAreaByDisciplina()
     {
         $disciplinas = $this->disciplinas;

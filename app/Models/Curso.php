@@ -25,7 +25,7 @@ class Curso extends Model
 
     public function areas()
     {
-        return $this->belongsToMany(AreasDeConhecimento::class, 'parametros_para_sugerir_curso');
+        return $this->belongsToMany(AreasDeConhecimento::class, 'parametros_para_sugerir_curso')->withPivot('valor');
     }
 
 
