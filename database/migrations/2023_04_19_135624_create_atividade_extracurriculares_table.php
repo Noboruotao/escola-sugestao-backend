@@ -44,8 +44,8 @@ class CreateAtividadeExtracurricularesTable extends Migration
                 ->constrained('atividade_extracurriculares')
                 ->onDelete('cascade')
                 ->name('ativ_extra_sugeridas_atividade_extracurricular_id_foreign');
-            $table->integer('vezes_mostradas');
-            $table->date('aparecer')->default(NULL);
+            $table->integer('vezes_mostradas')->default(0);
+            $table->date('desaparecer')->default(null)->nullable();
         });
 
 

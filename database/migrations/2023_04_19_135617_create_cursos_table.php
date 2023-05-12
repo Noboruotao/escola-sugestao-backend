@@ -31,6 +31,7 @@ class CreateCursosTable extends Migration
             $table->foreignId('curso_id')
                     ->constrained('cursos')
                     ->onDelete('cascade');
+            $table->date('desaparecer')->default(null)->nullable();
         });
 
 

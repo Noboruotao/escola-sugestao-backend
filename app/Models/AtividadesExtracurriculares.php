@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 
 class AtividadesExtracurriculares extends Model
@@ -45,11 +46,6 @@ class AtividadesExtracurriculares extends Model
     public function updateAlunoAreas($aluno, $atividade_extracurricular)
     {
         $areas_do_aluno = $aluno->areas;
-        if($aluno->id==44)
-            {
-                echo $atividade_extracurricular->nome. PHP_EOL;
-                echo $atividade_extracurricular->areas->pluck('id'). PHP_EOL;
-            }
 
         foreach($atividade_extracurricular->areas as $area)
         {
@@ -73,6 +69,56 @@ class AtividadesExtracurriculares extends Model
                     \Illuminate\Support\Facades\DB::table('aluno_areas_de_conhecimento')->insert($data_parts);    
                 }
             }
+        }
+    }
+
+
+    public function sugerirAtividadeExtracurricular($aluno)
+    {
+        $areas_do_aluno = $aluno->areas;
+        $atividades_sugerido = DB::table('atividade_extracurricular_sugeridas')->where('aluno_id', $aluno->id)->get();
+
+        $datas = [];
+
+        foreach(AtividadesExtracurriculares::whereNotIn('id', $atividades_sugerido->pluck('atividade_extracurricular_id')->toArray())->get() as $ativExtra)
+        {
+            foreach($ativExtra->parametroAreas as $area)
+            {
+                $parametro_count = $ativExtra->parametroAreas->count();
+
+                $area_do_aluno = $areas_do_aluno->firstWhere('id', $area->id);
+                if( $area_do_aluno )
+                {
+                    $valor_total_do_aluno = $area_do_aluno->pivot->valor_calculado_por_notas
+                    +$area_do_aluno->pivot->valor_calculado_pelo_emprestimo_de_acervo+$area_do_aluno->pivot->valor_calculado_por_atividade_extracurricular
+                    +$area_do_aluno->pivot->valor_respondido_pelo_aluno;
+                    
+                    if($valor_total_do_aluno >= $area->pivot->valor)
+                    {
+                        $parametro_count--;
+                    }
+                }
+
+                if($parametro_count == 0)
+                {
+                    $datas[] = [
+                        'aluno_id'=> $aluno->id,
+                        'atividade_extracurricular_id'=> $ativExtra->id,
+                    ];
+                }
+            }
+            
+
+            
+        }
+
+        $data = collect($datas)->map(function($data){
+            return $data;
+        });
+
+        foreach(array_chunk($data->toArray(), 200) as $data_parts)
+        {
+            DB::table('atividade_extracurricular_sugeridas')->insert($data_parts);    
         }
     }
 }
