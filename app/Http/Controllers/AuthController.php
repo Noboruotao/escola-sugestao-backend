@@ -18,7 +18,7 @@ class AuthController extends Controller
     }
 
 
-    public function home()
+    public function homeTest()
     {
         $pessoa = Pessoa::inRandomOrder()->first();
         return view('home', ['pessoa'=>$pessoa]);
