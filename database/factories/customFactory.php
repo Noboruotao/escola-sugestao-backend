@@ -32,9 +32,26 @@ abstract class customFactory extends Factory
             return $data;
         });
 
-        foreach(array_chunk($data->toArray(), 200) as $data_parts)
+        foreach(array_chunk($data->toArray(), 500) as $data_parts)
         {
             DB::table($table)->insert($data_parts);    
+        }
+    }
+
+
+    protected function insertDatasMidway($table, &$datas)
+    {
+        if(count($datas)>=500)
+        {
+            $this->insertDatas($table, $datas);
+            
+            if (is_array($datas)) {
+                $datas = [];
+            }
+            
+            if ($datas instanceof \Illuminate\Support\Collection) {
+                $datas = collect();
+            }
         }
     }
 

@@ -49,7 +49,7 @@ class AcervoFactory extends customFactory
                     ['tipo'=>'Acervo de Referência', 'multa'=>0.6],
                     ['tipo'=>'Coleções Especiais', 'multa'=>0.6]
                 ];
-        $this->insertDatas('tipo_de_acervo', $tipos_acervo);
+        $this->verifyTable('tipo_de_acervo', $tipos_acervo);
     }
 
 
@@ -70,7 +70,7 @@ class AcervoFactory extends customFactory
             ['estado'=>'Debuiado'],
         ];
 
-        $this->insertDatas('estado_do_acervo', $estados_acervo);
+        $this->verifyTable('estado_do_acervo', $estados_acervo);
     }
 
 
@@ -90,7 +90,7 @@ class AcervoFactory extends customFactory
             ['situacao'=>'Extraviado'],
             ['situacao'=>'Descartado'],
         ];
-        $this->insertDatas('situacao_do_acervo', $situacao_acervo);
+        $this->verifyTable('situacao_do_acervo', $situacao_acervo);
     }  
     
     
@@ -133,7 +133,7 @@ class AcervoFactory extends customFactory
             ['categoria' => 'Terror'],
             ['categoria' => 'Viagem'],
         ];
-        $this->insertDatas('categorias', $categorias_acervo);
+        $this->verifyTable('categorias', $categorias_acervo);
     }
 
 
@@ -160,7 +160,7 @@ class AcervoFactory extends customFactory
             ['idioma' => 'Grego'],
             ['idioma' => 'Latim']
         ];
-        $this->insertDatas('idiomas', $idiomas);
+        $this->verifyTable('idiomas', $idiomas);
 
         echo "    start insertNacionalidades()". PHP_EOL;
         $nacionalidades = [
@@ -196,7 +196,7 @@ class AcervoFactory extends customFactory
             'idioma_oficial_id' => array_search(['idioma'=>'Latim'], $idiomas)+1],
         ];
 
-        $this->insertDatas('nacionalidades', $nacionalidades);
+        $this->verifyTable('nacionalidades', $nacionalidades);
     }
 
 
@@ -236,7 +236,7 @@ class AcervoFactory extends customFactory
             ['estado' => 'Sergipe', 'sigla' => 'SE'],
             ['estado' => 'Tocantins', 'sigla' => 'TO'],
         ];
-        $this->insertDatas('estados', $estados);
+        $this->verifyTable('estados', $estados);
     }
 
 
@@ -261,6 +261,7 @@ class AcervoFactory extends customFactory
                     'estado_id'=>DB::table('estados')->inRandomOrder()->first()->id
             ];
             $numero_de_editoras--;
+            $this->insertDatasMidway('editoras', $editoras);
         }
         $this->insertDatas('editoras', $editoras);
     }
@@ -338,8 +339,8 @@ class AcervoFactory extends customFactory
                 'data_de_nascimento' => $data_de_nascimento,
                 'data_de_falecimento' => (rand(0, 1) ===1)?$faker->dateTimeBetween($data_de_nascimento, 'now')->format('Y-m-d'): null
             ];
-
             $numero_de_autores--;
+            $this->insertDatasMidway('autors', $autores);
         }
         return $autores;
     }
@@ -409,6 +410,7 @@ class AcervoFactory extends customFactory
                 'updated_at'=>now()
             ];
             $numero_de_acervos--;
+            $this->insertDatasMidway('acervos', $acervos);
         }
         return $acervos;
     }

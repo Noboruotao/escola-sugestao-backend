@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 use App\Models\Aluno;
 use App\Models\Pessoa;
+use App\Models\Curso;
 
 
 class PessoaCursoFactory extends customFactory
@@ -22,6 +23,10 @@ class PessoaCursoFactory extends customFactory
         $pessoa_curso->insertNivelEscolar();
         $pessoa_curso->insertAno();
         $pessoa_curso->makePessoa($num_pessoas);
+        
+        $pessoa_curso->makeProfessor();
+        $pessoa_curso->makeAluno();
+        $pessoa_curso->makePais();
         
         $pessoa_curso->insertMensalidade();
     }
@@ -180,7 +185,7 @@ class PessoaCursoFactory extends customFactory
                 'updated_at'=>now()
             ],
         ];
-        $this->insertDatas('cursos', $cursos);
+        $this->verifyTable('cursos', $cursos);
     }
 
 
@@ -210,7 +215,7 @@ class PessoaCursoFactory extends customFactory
             'valor' =>500],
             
         ];
-        $this->insertDatas('bolsas', $bolsas);
+        $this->verifyTable('bolsas', $bolsas);
     }
 
 
@@ -234,7 +239,7 @@ class PessoaCursoFactory extends customFactory
             ['situacao'=>'Cancelado'],
             ['situacao'=>'Em Andamento'],
         ];
-        $this->insertDatas('situacao_aluno', $situacao);
+        $this->verifyTable('situacao_aluno', $situacao);
     }
 
 
@@ -252,7 +257,7 @@ class PessoaCursoFactory extends customFactory
             ['nome' => 'Cursos Técnicos'],
             ['nome' => 'Cursos Preparatórios'],
         ];
-        $this->insertDatas('nivel_escolar', $nivel_escolar);
+        $this->verifyTable('nivel_escolar', $nivel_escolar);
     }
 
 
@@ -274,7 +279,21 @@ class PessoaCursoFactory extends customFactory
                 ];
             }
         }
-        $this->insertDatas('anos', $data);
+        $this->verifyTable('anos', $data);
+    }
+
+
+    protected function verifyIfValueExists($coluna, callable $callback)
+    {
+        do {
+            $value = $callback();
+
+            if (Pessoa::where($coluna, $value)->exists()) {
+                $value = null;
+            }
+        } while ($value == null);
+
+        return $value;
     }
 
 
@@ -286,91 +305,87 @@ class PessoaCursoFactory extends customFactory
     protected function makePessoa($numero_de_pessoa)
     {
         echo "    start makePessoa()". PHP_EOL;
-        $pessoas = [];
-        $alunos = [];
-        $professores = [];
-        $pais = [];
-        while($numero_de_pessoa>0)
-        {
-            $prim_nome = $this->faker->firstName();
-            $last_nome = $this->faker->lastName();
-            $data_nascimento = $this->faker->dateTimeBetween('-'.$this->faker->biasedNumberBetween(2, 50, function($x) {
-                return 18 - $x;
-            }).' years', '-1 years')->format('Y-m-d');
+        $pessoas = collect();
 
-            do{
-                $cpf = $this->faker->cpf();
-                foreach($pessoas as $pessoa)
+        try {
+            while($numero_de_pessoa>0)
+            {
+                $genero = $this->faker->randomElement(['Masculino', 'Feminino']);
+
+                $data_nascimento = $this->faker->dateTimeBetween('-'.$this->faker->biasedNumberBetween(2, 50, function($x) {
+                    return 18 - $x;
+                }).' years', '-1 years')->format('Y-m-d');
+
+                $idade = $this->getIdade($data_nascimento);
+
+                if($genero == 'Masculino')
                 {
-                    if( $pessoa['cpf']== $cpf ){
-                        $cpf=null;
-                    };
-                }
-            }while( $cpf == null );
+                    $prim_nome = $this->faker->firstNameMale();
 
-            do{
-                $rg = $this->faker->rg();
-                foreach($pessoas as $pessoa)
-                {
-                    if( $pessoa['rg']== $rg ){
-                        $rg=null;
-                    };
-                }
-            }while( $rg == null );
-            
-            $idade = $this->getIdade($data_nascimento);
-            $genero = $this->faker->randomElement(['Masculino', 'Feminino']);
-
-            if($idade < 10 && $genero == 'Masculino'){
-                $foto = 'images/pessoas_foto/boy_'.$this->faker->randomElement(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']).'.png';
-            }else if($idade < 10 && $genero == 'Feminino'){
-                $foto = 'images/pessoas_foto/girl_'.$this->faker->randomElement(['13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']).'.png';
-            }else if($idade < 18 && $genero == 'Masculino'){
-                $foto = 'images/pessoas_foto/youngman_'.$this->faker->randomElement(['25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36']).'.png';
-            }else if($idade < 18 && $genero == 'Feminino'){
-                $foto = 'images/pessoas_foto/youngwoman_'.$this->faker->randomElement(['37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48']).'.png';
-            }else if($genero == 'Masculino'){
-                $foto = 'images/pessoas_foto/man_'.$this->faker->randomElement(['49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60']).'.png';
-            }else if($genero == 'Feminino'){
-                $foto = 'images/pessoas_foto/woman_'.$this->faker->randomElement(['61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72']).'.png';
-            }
-
-            $pessoas[] = [
-                'nome' => $prim_nome . ' ' . $last_nome,
-                'primeiro_nome' => $prim_nome,
-                'ultimo_nome' => $last_nome,
-                'email' => $prim_nome.'.'.$this->faker->email(),
-                'data_de_nascimento' => $data_nascimento,
-                'genero' => $genero,
-                'cpf' => $cpf,
-                'rg' => $rg,
-                'endereco' => $this->faker->address(),
-                'telefone' => (rand(0, 1))? $this->faker->landline(): null,
-                'celular' => (rand(0, 1))? $this->faker->cellphone(): null,
-                'senha' => \Illuminate\Support\Facades\Hash::make('password'),
-                'foto'=> $foto,
-                'created_at'=>now(),
-                'updated_at'=>now()
-            ];
-            $numero_de_pessoa--;
-            
-            if( $idade<18 ){
-                $alunos[] = count($pessoas);
-            }else{
-                if($this->faker->randomDigit()<1 || count($professores)<4){
-                    $professores[] = count($pessoas);
+                    if($idade < 10){
+                        $foto = 'images/pessoas_foto/boy_'.$this->faker->randomElement(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']).'.png';
+                    }else if($idade < 18){
+                        $foto = 'images/pessoas_foto/youngman_'.$this->faker->randomElement(['25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36']).'.png';
+                    }else{
+                        $foto = 'images/pessoas_foto/man_'.$this->faker->randomElement(['49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60']).'.png';
+                    }
                 }else{
-                    $pais[] = count($pessoas);
+                    $prim_nome = $this->faker->firstNameFemale();
+
+                    if($idade < 10){
+                        $foto = 'images/pessoas_foto/girl_'.$this->faker->randomElement(['13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']).'.png';
+                    }else if($idade < 18){
+                        $foto = 'images/pessoas_foto/youngwoman_'.$this->faker->randomElement(['37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48']).'.png';
+                    }else{
+                        $foto = 'images/pessoas_foto/woman_'.$this->faker->randomElement(['61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72']).'.png';
+                    }
                 }
-            }
+
+                $cpf = $this->verifyIfValueExists('cpf', function(){
+                    return $this->faker->cpf();
+                });
             
+                $rg = $this->verifyIfValueExists('rg', function(){
+                    return $this->faker->rg();
+                });
+
+                do {
+                    $email = $prim_nome . $this->faker->numerify('####') . '.' . $this->faker->email();
+        
+                    if (Pessoa::where('email', $email)->exists()) {
+                        $email = null;
+                    }
+                } while ($email == null);
+
+                $last_nome = $this->faker->lastName();
+
+                $pessoas->push([
+                    'nome' => $prim_nome . ' ' . $last_nome,
+                    'primeiro_nome' => $prim_nome,
+                    'ultimo_nome' => $last_nome,
+                    'email' => $email,
+                    'data_de_nascimento' => $data_nascimento,
+                    'genero' => $genero,
+                    'cpf' => $cpf,
+                    'rg' => $rg,
+                    'endereco' => $this->faker->address(),
+                    'telefone' => (rand(0, 1))? $this->faker->landline(): null,
+                    'celular' => (rand(0, 1))? $this->faker->cellphone(): null,
+                    'senha' => \Illuminate\Support\Facades\Hash::make('password'),
+                    'foto'=> $foto,
+                    'created_at'=>now(),
+                    'updated_at'=>now()
+                ]);
+
+                $numero_de_pessoa--;
+                
+                $this->insertDatasMidway('pessoas', $pessoas);
+            }
+
+            $this->insertDatas('pessoas', $pessoas);
+        } catch (\Exception $e) {
+            throw $e;
         }
-
-        $this->insertDatas('pessoas', $pessoas);
-
-        $this->makeProfessor($professores);
-        $this->makeAluno($alunos);
-        $this->makePais($pais);
     }
 
 
@@ -378,43 +393,47 @@ class PessoaCursoFactory extends customFactory
      * @array $ids
      * @return array
      */
-    protected function makeProfessor($ids)
+    protected function makeProfessor()
     {
         echo "    start makeProfessor()". PHP_EOL;
         $datas = [];
-        $cursos = [];
-        foreach($ids as $professor)
-        {
-            $curso = DB::table('cursos')->inRandomOrder()->first();
+        $cursos = Curso::all();
+        $curso_professor = [];
 
-            $cursos[] = ['professor_id'=>$professor, 'curso_id'=>$curso->id];
+        $professors = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->limit(Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->count()/10)->pluck('id')->toArray();
+        foreach($professors as $professor)
+        {
+            $curso = $cursos->random();
+
+            $curso_professor[] = ['professor_id'=>$professor, 'curso_id'=>$curso->id];
 
             $datas[] = [
                 'id' =>$professor,
                 'experiencia_profissional' => 'Tem experiência em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso->nome.' por '.($this->faker->numberBetween(1, $this->getIdade(Pessoa::find($professor)->data_de_nascimento)-18)).' anos',
             ];
+            $this->insertDatasMidway('professors', $datas);
         }
         $this->insertDatas('professors', $datas);
-        $this->insertDatas('curso_professor', $cursos);
+        $this->insertDatas('curso_professor', $curso_professor);
     }
 
 
-    protected function makeAluno($ids)
+    protected function makeAluno()
     {
         echo "    start makeAluno()". PHP_EOL;
         $datas = [];
-        $alunos = Pessoa::whereIn('id', $ids)->get();
+        $alunos = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 < 18')->get();
 
-        
         foreach($alunos as $aluno)
         {
             $idade = $this->getIdade($aluno->data_de_nascimento);
             
             $datas[] = [
                 'id' => $aluno->id,
-                'ano_id' => DB::table('anos')->find($idade)->id,
+                'ano_id' => DB::table('anos')->where('id', $idade)->first()->id,
                 'situacao_id' => $this->faker->randomElement([1, 3, 11])
             ];
+            $this->insertDatasMidway('alunos', $datas);
         }
         $this->insertDatas('alunos', $datas);
         $this->attributeBolsa();
@@ -435,25 +454,26 @@ class PessoaCursoFactory extends customFactory
                     'bolsa_id'=> DB::table('bolsas')->inRandomOrder()->first()->id
                 ];
             }
+            $this->insertDatasMidway('aluno_bolsa', $datas);
         }
         $this->insertDatas('aluno_bolsa', $datas);
     }    
 
 
-    protected function makePais($pais)
+    protected function makePais()
     {
         echo "    start makePais()". PHP_EOL;
         $datas = [];
         foreach(Aluno::all() as $aluno)
         {
-            foreach( $this->faker->randomElements($pais, $count = rand(1, 2) ) as $pai )
+            foreach( $this->faker->randomElements(Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->pluck('id')->toArray(), $count = rand(1, 2) ) as $pai )
             {
                 $datas[] = [
                     'pais_ou_responsavel_id' => $pai,
                     'aluno_id' => $aluno->id,
                 ];
             }
-        
+            $this->insertDatasMidway('pais_ou_responsaveis', $datas);
         }
         $this->insertDatas('pais_ou_responsaveis', $datas);
     }
@@ -471,7 +491,9 @@ class PessoaCursoFactory extends customFactory
                 'aluno_id'=> $aluno->id,
                 'valor'=> \App\Models\Bolsa::getValorMensalidade($id=$aluno->id)
             ];
+            $this->insertDatasMidway('mensalidades', $datas);
+
         }
-        $this->insertDatas('mensalidades', $datas);       
+        $this->insertDatas('mensalidades', $datas);
     }
 }

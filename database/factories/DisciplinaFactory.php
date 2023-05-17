@@ -26,7 +26,7 @@ class DisciplinaFactory extends customFactory
             ['nome'=>'Entrega de Trabalho'],
             ['nome'=>'Prova de Recuperação'],
         ];
-        $this->insertDatas('tipos_de_avaliacoes', $datas);
+        $this->verifyTable('tipos_de_avaliacoes', $datas);
     }
 
 
@@ -43,7 +43,7 @@ class DisciplinaFactory extends customFactory
             ['nome'=>'Dispensado'],
         ];
 
-        $this->insertDatas('situacao_da_disciplina', $datas);
+        $this->verifyTable('situacao_da_disciplina', $datas);
     }
 
 
@@ -1401,7 +1401,7 @@ class DisciplinaFactory extends customFactory
                 'created_at'=>now(),
                 'updated_at'=>now()],
         ];
-        $this->insertDatas('disciplinas', $disciplinas);
+        $this->verifyTable('disciplinas', $disciplinas);
     }
      
 }

@@ -46,6 +46,8 @@ class EmprestimoFactory extends customFactory
                     'updated_at'=> now()
                 ];
             }
+            $this->insertDatasMidway('emprestimos', $datas);
+             
         }
         $this->insertDatas('emprestimos', $datas);
     }
@@ -101,6 +103,8 @@ class EmprestimoFactory extends customFactory
                 'valor_da_multa'=> ($dias_atrasados-14) * $emprestimo->acervo->tipo->multa,
                 'pago'=> $data_de_devolucao
             ];
+            $this->insertDatasMidway('multas', $datas);
+
         }
         $this->insertDatas('multas', $datas);
     }

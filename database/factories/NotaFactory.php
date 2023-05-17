@@ -127,6 +127,8 @@ class NotaFactory extends customFactory
                     ];
                 }
             }
+
+            $this->insertDatasMidway('aluno_areas_de_conhecimento', $aluno_area);
         }
         echo "        INSERT inserirAlunoArea()". PHP_EOL;
         $this->insertDatas('aluno_areas_de_conhecimento', $aluno_area);

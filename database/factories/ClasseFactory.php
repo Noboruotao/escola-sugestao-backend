@@ -73,7 +73,7 @@ class ClasseFactory extends customFactory
                 }
             }
         }
-        $this->insertDatas('aluno_classe', $datasAlunoClasse);
-        $this->insertDatas('aluno_disciplina', $datasAlunoDisciplina);
+        $this->verifyTable('aluno_classe', $datasAlunoClasse);
+        $this->verifyTable('aluno_disciplina', $datasAlunoDisciplina);
     }
 }

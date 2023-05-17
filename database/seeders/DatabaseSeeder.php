@@ -13,13 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \Illuminate\Support\Facades\Artisan::call('migrate:fresh');
-
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        \Database\Factories\AcervoFactory::definition($num_editoras = 100, $num_autores = 200, $num_acervos = 500);
+        \Database\Factories\AcervoFactory::definition($num_editoras = 100, $num_autores = 100, $num_acervos = 1000);
 
-        \Database\Factories\PessoaCursoFactory::definition($num_pessoas = 500);
+        \Database\Factories\PessoaCursoFactory::definition($num_pessoas = 2000);
 
         \Database\Factories\AtividadeExtracurricularFactory::definition();
 

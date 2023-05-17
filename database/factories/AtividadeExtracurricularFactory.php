@@ -41,7 +41,7 @@ class AtividadeExtracurricularFactory extends customFactory
             ["nome" => "Robótica"],
             ["nome" => "Outros"]
         ];
-        $this->insertDatas('tipos_de_atividade_extracurricular', $datas);
+        $this->verifyTable('tipos_de_atividade_extracurricular', $datas);
     }
 
 
@@ -202,7 +202,7 @@ class AtividadeExtracurricularFactory extends customFactory
             ['nome' => 'Viagens e excursões', 'tipo_id' => 17],
               
         ];
-        $this->insertDatas('atividade_extracurriculares', $atividades);
+        $this->verifyTable('atividade_extracurriculares', $atividades);
     }
 
 
