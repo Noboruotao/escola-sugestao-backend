@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 use App\Models\Pessoa;
 use App\Models\Aluno;
+use App\Models\Acervo;
 
 class EmprestimoFactory extends customFactory
 {
@@ -29,15 +30,18 @@ class EmprestimoFactory extends customFactory
 
         $pessoas = Aluno::whereBetween('ano_id', [6, 17])->get()->merge(\App\Models\Professor::all());
         $bibliotecarios = Pessoa::getPessoaByRole('Bibliotecário');
+        $acervos = \App\Models\Acervo::all();
 
         foreach($pessoas as $pessoa)
         {
-            foreach(\App\Models\Acervo::inRandomOrder()->limit($this->faker->numberBetween($min = 0, $max = 20))->get() as $acervo)
+            $numero_de_emprestimos = $this->faker->numberBetween($min = 0, $max = 20);
+            do
             {
                 $data_de_emprestimo = $this->faker->dateTimeBetween($startDate = '-3 years', $endDate = '-1 week', $timezone = null);
                 $devolucao_date = clone $data_de_emprestimo;
+
                 $datas[] = [
-                    'acervo_id'=> $acervo->id,
+                    'acervo_id'=> $acervos->random()->id,
                     'bibliotecario_id'=> $this->faker->randomElement($bibliotecarios)->id,
                     'leitor_id'=> $pessoa->id,
                     'data_de_emprestimo'=> $data_de_emprestimo,
@@ -45,7 +49,9 @@ class EmprestimoFactory extends customFactory
                     'created_at'=> now(),
                     'updated_at'=> now()
                 ];
-            }
+
+                $numero_de_emprestimos--;
+            }while($numero_de_emprestimos>0);
             $this->insertDatasMidway('emprestimos', $datas);
              
         }
@@ -68,14 +74,14 @@ class EmprestimoFactory extends customFactory
     {
         echo "    start attributeAcervoAreasToAluno()". PHP_EOL;
 
-        foreach(Aluno::whereIn('id', Emprestimo::distinct('leitor_id')->pluck('leitor_id'))->get() as $leitor)
+        $todos_emprestimos = Emprestimo::whereIn('leitor_id', Aluno::pluck('id')->toArray())->get();
+
+        foreach($todos_emprestimos as $emprestimo)
         {
-            
-            $acervos = \App\Models\Acervo::whereIn('id', Emprestimo::where('leitor_id', $leitor->id)->pluck('acervo_id')->toArray())->get();
-            foreach($acervos as $acervo)
-            {
-                Emprestimo::updateAlunoAreas($leitor, $acervo);
-            }
+            $leitor = aluno::find($emprestimo->leitor->id);
+            $acervo = $emprestimo->acervo;
+
+            Emprestimo::updateAlunoAreas($leitor, $acervo);
         }
     }
 

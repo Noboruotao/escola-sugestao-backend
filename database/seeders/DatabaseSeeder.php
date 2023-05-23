@@ -15,9 +15,9 @@ class DatabaseSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        \Database\Factories\AcervoFactory::definition($num_editoras = 100, $num_autores = 100, $num_acervos = 1000);
+        \Database\Factories\AcervoFactory::definition($num_editoras = 20, $num_autores = 10, $num_acervos = 50);
 
-        \Database\Factories\PessoaCursoFactory::definition($num_pessoas = 2000);
+        \Database\Factories\PessoaCursoFactory::definition($num_pessoas = 200);
 
         \Database\Factories\AtividadeExtracurricularFactory::definition();
 

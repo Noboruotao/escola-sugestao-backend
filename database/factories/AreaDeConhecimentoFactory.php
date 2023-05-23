@@ -424,15 +424,19 @@ class AreaDeConhecimentoFactory extends customFactory
 
         ];
 
+        $todas_as_disciplinas = Disciplina::all();
+        $todas_as_areas = AreasDeConhecimento::all();
+
+
         foreach($area_disciplina as $relacao)
         {
-            $disciplina = Disciplina::where('nome', $relacao['nome'])->first();
+            $disciplina = $todas_as_disciplinas->where('nome', $relacao['nome'])->first();
 
             if( count($relacao['areas'])!=0 ){
                 foreach($relacao['areas'] as $areas_de_conhecimento_nome)
                 {
                     $datas[]=[
-                        'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', $areas_de_conhecimento_nome)->first()->id,
+                        'areas_de_conhecimento_id'=> $todas_as_areas->where('nome', $areas_de_conhecimento_nome)->first()->id,
                         'disciplina_id' => $disciplina->id
                     ];
                 }
@@ -546,9 +550,12 @@ class AreaDeConhecimentoFactory extends customFactory
             ],
         ];
 
+        $todos_os_cursos = \App\models\Curso::all();
+        $todas_as_areas = AreasDeConhecimento::all();
+
         foreach($cursos as $curso)
         {
-            $curso_info = \App\Models\Curso::where('nome', $curso['nome'])->first();
+            $curso_info = $todos_os_cursos->where('nome', $curso['nome'])->first();
             
             if( count($curso["areas"])!=0 )
             {
@@ -556,7 +563,7 @@ class AreaDeConhecimentoFactory extends customFactory
                 {
                     $datas[] = [
                         'curso_id'=> $curso_info->id,
-                        'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', key($area))->first()->id,
+                        'areas_de_conhecimento_id'=> $todas_as_areas->where('nome', key($area))->first()->id,
                         'valor'=>$area[key($area)]
                     ];
                 }
@@ -724,14 +731,17 @@ class AreaDeConhecimentoFactory extends customFactory
               
         ];
 
+        $todas_as_atividades = AtividadesExtracurriculares::all();
+        $todas_areas = \App\Models\AreasDeConhecimento::all();
+
         foreach($atividades as $atividade)
         {
         
-            $ativ_extra = AtividadesExtracurriculares::where('nome', $atividade['nome'])->first();
+            $ativ_extra = $todas_as_atividades->where('nome', $atividade['nome'])->first();
             foreach($atividade['areas'] as $area)
             {
                 $datas[] = [
-                    'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', $area)->first()->id,
+                    'areas_de_conhecimento_id'=> $todas_areas->where('nome', $area)->first()->id,
                     'atividades_extracurriculares_id'=>$ativ_extra->id
                 ];
             }
@@ -857,14 +867,17 @@ class AreaDeConhecimentoFactory extends customFactory
               
         ];
 
+        $todas_as_atividades = AtividadesExtracurriculares::all();
+        $todas_areas = AreasDeConhecimento::all();
+
         foreach($atividades as $atividade)
         {
         
-            $ativ_extra = AtividadesExtracurriculares::where('nome', $atividade['nome'])->first();
+            $ativ_extra =  $todas_as_atividades->where('nome', $atividade['nome'])->first();
             foreach($atividade['areas'] as $key=>$value)
             {
                 $datas[] = [
-                    'areas_de_conhecimento_id'=> AreasDeConhecimento::where('nome', $key)->first()->id,
+                    'areas_de_conhecimento_id'=>  $todas_areas->where('nome', $key)->first()->id,
                     'atividades_extracurriculares_id'=>$ativ_extra->id,
                     'valor'=> $value
                 ];
@@ -972,7 +985,7 @@ class AreaDeConhecimentoFactory extends customFactory
                     $ano_disciplina[] = $this->attributeDisciplinaToAnoDatas($ano, $this->getDisciplinaPorArea($area) );
                 }
             }
-            $this->verifyTable('ano_disciplina', $ano_disciplina);
+            $this->insertDatas('ano_disciplina', $ano_disciplina);
             $ano_disciplina = array();
         }
     }

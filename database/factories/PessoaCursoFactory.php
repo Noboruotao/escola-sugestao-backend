@@ -283,12 +283,12 @@ class PessoaCursoFactory extends customFactory
     }
 
 
-    protected function verifyIfValueExists($coluna, callable $callback)
+    protected function verifyIfValueExists($coluna, callable $callback, $current_datas)
     {
         do {
             $value = $callback();
 
-            if (Pessoa::where($coluna, $value)->exists()) {
+            if (Pessoa::where($coluna, $value)->exists() || $current_datas->contains($coluna, $value) ) {
                 $value = null;
             }
         } while ($value == null);
@@ -343,19 +343,20 @@ class PessoaCursoFactory extends customFactory
 
                 $cpf = $this->verifyIfValueExists('cpf', function(){
                     return $this->faker->cpf();
-                });
+                }, $pessoas);
             
                 $rg = $this->verifyIfValueExists('rg', function(){
                     return $this->faker->rg();
-                });
+                }, $pessoas);
 
                 do {
                     $email = $prim_nome . $this->faker->numerify('####') . '.' . $this->faker->email();
-        
-                    if (Pessoa::where('email', $email)->exists()) {
+                
+                    if (Pessoa::where('email', $email)->exists() == true || $pessoas->contains('email', $email) == true) {
                         $email = null;
                     }
-                } while ($email == null);
+                } while ($email === null);
+                
 
                 $last_nome = $this->faker->lastName();
 
@@ -400,18 +401,20 @@ class PessoaCursoFactory extends customFactory
         $cursos = Curso::all();
         $curso_professor = [];
 
-        $professors = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->limit(Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->count()/10)->pluck('id')->toArray();
+        $professors = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->limit(Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->count()/10)->get();
         foreach($professors as $professor)
         {
             $curso = $cursos->random();
 
-            $curso_professor[] = ['professor_id'=>$professor, 'curso_id'=>$curso->id];
+            $curso_professor[] = ['professor_id'=>$professor->id, 'curso_id'=>$curso->id];
 
             $datas[] = [
-                'id' =>$professor,
-                'experiencia_profissional' => 'Tem experiência em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso->nome.' por '.($this->faker->numberBetween(1, $this->getIdade(Pessoa::find($professor)->data_de_nascimento)-18)).' anos',
+                'id' =>$professor->id,
+                'experiencia_profissional' => 'Tem experiência em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso->nome.' por '.($this->faker->numberBetween(1, $this->getIdade($professor->data_de_nascimento)-18)).' anos',
             ];
             $this->insertDatasMidway('professors', $datas);
+            $this->insertDatasMidway('curso_professor', $curso_professor);
+
         }
         $this->insertDatas('professors', $datas);
         $this->insertDatas('curso_professor', $curso_professor);
@@ -423,14 +426,14 @@ class PessoaCursoFactory extends customFactory
         echo "    start makeAluno()". PHP_EOL;
         $datas = [];
         $alunos = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 < 18')->get();
-
+        $anos = \App\Models\Ano::all();
         foreach($alunos as $aluno)
         {
             $idade = $this->getIdade($aluno->data_de_nascimento);
             
             $datas[] = [
                 'id' => $aluno->id,
-                'ano_id' => DB::table('anos')->where('id', $idade)->first()->id,
+                'ano_id' => $anos->where('id', $idade)->first()->id,
                 'situacao_id' => $this->faker->randomElement([1, 3, 11])
             ];
             $this->insertDatasMidway('alunos', $datas);
@@ -464,9 +467,10 @@ class PessoaCursoFactory extends customFactory
     {
         echo "    start makePais()". PHP_EOL;
         $datas = [];
+        $adultos = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->pluck('id')->toArray();
         foreach(Aluno::all() as $aluno)
         {
-            foreach( $this->faker->randomElements(Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->pluck('id')->toArray(), $count = rand(1, 2) ) as $pai )
+            foreach( $this->faker->randomElements($adultos, $count = rand(1, 2) ) as $pai )
             {
                 $datas[] = [
                     'pais_ou_responsavel_id' => $pai,

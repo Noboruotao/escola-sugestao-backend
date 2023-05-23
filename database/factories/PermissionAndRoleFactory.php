@@ -66,6 +66,8 @@ class PermissionAndRoleFactory extends customFactory
                 'model_type'=> 'App\Models\Pessoa',
                 'model_id'=> $aluno['id']
             ];
+
+            $this->insertDatasMidway('model_has_roles', $model_has_roles);
         }
         $this->insertDatas('model_has_roles', $model_has_roles);
     }
@@ -109,8 +111,9 @@ class PermissionAndRoleFactory extends customFactory
                     'model_id'=> $professor['id']
                 ];
             }
+            $this->insertDatasMidway('model_has_roles', $model_has_roles);
         }
-        $this->verifyTable('model_has_roles', $model_has_roles);
+        $this->insertDatas('model_has_roles', $model_has_roles);
     }
 
 
@@ -127,8 +130,10 @@ class PermissionAndRoleFactory extends customFactory
                 'model_type'=> 'App\Models\Pessoa',
                 'model_id'=> $pai->id
             ];
+
+            $this->insertDatasMidway('model_has_roles', $model_has_roles);
         }
-        $this->verifyTable('model_has_roles', $model_has_roles);
+        $this->insertDatas('model_has_roles', $model_has_roles);
     }
 
 

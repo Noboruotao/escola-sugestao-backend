@@ -365,6 +365,12 @@ class AcervoFactory extends customFactory
     {
         $acervos =[];
         $tipos_acervo_qnt = \App\models\TipoAcervo::count();
+        $autores = \App\Models\Autor::all();
+        $idioma = \App\Models\Idioma::where('idioma', 'Português')->first()->id;
+        $editoras = \App\Models\Editora::all();
+        $categorias = \App\Models\Categoria::all();
+        $estados = \App\Models\EstadoAcervo::all();
+        $situacoes = \App\Models\SituacaoAcervo::all();
 
         while($numero_de_acervos>0)
         {
@@ -396,13 +402,13 @@ class AcervoFactory extends customFactory
                 'titulo' => $this->faker->sentence($nbWords = 4, $variableNbWords = true),
                 'resumo' => $this->faker->paragraph(3),
                 'tradutor' => $this->faker->name(),
-                'autor_id' =>   \App\Models\Autor::inRandomOrder()->first()->id,
-                'idioma_id' => \App\Models\Idioma::where('idioma', 'Português')->first()->id,
-                'editora_id' => \App\Models\Editora::inRandomOrder()->first()->id,
-                'categoria_id' => \App\Models\Categoria::inRandomOrder()->first()->id,
+                'autor_id' =>   $autores->random()->id,
+                'idioma_id' => $idioma,
+                'editora_id' => $editoras->random()->id,
+                'categoria_id' => $categorias->random()->id,
                 'tipo_id' => $tipo_acervo,
-                'estado_id' => \App\Models\EstadoAcervo::inRandomOrder()->first()->id,
-                'situacao_id' => \App\Models\SituacaoAcervo::inRandomOrder()->first()->id,
+                'estado_id' => $estados->random()->id,
+                'situacao_id' => $situacoes->random()->id,
                 'IBNS' => ($tipo_acervo==1)? $this->faker->numerify('###-#-##-######-#'): NULL,
                 'ano_de_publicacao' => $this->faker->date($format='Y', $max='now'),
                 'capa'=> $capa,

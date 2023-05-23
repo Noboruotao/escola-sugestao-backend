@@ -41,8 +41,9 @@ abstract class customFactory extends Factory
 
     protected function insertDatasMidway($table, &$datas)
     {
-        if(count($datas)>=500)
+        if(count($datas)>=2000)
         {
+            echo '        insertDatasMidway '.$table.PHP_EOL;
             $this->insertDatas($table, $datas);
             
             if (is_array($datas)) {

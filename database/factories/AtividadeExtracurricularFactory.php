@@ -210,6 +210,9 @@ class AtividadeExtracurricularFactory extends customFactory
     {
         $alunos = \App\Models\Aluno::all();
         $datas = [];
+
+        $todas_as_atividades = \App\Models\AtividadesExtracurriculares::all();
+
         foreach($alunos as $aluno)
         {
             if($this->faker->randomDigit()<3)

@@ -31,11 +31,13 @@ class NotaFactory extends customFactory
         $notas = [];
         $aluno_disciplina = [];
 
+        $todos_anos = \App\Models\Ano::all();
+
         foreach( \App\Models\Aluno::all() as $aluno )
         {
             for($i=1; $i<($aluno->ano->id); $i++)
             {
-                $disciplinas = \App\Models\Ano::find($i)->disciplinas;
+                $disciplinas = $todos_anos->where('id', $i)->first()->disciplinas;
                 foreach($disciplinas as $disciplina)
                 {
                     $notaP1 = $this->gerarRandomNota();
@@ -94,6 +96,9 @@ class NotaFactory extends customFactory
                     ];
                 }
             }
+
+            $this->insertDatasMidway('aluno_disciplina', $aluno_disciplina);
+            $this->insertDatasMidway('notas', $notas);
         }
         $this->insertDatas('aluno_disciplina', $aluno_disciplina);
         $this->insertDatas('notas', $notas);
@@ -113,7 +118,7 @@ class NotaFactory extends customFactory
                 $num_disciplina = 0;
                 foreach($aluno->disciplinas as $disciplina)
                 {
-                    if( $disciplina->hasAreasDeConhecimento($area->id))
+                    if( $disciplina->areas->contains($area))
                     {
                         $soma += $disciplina->pivot->nota_final;
                         $num_disciplina ++;                        
@@ -130,7 +135,6 @@ class NotaFactory extends customFactory
 
             $this->insertDatasMidway('aluno_areas_de_conhecimento', $aluno_area);
         }
-        echo "        INSERT inserirAlunoArea()". PHP_EOL;
         $this->insertDatas('aluno_areas_de_conhecimento', $aluno_area);
     }
 

@@ -22,10 +22,11 @@ class ClasseFactory extends customFactory
         echo "    start insertClasse()". PHP_EOL;
         $datas = [];
         $disciplinas = \App\Models\Disciplina::all();
+        $professores = \App\Models\Professor::all();
         foreach($disciplinas as $disciplina)
         {
             do{
-                $professor = \App\Models\Professor::inRandomOrder()->first();
+                $professor = $professores->random();
                 if( $disciplina->areas->intersect( $professor->getAreas ) ) 
                 {
                     $datas[] = [
