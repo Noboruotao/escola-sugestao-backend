@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\Aluno;
 
 class NotaFactory extends customFactory
 {
@@ -28,114 +30,111 @@ class NotaFactory extends customFactory
     protected function insertNotas()
     {
         echo "    start insertNotas()". PHP_EOL;
-        $notas = [];
-        $aluno_disciplina = [];
 
         $todos_anos = \App\Models\Ano::all();
-
-        foreach( \App\Models\Aluno::all() as $aluno )
-        {
-            for($i=1; $i<($aluno->ano->id); $i++)
+        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) use ($todos_anos){
+            foreach( $alunos as $aluno )
             {
-                $disciplinas = $todos_anos->where('id', $i)->first()->disciplinas;
-                foreach($disciplinas as $disciplina)
+                for($i=1; $i<($aluno->ano->id); $i++)
                 {
-                    $notaP1 = $this->gerarRandomNota();
-                    $notaP2 = $this->gerarRandomNota();
-
-                    $notas[] = [
-                        'aluno_id'=>$aluno->id,
-                        'tipo_de_avaliacao_id'=> 1,
-                        'disciplina_id'=> $disciplina->id,
-                        'nota'=> $notaP1,
-                        'peso_da_nota'=> 4
-                    ];
-
-                    $notas[] = [
-                        'aluno_id'=>$aluno->id,
-                        'tipo_de_avaliacao_id'=> 2,
-                        'disciplina_id'=> $disciplina->id,
-                        'nota'=> $notaP2,
-                        'peso_da_nota'=> 6
-                    ];
-
-                    if( (($notaP1 * 4 + $notaP2 * 6)/10)<5 )
+                    $disciplinas = $todos_anos->where('id', $i)->first()->disciplinas;
+                    foreach($disciplinas as $disciplina)
                     {
-                        if( $notaP1 < $notaP2 )
+                        $notaP1 = $this->gerarRandomNota();
+                        $notaP2 = $this->gerarRandomNota();
+
+                        $notas[] = [
+                            'aluno_id'=>$aluno->id,
+                            'tipo_de_avaliacao_id'=> 1,
+                            'disciplina_id'=> $disciplina->id,
+                            'nota'=> $notaP1,
+                            'peso_da_nota'=> 4
+                        ];
+
+                        $notas[] = [
+                            'aluno_id'=>$aluno->id,
+                            'tipo_de_avaliacao_id'=> 2,
+                            'disciplina_id'=> $disciplina->id,
+                            'nota'=> $notaP2,
+                            'peso_da_nota'=> 6
+                        ];
+
+                        if( (($notaP1 * 4 + $notaP2 * 6)/10)<5 )
                         {
-                            $notaSub = $this->gerarRandomNota();
-                            $notaP1 = ($notaSub>$notaP1)?$notaSub: $notaP1;
-                            $notas[] = [
-                                'aluno_id'=>$aluno->id,
-                                'tipo_de_avaliacao_id'=> 4,
-                                'disciplina_id'=> $disciplina->id,
-                                'nota'=> $notaP1,
-                                'peso_da_nota'=> 4
-                            ];
+                            if( $notaP1 < $notaP2 )
+                            {
+                                $notaSub = $this->gerarRandomNota();
+                                $notaP1 = ($notaSub>$notaP1)?$notaSub: $notaP1;
+                                $notas[] = [
+                                    'aluno_id'=>$aluno->id,
+                                    'tipo_de_avaliacao_id'=> 4,
+                                    'disciplina_id'=> $disciplina->id,
+                                    'nota'=> $notaP1,
+                                    'peso_da_nota'=> 4
+                                ];
 
-                        }else{
+                            }else{
 
-                            $notaSub = $this->gerarRandomNota();
-                            $notaP2 = ($notaSub>$notaP2)?$notaSub: $notaP2;
-                            $notas[] = [
-                                'aluno_id'=>$aluno->id,
-                                'tipo_de_avaliacao_id'=> 4,
-                                'disciplina_id'=> $disciplina->id,
-                                'nota'=> $notaP2,
-                                'peso_da_nota'=> 6
-                            ];
+                                $notaSub = $this->gerarRandomNota();
+                                $notaP2 = ($notaSub>$notaP2)?$notaSub: $notaP2;
+                                $notas[] = [
+                                    'aluno_id'=>$aluno->id,
+                                    'tipo_de_avaliacao_id'=> 4,
+                                    'disciplina_id'=> $disciplina->id,
+                                    'nota'=> $notaP2,
+                                    'peso_da_nota'=> 6
+                                ];
 
+                            }
                         }
+
+                        $aluno_disciplina[] = [
+                            'aluno_id'=> $aluno->id,
+                            'disciplina_id'=> $disciplina->id,
+                            'situacao_id'=>((($notaP1 * 4 + $notaP2 * 6)/10)>=5)? 1: 2,
+                            'nota_final'=> (($notaP1 * 4 + $notaP2 * 6)/10)
+                        ];
                     }
-
-                    $aluno_disciplina[] = [
-                        'aluno_id'=> $aluno->id,
-                        'disciplina_id'=> $disciplina->id,
-                        'situacao_id'=>((($notaP1 * 4 + $notaP2 * 6)/10)>=5)? 1: 2,
-                        'nota_final'=> (($notaP1 * 4 + $notaP2 * 6)/10)
-                    ];
                 }
-            }
 
-            $this->insertDatasMidway('aluno_disciplina', $aluno_disciplina);
-            $this->insertDatasMidway('notas', $notas);
-        }
-        $this->insertDatas('aluno_disciplina', $aluno_disciplina);
-        $this->insertDatas('notas', $notas);
+            }
+            $this->insertDatas('aluno_disciplina', $aluno_disciplina);
+            $this->insertDatas('notas', $notas);
+        });
     }
 
 
     protected function inserirAlunoArea()
     {
         echo "    start inserirAlunoArea()". PHP_EOL;
-        $aluno_area = [];
 
-        foreach(\App\Models\Aluno::all() as $aluno)
-        {
-            foreach( $aluno->getAlunoAreaByDisciplina() as $area)
+        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
+            foreach($alunos as $aluno)
             {
-                $soma = 0;
-                $num_disciplina = 0;
-                foreach($aluno->disciplinas as $disciplina)
+                foreach( $aluno->getAlunoAreaByDisciplina() as $area)
                 {
-                    if( $disciplina->areas->contains($area))
+                    $soma = 0;
+                    $num_disciplina = 0;
+                    foreach($aluno->disciplinas as $disciplina)
                     {
-                        $soma += $disciplina->pivot->nota_final;
-                        $num_disciplina ++;                        
-                    }                    
+                        if( $disciplina->areas->contains($area))
+                        {
+                            $soma += $disciplina->pivot->nota_final;
+                            $num_disciplina ++;                        
+                        }                    
+                    }
+                    if($soma!=0){
+                        $aluno_area[] = [
+                            'aluno_id'=> $aluno->id,
+                            'areas_de_conhecimento_id'=> $area->id,
+                            'valor_calculado_por_notas'=> ($soma/$num_disciplina)
+                        ];
+                    }
                 }
-                if($soma!=0){
-                    $aluno_area[] = [
-                        'aluno_id'=> $aluno->id,
-                        'areas_de_conhecimento_id'=> $area->id,
-                        'valor_calculado_por_notas'=> ($soma/$num_disciplina)
-                    ];
-                }
-            }
 
-            $this->insertDatasMidway('aluno_areas_de_conhecimento', $aluno_area);
-        }
-        $this->insertDatas('aluno_areas_de_conhecimento', $aluno_area);
+            }
+            $this->insertDatas('aluno_areas_de_conhecimento', $aluno_area);
+        });
     }
 
 
@@ -143,13 +142,14 @@ class NotaFactory extends customFactory
     {
         echo "    start attributeAtivExtraAreasToAluno()". PHP_EOL; 
 
-        $alunos = \App\Models\Aluno::all();
-        foreach($alunos as $aluno)
-        {
-            foreach($aluno->atividades_extracurriculares as $ativExtra)
+        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
+            foreach($alunos as $aluno)
             {
-                \App\Models\AtividadesExtracurriculares::updateAlunoAreas($aluno, $ativExtra);
+                foreach($aluno->atividades_extracurriculares as $ativExtra)
+                {
+                    \App\Models\AtividadesExtracurriculares::updateAlunoAreas($aluno, $ativExtra);
+                }
             }
-        }
+        });
     }
 }

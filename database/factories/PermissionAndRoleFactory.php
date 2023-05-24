@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -28,7 +29,6 @@ class PermissionAndRoleFactory extends customFactory
     protected function insertRoles()
     {
         echo "    start insertRoles()". PHP_EOL;
-        $datas = [];
         $roles_data = [
             'Administrador',
             'Diretor',
@@ -58,18 +58,18 @@ class PermissionAndRoleFactory extends customFactory
     {
         echo "    start attributeRolesToAlunos()". PHP_EOL;
 
-        $model_has_roles =[];
-        foreach(\App\Models\Aluno::all()->toArray() as $aluno)
-        {
-            $model_has_roles[] = [
-                'role_id'=> 8,
-                'model_type'=> 'App\Models\Pessoa',
-                'model_id'=> $aluno['id']
-            ];
 
-            $this->insertDatasMidway('model_has_roles', $model_has_roles);
-        }
-        $this->insertDatas('model_has_roles', $model_has_roles);
+        \App\Models\Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
+            foreach($alunos as $aluno)
+            {
+                $model_has_roles[] = [
+                    'role_id'=> 8,
+                    'model_type'=> 'App\Models\Pessoa',
+                    'model_id'=> $aluno->id
+                ];
+            }
+            $this->insertDatas('model_has_roles', $model_has_roles);
+        });
     }
 
 
@@ -77,28 +77,27 @@ class PermissionAndRoleFactory extends customFactory
     {
         echo "    start attributeRolesToProfessor()". PHP_EOL;
 
-        $model_has_roles =[];
         foreach(\App\Models\Professor::all()->toArray() as $professor)
         {
-            if(count($model_has_roles)==0){
+            if(\App\Models\Professor::count()==0){
                 $model_has_roles[] = [
                     'role_id'=> 1,
                     'model_type'=> 'App\Models\Pessoa',
                     'model_id'=> $professor['id']
                 ];    
-            }else if(count($model_has_roles)==1){
+            }else if(\App\Models\Professor::count()==1){
                 $model_has_roles[] = [
                     'role_id'=> 2,
                     'model_type'=> 'App\Models\Pessoa',
                     'model_id'=> $professor['id']
                 ];    
-            }else if(count($model_has_roles)==2){
+            }else if(\App\Models\Professor::count()==2){
                 $model_has_roles[] = [
                     'role_id'=> 3,
                     'model_type'=> 'App\Models\Pessoa',
                     'model_id'=> $professor['id']
                 ];    
-            }else if(count($model_has_roles)==3){
+            }else if(\App\Models\Professor::count()==3){
                 $model_has_roles[] = [
                     'role_id'=> 7,
                     'model_type'=> 'App\Models\Pessoa',
@@ -111,7 +110,10 @@ class PermissionAndRoleFactory extends customFactory
                     'model_id'=> $professor['id']
                 ];
             }
-            $this->insertDatasMidway('model_has_roles', $model_has_roles);
+            if(count($model_has_roles)>200)
+            {
+                $this->insertDatas('model_has_roles', $model_has_roles);
+            }
         }
         $this->insertDatas('model_has_roles', $model_has_roles);
     }
@@ -121,18 +123,17 @@ class PermissionAndRoleFactory extends customFactory
     {
         echo "    start attributeRolesToPais()". PHP_EOL;
 
-        $model_has_roles = [];
-        $pais = \App\Models\Pessoa::whereDoesntHave('Roles')->get();
-        foreach($pais as $pai)
-        {
-            $model_has_roles[] = [
-                'role_id'=> 8,
-                'model_type'=> 'App\Models\Pessoa',
-                'model_id'=> $pai->id
-            ];
-
-            $this->insertDatasMidway('model_has_roles', $model_has_roles);
-        }
+        \App\Models\Pessoa::whereDoesntHave('Roles')->orderBy('id')->chunk(500, function (Collection $pais) {
+            foreach($pais as $pai)
+            {
+                $model_has_roles[] = [
+                    'role_id'=> 8,
+                    'model_type'=> 'App\Models\Pessoa',
+                    'model_id'=> $pai->id
+                ];
+            }
+            $this->insertDatas('model_has_roles', $model_has_roles);
+        });
         $this->insertDatas('model_has_roles', $model_has_roles);
     }
 
@@ -204,7 +205,6 @@ class PermissionAndRoleFactory extends customFactory
     {
         echo "    start attributePermissionToRole()". PHP_EOL;
 
-        $datas = [];
 
         $rolePermission = [
             [

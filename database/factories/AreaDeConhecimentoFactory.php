@@ -5,8 +5,10 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\AreasDeConhecimento;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\Disciplina;
 use App\Models\AtividadesExtracurriculares;
+use App\Models\Acervo;
 
 class AreaDeConhecimentoFactory extends customFactory
 {
@@ -154,7 +156,6 @@ class AreaDeConhecimentoFactory extends customFactory
     protected function attributeAreasToDisciplina()
     {
         echo "    start attributeAreasToDisciplina()". PHP_EOL; 
-        $datas =[];
         $area_disciplina = [
             ["nome" => "Cálculo I", "areas" =>['Matemática', 'Estatisticas', 'Física']],
             ["nome" => "Cálculo II", "areas" =>['Matemática', 'Estatisticas', 'Física']],
@@ -424,9 +425,8 @@ class AreaDeConhecimentoFactory extends customFactory
 
         ];
 
-        $todas_as_disciplinas = Disciplina::all();
         $todas_as_areas = AreasDeConhecimento::all();
-
+        $todas_as_disciplinas = Disciplina::all();
 
         foreach($area_disciplina as $relacao)
         {
@@ -450,7 +450,6 @@ class AreaDeConhecimentoFactory extends customFactory
     {
         echo "    start parametroAreasToCurso()". PHP_EOL; 
 
-        $datas = [];
         $cursos = [
             [
                 'nome' => 'Administração',
@@ -576,7 +575,6 @@ class AreaDeConhecimentoFactory extends customFactory
     protected function attributeAreasToAtivExtra()
     {
         echo "    start attributeAreasToAtivExtra()". PHP_EOL; 
-        $datas = [];
         $atividades = [
             ['nome' => 'Futebol', 'areas'=>['Anatomia Humana']],
             ['nome' => 'Vôlei', 'areas'=>['Anatomia Humana']],
@@ -754,7 +752,6 @@ class AreaDeConhecimentoFactory extends customFactory
     {
         echo "    start parametroAreasAtivExtra()". PHP_EOL; 
 
-        $datas = [];
         $atividades = [
             ['nome' => 'Ginástica Rítmica', 'areas'=>['Anatomia Humana'=>8, 'Música'=>5]],
             ['nome' => 'Atletismo', 'areas'=>['Anatomia Humana'=>8]],
@@ -891,21 +888,21 @@ class AreaDeConhecimentoFactory extends customFactory
     {
         echo "    start attributeAreasToAcervo()". PHP_EOL; 
 
-        $acervos = \App\Models\Acervo::all();
-        $datas = [];
-
-        foreach($acervos as $acervo)
-        {
-            foreach( AreasDeConhecimento::limit( $this->faker->randomDigitNot(0) )->inRandomOrder()->get() as $area )
+        Acervo::orderBy('id')->chunk(500, function (Collection $acervos){
+            foreach($acervos as $acervo)
             {
-                $datas[] =[
-                    'acervo_id'=> $acervo->id,
-                    'areas_de_conhecimento_id'=> $area->id
-                ];
+                foreach( AreasDeConhecimento::limit( $this->faker->randomDigitNot(0) )->inRandomOrder()->get() as $area )
+                {
+                    $datas[] =[
+                        'acervo_id'=> $acervo->id,
+                        'areas_de_conhecimento_id'=> $area->id
+                    ];
+                }
             }
-            $this->insertDatasMidway('acervo_areas_de_conhecimento', $datas);
-        }
-        $this->verifyTable('acervo_areas_de_conhecimento', $datas);
+            $this->insertDatas('acervo_areas_de_conhecimento', $datas);
+
+        });
+        $this->insertDatas('acervo_areas_de_conhecimento', $datas);
     }
 
 
@@ -945,7 +942,6 @@ class AreaDeConhecimentoFactory extends customFactory
     protected function attributeDisciplinaToAno()
     {
         echo "    start attributeDisciplinaToAno()". PHP_EOL; 
-        $ano_disciplina  = [];
 
         $anos = DB::table('anos')
                 ->join('nivel_escolar', 'anos.nivel_escolar_id', '=', 'nivel_escolar.id')
@@ -994,28 +990,29 @@ class AreaDeConhecimentoFactory extends customFactory
     protected function insertMaterialSugerido()
     {
         echo "    start insertMaterialSugerido()". PHP_EOL; 
-        $datas = [];
-
-        $acervos = \App\Models\Acervo::all();
-
-        foreach($acervos as $acervo)
-        {
-            $acervoAreas = $acervo->areas;
-            $disciplinas = new Disciplina();
-            $disciplinas = $disciplinas->hasAreasDeConhecimento($acervoAreas->pluck('id'));
-            foreach($disciplinas as $disciplina)
+        
+        Acervo::orderBy('id')->chunk(500, function (Collection $acervos){
+            foreach($acervos as $acervo)
             {
-                if( count( $acervoAreas->intersect($disciplina->areas) ) >=3 || count( $acervoAreas->intersect($disciplina->areas) ) == count($acervoAreas))
+                $acervoAreas = $acervo->areas;
+                $disciplinas = new Disciplina();
+                $disciplinas = $disciplinas->hasAreasDeConhecimento($acervoAreas->pluck('id'));
+                foreach($disciplinas as $disciplina)
                 {
-                    $datas[] = [
-                        'disciplina_id'=> $disciplina->id,
-                        'acervo_id'=> $acervo->id
-                    ];
-                    
+                    if( count( $acervoAreas->intersect($disciplina->areas) ) >=3 || count( $acervoAreas->intersect($disciplina->areas) ) == count($acervoAreas))
+                    {
+                        $datas[] = [
+                            'disciplina_id'=> $disciplina->id,
+                            'acervo_id'=> $acervo->id
+                        ];
+                        
+                    }
                 }
-                $this->insertDatasMidway('materiais_sugeridos', $datas);
             }
-        }
-        $this->verifyTable('materiais_sugeridos', $datas);
+            if($datas != null)
+            {
+                $this->insertDatas('materiais_sugeridos', $datas);
+            }
+        });
     }
 }

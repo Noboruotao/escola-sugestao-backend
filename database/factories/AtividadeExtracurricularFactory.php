@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
 
 
 class AtividadeExtracurricularFactory extends customFactory
@@ -208,27 +209,27 @@ class AtividadeExtracurricularFactory extends customFactory
 
     protected function attributeAtivExtraToAluno()
     {
-        $alunos = \App\Models\Aluno::all();
-        $datas = [];
-
         $todas_as_atividades = \App\Models\AtividadesExtracurriculares::all();
 
-        foreach($alunos as $aluno)
-        {
-            if($this->faker->randomDigit()<3)
+        \App\Models\Aluno::orderBy('id')->chunk(500, function(Collection $alunos) use ($todas_as_atividades){
+            foreach($alunos as $aluno)
             {
-                $num_de_ativ = rand(1, 2);
-                $atividade_extracurriculares = \App\Models\AtividadesExtracurriculares::limit($num_de_ativ)->inRandomOrder()->get();
-                foreach($atividade_extracurriculares as $ativ_extra)
+                if($this->faker->randomDigit()<3)
                 {
-                    $datas[] = [
-                        'aluno_id'=> $aluno->id,
-                        'atividades_extracurriculares_id'=>$ativ_extra->id,
-                        'ativo'=> ($atividade_extracurriculares->last() === $ativ_extra)? 1: null
-                    ];
+                    $num_de_ativ = rand(1, 2);
+                    $atividade_extracurriculares = $todas_as_atividades->shuffle()->take($num_de_ativ);
+                    foreach($atividade_extracurriculares as $ativ_extra)
+                    {
+                        $datas[] = [
+                            'aluno_id'=> $aluno->id,
+                            'atividades_extracurriculares_id'=>$ativ_extra->id,
+                            'ativo'=> ($atividade_extracurriculares->last() === $ativ_extra)? 1: null
+                        ];
+                    }
                 }
             }
-        }
+            $this->insertDatas('aluno_atividades_extracurriculares', $datas);
+        });
         $this->insertDatas('aluno_atividades_extracurriculares', $datas);
     }
 }

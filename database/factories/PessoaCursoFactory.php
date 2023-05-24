@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Models\Aluno;
 use App\Models\Pessoa;
 use App\Models\Curso;
@@ -268,7 +269,6 @@ class PessoaCursoFactory extends customFactory
     protected function insertAno()
     {
         echo "    start insertAno()". PHP_EOL;
-        $data = [];
         foreach([['Ensino Infantil', 5], ['Ensino Fundamental',9], ['Ensino Médio', 3],['Cursos Técnicos', 3], ['Cursos Preparatórios', 1]] as $nivel)
         {
             for($i=1; $i<=$nivel[1]; $i++)
@@ -380,7 +380,10 @@ class PessoaCursoFactory extends customFactory
 
                 $numero_de_pessoa--;
                 
-                $this->insertDatasMidway('pessoas', $pessoas);
+                if($pessoas->count()>200)
+               {
+                $this->insertDatas('pessoas', $pessoas);
+                };
             }
 
             $this->insertDatas('pessoas', $pessoas);
@@ -397,25 +400,33 @@ class PessoaCursoFactory extends customFactory
     protected function makeProfessor()
     {
         echo "    start makeProfessor()". PHP_EOL;
-        $datas = [];
         $cursos = Curso::all();
-        $curso_professor = [];
 
-        $professors = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->limit(Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->count()/10)->get();
-        foreach($professors as $professor)
-        {
-            $curso = $cursos->random();
+        $limit = ceil(Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->count() / 10);
 
-            $curso_professor[] = ['professor_id'=>$professor->id, 'curso_id'=>$curso->id];
+        Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->limit($limit)->orderBy('id')->chunk(500, function (Collection $professors) use ($cursos){
+            foreach($professors as $professor)
+            {
+                $curso = $cursos->random();
 
-            $datas[] = [
-                'id' =>$professor->id,
-                'experiencia_profissional' => 'Tem experiência em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso->nome.' por '.($this->faker->numberBetween(1, $this->getIdade($professor->data_de_nascimento)-18)).' anos',
-            ];
-            $this->insertDatasMidway('professors', $datas);
-            $this->insertDatasMidway('curso_professor', $curso_professor);
+                $curso_professor[] = ['professor_id'=>$professor->id, 'curso_id'=>$curso->id];
 
-        }
+                $datas[] = [
+                    'id' =>$professor->id,
+                    'experiencia_profissional' => 'Tem experiência em '. $this->faker->randomElement(['lecionar ', 'estudar ', 'pesquisar ']). 'na área de '.$curso->nome.' por '.($this->faker->numberBetween(1, $this->getIdade($professor->data_de_nascimento)-18)).' anos',
+                ];
+
+                if(count($datas)>200)
+               {
+                $this->insertDatas('professors', $datas);
+                }
+                
+                if(count($curso_professor)>200)
+               {
+                $this->insertDatas('curso_professor', $curso_professor);
+                };
+            }
+        });
         $this->insertDatas('professors', $datas);
         $this->insertDatas('curso_professor', $curso_professor);
     }
@@ -424,20 +435,27 @@ class PessoaCursoFactory extends customFactory
     protected function makeAluno()
     {
         echo "    start makeAluno()". PHP_EOL;
-        $datas = [];
-        $alunos = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 < 18')->get();
         $anos = \App\Models\Ano::all();
-        foreach($alunos as $aluno)
-        {
-            $idade = $this->getIdade($aluno->data_de_nascimento);
-            
-            $datas[] = [
-                'id' => $aluno->id,
-                'ano_id' => $anos->where('id', $idade)->first()->id,
-                'situacao_id' => $this->faker->randomElement([1, 3, 11])
-            ];
-            $this->insertDatasMidway('alunos', $datas);
-        }
+        Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 < 18')->orderBy('id')->chunk(500, function (Collection $alunos) use ($anos) {
+
+            foreach($alunos as $aluno)
+            {
+                $idade = $this->getIdade($aluno->data_de_nascimento);
+                
+                $datas[] = [
+                    'id' => $aluno->id,
+                    'ano_id' => $anos->where('id', $idade)->first()->id,
+                    'situacao_id' => $this->faker->randomElement([1, 3, 11])
+                ];
+
+            }
+
+            if(count($datas)>200)
+           {
+            $this->insertDatas('alunos', $datas);
+            };
+
+        });
         $this->insertDatas('alunos', $datas);
         $this->attributeBolsa();
     }
@@ -447,18 +465,24 @@ class PessoaCursoFactory extends customFactory
     {
         $alunos = Aluno::all();
 
-        $datas = [];
-        foreach($alunos as $aluno)
-        {
-            if(rand(0, 2)==1)
+        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
+
+            foreach($alunos as $aluno)
             {
-                $datas[] = [
-                    'aluno_id'=> $aluno->id,
-                    'bolsa_id'=> DB::table('bolsas')->inRandomOrder()->first()->id
-                ];
+                if(rand(0, 2)==1)
+                {
+                    $datas[] = [
+                        'aluno_id'=> $aluno->id,
+                        'bolsa_id'=> DB::table('bolsas')->inRandomOrder()->first()->id
+                    ];
+                }
             }
-            $this->insertDatasMidway('aluno_bolsa', $datas);
-        }
+
+            if(count($datas)>200)
+           {
+            $this->insertDatas('aluno_bolsa', $datas);
+            };
+        });
         $this->insertDatas('aluno_bolsa', $datas);
     }    
 
@@ -466,19 +490,27 @@ class PessoaCursoFactory extends customFactory
     protected function makePais()
     {
         echo "    start makePais()". PHP_EOL;
-        $datas = [];
         $adultos = Pessoa::whereRaw('DATEDIFF(CURDATE(), data_de_nascimento) / 365 > 18')->pluck('id')->toArray();
-        foreach(Aluno::all() as $aluno)
-        {
-            foreach( $this->faker->randomElements($adultos, $count = rand(1, 2) ) as $pai )
+        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) use ($adultos){
+
+            foreach($alunos as $aluno)
             {
-                $datas[] = [
-                    'pais_ou_responsavel_id' => $pai,
-                    'aluno_id' => $aluno->id,
-                ];
+                foreach( $this->faker->randomElements($adultos, $count = rand(1, 2) ) as $pai )
+                {
+                    $datas[] = [
+                        'pais_ou_responsavel_id' => $pai,
+                        'aluno_id' => $aluno->id,
+                    ];
+                }
+
             }
-            $this->insertDatasMidway('pais_ou_responsaveis', $datas);
-        }
+
+            if(count($datas)>200)
+           {
+            $this->insertDatas('pais_ou_responsaveis', $datas);
+            };
+
+        });
         $this->insertDatas('pais_ou_responsaveis', $datas);
     }
 
@@ -486,18 +518,21 @@ class PessoaCursoFactory extends customFactory
     protected function insertMensalidade()
     {
         echo "    start insertMensalidade()". PHP_EOL;
-        $datas = [];
-        $alunos = Aluno::all();
+        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
 
-        foreach($alunos as $aluno)
-        {
-            $datas[] = [
-                'aluno_id'=> $aluno->id,
-                'valor'=> \App\Models\Bolsa::getValorMensalidade($id=$aluno->id)
-            ];
-            $this->insertDatasMidway('mensalidades', $datas);
+            foreach($alunos as $aluno)
+            {
+                $datas[] = [
+                    'aluno_id'=> $aluno->id,
+                    'valor'=> \App\Models\Bolsa::getValorMensalidade($id=$aluno->id)
+                ];
+            }
 
-        }
+            if(count($datas)>200)
+           {
+            $this->insertDatas('mensalidades', $datas);
+            };
+        });
         $this->insertDatas('mensalidades', $datas);
     }
 }

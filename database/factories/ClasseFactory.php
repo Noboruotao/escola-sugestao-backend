@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Validation\Rules\Exists;
+use Illuminate\Database\Eloquent\Collection;
 
 class ClasseFactory extends customFactory
 {
@@ -20,7 +21,6 @@ class ClasseFactory extends customFactory
     protected function insertClasse()
     {
         echo "    start insertClasse()". PHP_EOL;
-        $datas = [];
         $disciplinas = \App\Models\Disciplina::all();
         $professores = \App\Models\Professor::all();
         foreach($disciplinas as $disciplina)
@@ -46,35 +46,34 @@ class ClasseFactory extends customFactory
     protected function alunoClasse()
     {
         echo "    start alunoClasse()". PHP_EOL;
-
-       $datasAlunoClasse = [];
-       $datasAlunoDisciplina = [];
        
-       $classes = \App\Models\Classe::all();
-
-       foreach($classes as $classe)
-       {
-            $disciplina = $classe->disciplina;
-
-            if( count($disciplina->anos)!=0 )
+        \App\Models\Classe::orderBy('id')->chunk(500, function (Collection $classes){
+            foreach($classes as $classe)
             {
-                $alunos = $disciplina->anos[0]->alunos;
-                foreach($alunos as $aluno)
-                {
-                    $datasAlunoClasse[] = [
-                        'aluno_id'=> $aluno->id,
-                        'classe_id'=> $classe->id
-                    ];
+                $disciplina = $classe->disciplina;
 
-                    $datasAlunoDisciplina[] = [
-                        'aluno_id'=> $aluno->id,
-                        'disciplina_id'=> $disciplina->id,
-                        'situacao_id'=> 5
-                    ];
+                if( count($disciplina->anos)!=0 )
+                {
+                    $alunos = $disciplina->anos[0]->alunos;
+                    foreach($alunos as $aluno)
+                    {
+                        $datasAlunoClasse[] = [
+                            'aluno_id'=> $aluno->id,
+                            'classe_id'=> $classe->id
+                        ];
+
+                        $datasAlunoDisciplina[] = [
+                            'aluno_id'=> $aluno->id,
+                            'disciplina_id'=> $disciplina->id,
+                            'situacao_id'=> 5
+                        ];
+                    }
                 }
             }
-        }
-        $this->verifyTable('aluno_classe', $datasAlunoClasse);
-        $this->verifyTable('aluno_disciplina', $datasAlunoDisciplina);
+            $this->insertDatas('aluno_classe', $datasAlunoClasse);
+            $this->insertDatas('aluno_disciplina', $datasAlunoDisciplina);
+        });
+        $this->insertDatas('aluno_classe', $datasAlunoClasse);
+        $this->insertDatas('aluno_disciplina', $datasAlunoDisciplina);
     }
 }

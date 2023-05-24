@@ -26,7 +26,7 @@ abstract class customFactory extends Factory
      * deve ter as chaves de acordo com o nome da coluna)
      * entrada: array
      */
-    protected function insertDatas($table, $datas)
+    protected function insertDatas($table, &$datas)
     {
         $data = collect($datas)->map(function($data){
             return $data;
@@ -36,25 +36,33 @@ abstract class customFactory extends Factory
         {
             DB::table($table)->insert($data_parts);    
         }
-    }
 
-
-    protected function insertDatasMidway($table, &$datas)
-    {
-        if(count($datas)>=2000)
-        {
-            echo '        insertDatasMidway '.$table.PHP_EOL;
-            $this->insertDatas($table, $datas);
-            
-            if (is_array($datas)) {
-                $datas = [];
-            }
-            
-            if ($datas instanceof \Illuminate\Support\Collection) {
-                $datas = collect();
-            }
+        if (is_array($datas)) {
+            $datas = [];
+        }
+        
+        if ($datas instanceof \Illuminate\Support\Collection) {
+            $datas = collect();
         }
     }
+
+
+    // protected function insertDatasMidway($table, &$datas)
+    // {
+    //     if(count($datas)>=2000)
+    //     {
+    //         echo '        insertDatasMidway '.$table.PHP_EOL;
+    //         $this->insertDatas($table, $datas);
+            
+    //         if (is_array($datas)) {
+    //             $datas = [];
+    //         }
+            
+    //         if ($datas instanceof \Illuminate\Support\Collection) {
+    //             $datas = collect();
+    //         }
+    //     }
+    // }
 
 
     /**

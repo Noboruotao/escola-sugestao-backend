@@ -247,7 +247,6 @@ class AcervoFactory extends customFactory
     protected function insertEditoras($numero_de_editoras=10)
     {
         echo "    start insertEditoras()". PHP_EOL;
-        $editoras = [];
         while($numero_de_editoras > 0)
         {
             $editoras[] = [
@@ -261,7 +260,11 @@ class AcervoFactory extends customFactory
                     'estado_id'=>DB::table('estados')->inRandomOrder()->first()->id
             ];
             $numero_de_editoras--;
-            $this->insertDatasMidway('editoras', $editoras);
+            
+            if(count($editoras)>200)
+            {
+                $this->insertDatas('editoras', $editoras);
+            }
         }
         $this->insertDatas('editoras', $editoras);
     }
@@ -326,7 +329,6 @@ class AcervoFactory extends customFactory
      */
     protected function makeAutores($numero_de_autores)
     {
-        $autores = [];
         while($numero_de_autores > 0)
         {
             $nacionalidade = DB::table('nacionalidades')->inRandomOrder()->first()->id;
@@ -340,7 +342,10 @@ class AcervoFactory extends customFactory
                 'data_de_falecimento' => (rand(0, 1) ===1)?$faker->dateTimeBetween($data_de_nascimento, 'now')->format('Y-m-d'): null
             ];
             $numero_de_autores--;
-            $this->insertDatasMidway('autors', $autores);
+            if(count($autores)>200)
+            {
+                $this->insertDatas('autors', $autores);
+            }
         }
         return $autores;
     }
@@ -363,7 +368,6 @@ class AcervoFactory extends customFactory
      */
     protected function makeAcervo($numero_de_acervos)
     {
-        $acervos =[];
         $tipos_acervo_qnt = \App\models\TipoAcervo::count();
         $autores = \App\Models\Autor::all();
         $idioma = \App\Models\Idioma::where('idioma', 'Português')->first()->id;
@@ -416,7 +420,12 @@ class AcervoFactory extends customFactory
                 'updated_at'=>now()
             ];
             $numero_de_acervos--;
-            $this->insertDatasMidway('acervos', $acervos);
+
+            if(count($acervos)>200)
+            {
+                $this->insertDatas('acervos', $acervos);
+            }
+            
         }
         return $acervos;
     }
