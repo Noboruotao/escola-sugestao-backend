@@ -11,9 +11,9 @@ class Autor extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nome', 
-        'nacionalidade_id', 
-        'data_de_nascimento', 
+        'nome',
+        'nacionalidade_id',
+        'data_de_nascimento',
         'data_de_falecimento'
     ];
 

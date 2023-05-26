@@ -9,7 +9,7 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionAndRoleFactory extends customFactory
 {
-    
+
     public function definition()
     {
         dump('Starting Permission seeding');
@@ -28,7 +28,7 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function insertRoles()
     {
-        echo "    start insertRoles()". PHP_EOL;
+        echo "    start insertRoles()" . PHP_EOL;
         $roles_data = [
             'Administrador',
             'Diretor',
@@ -41,13 +41,12 @@ class PermissionAndRoleFactory extends customFactory
             'Pais/Responsável',
         ];
 
-        foreach( $roles_data as $role )
-        {
+        foreach ($roles_data as $role) {
             $datas[] = [
-                'name'=> $role,
-                'guard_name'=> \Spatie\Permission\Guard::getDefaultName(static::class),
-                'created_at'=>now(),
-                'updated_at'=> now()
+                'name' => $role,
+                'guard_name' => \Spatie\Permission\Guard::getDefaultName(static::class),
+                'created_at' => now(),
+                'updated_at' => now()
             ];
         }
         $this->verifyTable('roles', $datas);
@@ -56,16 +55,15 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributeRolesToAlunos()
     {
-        echo "    start attributeRolesToAlunos()". PHP_EOL;
+        echo "    start attributeRolesToAlunos()" . PHP_EOL;
 
 
         \App\Models\Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
-            foreach($alunos as $aluno)
-            {
+            foreach ($alunos as $aluno) {
                 $model_has_roles[] = [
-                    'role_id'=> 8,
-                    'model_type'=> 'App\Models\Pessoa',
-                    'model_id'=> $aluno->id
+                    'role_id' => 8,
+                    'model_type' => 'App\Models\Pessoa',
+                    'model_id' => $aluno->id
                 ];
             }
             $this->insertDatas('model_has_roles', $model_has_roles);
@@ -75,43 +73,41 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributeRolesToProfessor()
     {
-        echo "    start attributeRolesToProfessor()". PHP_EOL;
+        echo "    start attributeRolesToProfessor()" . PHP_EOL;
 
-        foreach(\App\Models\Professor::all()->toArray() as $professor)
-        {
-            if(\App\Models\Professor::count()==0){
+        foreach (\App\Models\Professor::all()->toArray() as $professor) {
+            if (\App\Models\Professor::count() == 0) {
                 $model_has_roles[] = [
-                    'role_id'=> 1,
-                    'model_type'=> 'App\Models\Pessoa',
-                    'model_id'=> $professor['id']
-                ];    
-            }else if(\App\Models\Professor::count()==1){
+                    'role_id' => 1,
+                    'model_type' => 'App\Models\Pessoa',
+                    'model_id' => $professor['id']
+                ];
+            } else if (\App\Models\Professor::count() == 1) {
                 $model_has_roles[] = [
-                    'role_id'=> 2,
-                    'model_type'=> 'App\Models\Pessoa',
-                    'model_id'=> $professor['id']
-                ];    
-            }else if(\App\Models\Professor::count()==2){
+                    'role_id' => 2,
+                    'model_type' => 'App\Models\Pessoa',
+                    'model_id' => $professor['id']
+                ];
+            } else if (\App\Models\Professor::count() == 2) {
                 $model_has_roles[] = [
-                    'role_id'=> 3,
-                    'model_type'=> 'App\Models\Pessoa',
-                    'model_id'=> $professor['id']
-                ];    
-            }else if(\App\Models\Professor::count()==3){
+                    'role_id' => 3,
+                    'model_type' => 'App\Models\Pessoa',
+                    'model_id' => $professor['id']
+                ];
+            } else if (\App\Models\Professor::count() == 3) {
                 $model_has_roles[] = [
-                    'role_id'=> 7,
-                    'model_type'=> 'App\Models\Pessoa',
-                    'model_id'=> $professor['id']
-                ];    
-            }else{
+                    'role_id' => 7,
+                    'model_type' => 'App\Models\Pessoa',
+                    'model_id' => $professor['id']
+                ];
+            } else {
                 $model_has_roles[] = [
-                    'role_id'=> Role::whereIn('id', [4, 5, 6, 7])->inRandomOrder()->first()->id,
-                    'model_type'=> 'App\Models\Pessoa',
-                    'model_id'=> $professor['id']
+                    'role_id' => Role::whereIn('id', [4, 5, 6, 7])->inRandomOrder()->first()->id,
+                    'model_type' => 'App\Models\Pessoa',
+                    'model_id' => $professor['id']
                 ];
             }
-            if(count($model_has_roles)>200)
-            {
+            if (count($model_has_roles) > 200) {
                 $this->insertDatas('model_has_roles', $model_has_roles);
             }
         }
@@ -121,15 +117,14 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributeRolesToPais()
     {
-        echo "    start attributeRolesToPais()". PHP_EOL;
+        echo "    start attributeRolesToPais()" . PHP_EOL;
 
         \App\Models\Pessoa::whereDoesntHave('Roles')->orderBy('id')->chunk(500, function (Collection $pais) {
-            foreach($pais as $pai)
-            {
+            foreach ($pais as $pai) {
                 $model_has_roles[] = [
-                    'role_id'=> 8,
-                    'model_type'=> 'App\Models\Pessoa',
-                    'model_id'=> $pai->id
+                    'role_id' => 8,
+                    'model_type' => 'App\Models\Pessoa',
+                    'model_id' => $pai->id
                 ];
             }
             $this->insertDatas('model_has_roles', $model_has_roles);
@@ -140,7 +135,7 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function insertPermissions()
     {
-        echo "    start insertPermissions()". PHP_EOL;
+        echo "    start insertPermissions()" . PHP_EOL;
         $datas = collect([
             'acervo',
             'aluno',
@@ -174,10 +169,10 @@ class PermissionAndRoleFactory extends customFactory
         ])->flatMap(function ($base) {
             return collect(['.create', '.read', '.update', '.delete', '.*'])->map(function ($action) use ($base) {
                 return [
-                    'name'=> $base.$action,
-                    'guard_name'=> \Spatie\Permission\Guard::getDefaultName(static::class),
-                    'created_at'=>now(),
-                    'updated_at'=> now()
+                    'name' => $base . $action,
+                    'guard_name' => \Spatie\Permission\Guard::getDefaultName(static::class),
+                    'created_at' => now(),
+                    'updated_at' => now()
                 ];
             });
         });
@@ -187,13 +182,11 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributePermissionToRoleDatas($rolePermission)
     {
-        foreach($rolePermission as $role)
-        {
-            foreach($role['permissions'] as $permission)
-            {
+        foreach ($rolePermission as $role) {
+            foreach ($role['permissions'] as $permission) {
                 $datas[] = [
-                    'permission_id'=> Permission::where('name', $permission)->value('id'),
-                    'role_id'=> Role::where('name', $role['name'])->value('id')
+                    'permission_id' => Permission::where('name', $permission)->value('id'),
+                    'role_id' => Role::where('name', $role['name'])->value('id')
                 ];
             }
         }
@@ -203,13 +196,13 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributePermissionToRole()
     {
-        echo "    start attributePermissionToRole()". PHP_EOL;
+        echo "    start attributePermissionToRole()" . PHP_EOL;
 
 
         $rolePermission = [
             [
-                'name'=>'Administrador',
-                'permissions'=> [
+                'name' => 'Administrador',
+                'permissions' => [
                     'acervo.*',
                     'aluno.*',
                     'ano.*',
@@ -242,8 +235,8 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
             [
-                'name'=>'Diretor',
-                'permissions'=> [
+                'name' => 'Diretor',
+                'permissions' => [
                     'acervo.read',
                     'aluno.*',
                     'ano.*',
@@ -266,8 +259,8 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
             [
-                'name'=>'Vice-Diretor',
-                'permissions'=> [
+                'name' => 'Vice-Diretor',
+                'permissions' => [
                     'acervo.read',
                     'aluno.*',
                     'ano.*',
@@ -289,8 +282,8 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
             [
-                'name'=>'Professor',
-                'permissions'=> [
+                'name' => 'Professor',
+                'permissions' => [
                     'acervo.read',
                     'aluno.read',
                     'aluno.update',
@@ -313,8 +306,8 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
             [
-                'name'=>'Orientador Educacional',
-                'permissions'=> [
+                'name' => 'Orientador Educacional',
+                'permissions' => [
                     'acervo.read',
                     'aluno.read',
                     'ano.read',
@@ -333,8 +326,8 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
             [
-                'name'=>'Coordenador Pedagógico',
-                'permissions'=> [
+                'name' => 'Coordenador Pedagógico',
+                'permissions' => [
                     'acervo.read',
                     'aluno.read',
                     'aluno.update',
@@ -359,8 +352,8 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
             [
-                'name'=>'Bibliotecário',
-                'permissions'=> [
+                'name' => 'Bibliotecário',
+                'permissions' => [
                     'acervo.*',
                     'autor.*',
                     'categoria_acervo.*',
@@ -375,8 +368,8 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
             [
-                'name'=>'Aluno',
-                'permissions'=> [
+                'name' => 'Aluno',
+                'permissions' => [
                     'acervo.read',
                     'aluno.read',
                     'ano.read',
@@ -393,8 +386,8 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
             [
-                'name'=>'Pais/Responsável',
-                'permissions'=> [
+                'name' => 'Pais/Responsável',
+                'permissions' => [
                     'acervo.read',
                     'aluno.read',
                     'ano.read',

@@ -41,7 +41,7 @@ class Aluno extends Model
 
     public function areas()
     {
-        return $this->belongsToMany(AreasDeConhecimento::class, 'aluno_areas_de_conhecimento')->withPivot('valor_calculado_por_notas', 'valor_calculado_pelo_emprestimo_de_acervo','valor_calculado_por_atividade_extracurricular', 'valor_respondido_pelo_aluno');
+        return $this->belongsToMany(AreasDeConhecimento::class, 'aluno_areas_de_conhecimento')->withPivot('valor_calculado_por_notas', 'valor_calculado_pelo_emprestimo_de_acervo', 'valor_calculado_por_atividade_extracurricular', 'valor_respondido_pelo_aluno');
     }
 
 
@@ -55,8 +55,7 @@ class Aluno extends Model
     {
         $disciplinas = $this->disciplinas;
         $areas = collect();
-        foreach($disciplinas as $disciplina)
-        {
+        foreach ($disciplinas as $disciplina) {
             $areas = $areas->merge($disciplina->areas->diff($areas));
         }
         return $areas;

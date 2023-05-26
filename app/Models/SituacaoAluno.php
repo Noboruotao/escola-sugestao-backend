@@ -14,5 +14,4 @@ class SituacaoAluno extends Model
     protected $fillable = [
         'situacao'
     ];
-    
 }

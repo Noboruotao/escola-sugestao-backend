@@ -16,7 +16,7 @@ class CreatePessoasTable extends Migration
     public function up()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
+
         Schema::create('pessoas', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
@@ -37,76 +37,76 @@ class CreatePessoasTable extends Migration
         });
 
 
-        Schema::create('professors', function (Blueprint $table){
+        Schema::create('professors', function (Blueprint $table) {
             $table->foreignId('id')
-                    ->constrained('pessoas')
-                    ->onDelete('cascade');
+                ->constrained('pessoas')
+                ->onDelete('cascade');
             $table->text('experiencia_profissional');
         });
 
 
-        Schema::create('situacao_aluno', function (Blueprint $table){
+        Schema::create('situacao_aluno', function (Blueprint $table) {
             $table->id();
             $table->string('situacao');
         });
 
-        
-        Schema::create('nivel_escolar', function (Blueprint $table){
+
+        Schema::create('nivel_escolar', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
         });
 
 
-        Schema::create('anos', function(Blueprint $table){
+        Schema::create('anos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('nivel_escolar_id')
-                    ->constrained('nivel_escolar')
-                    ->onDelete('cascade');
+                ->constrained('nivel_escolar')
+                ->onDelete('cascade');
             $table->integer('ano');
         });
 
 
-        Schema::create('alunos', function (Blueprint $table){
+        Schema::create('alunos', function (Blueprint $table) {
             $table->foreignId('id')
-                    ->constrained('pessoas')
-                    ->onDelete('cascade');
+                ->constrained('pessoas')
+                ->onDelete('cascade');
             $table->foreignId('ano_id')
-                    ->constrained('anos')
-                    ->onDelete('cascade');
+                ->constrained('anos')
+                ->onDelete('cascade');
             $table->foreignId('situacao_id')
-                    ->constrained('situacao_aluno')
-                    ->onDelete('cascade');
+                ->constrained('situacao_aluno')
+                ->onDelete('cascade');
         });
 
 
-        Schema::create('bolsas', function (Blueprint $table){
+        Schema::create('bolsas', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
             $table->float('valor');
         });
 
 
-        Schema::create('aluno_bolsa' , function (Blueprint $table){
+        Schema::create('aluno_bolsa', function (Blueprint $table) {
             $table->foreignId('aluno_id')
-                    ->constrained('alunos')
-                    ->onDelete('cascade');
+                ->constrained('alunos')
+                ->onDelete('cascade');
             $table->foreignId('bolsa_id')
-                    ->constrained('bolsas')
-                    ->onDelete('cascade');
+                ->constrained('bolsas')
+                ->onDelete('cascade');
         });
 
 
-        Schema::create('pais_ou_responsaveis', function (Blueprint $table){
+        Schema::create('pais_ou_responsaveis', function (Blueprint $table) {
             $table->foreignId('pais_ou_responsavel_id')
-                    ->constrained('pessoas')
-                    ->onDelete('cascade');
+                ->constrained('pessoas')
+                ->onDelete('cascade');
             $table->foreignId('aluno_id')
-                    ->constrained('alunos')
-                    ->inDelete('cascade');
+                ->constrained('alunos')
+                ->inDelete('cascade');
         });
 
 
-        Schema::create('mensalidades', function(Blueprint $table){
+        Schema::create('mensalidades', function (Blueprint $table) {
             $table->id();
             $table->foreignId('aluno_id');
             $table->float('valor');
@@ -129,7 +129,7 @@ class CreatePessoasTable extends Migration
         Schema::dropIfExists('aluno_bolsa');
         Schema::dropIfExists('nivel_escolar');
         Schema::dropIfExists('pais_ou_responsaveis');
-        
+
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

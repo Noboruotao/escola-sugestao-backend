@@ -45,12 +45,12 @@ class Pessoa extends Authenticatable
     ];
 
 
-    
+
     public function getPessoaByCpf($cpf)
     {
         return Pessoa::where('cpf', $cpf)->first();
     }
-    
+
 
     protected function getPessoaByRole($role_name)
     {

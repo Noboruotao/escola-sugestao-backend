@@ -15,29 +15,28 @@ class CreateClassesTable extends Migration
     public function up()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
+
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('professor_id')
-                    ->constrained('professors');
+                ->constrained('professors');
             $table->foreignId('disciplina_id')
-                    ->constrained('disciplinas');
-            
+                ->constrained('disciplinas');
+
             $table->timestamps();
         });
 
 
-        Schema::create('aluno_classe', function (Blueprint $table){
+        Schema::create('aluno_classe', function (Blueprint $table) {
             $table->foreignId('aluno_id')
-                    ->constrained('alunos')
-                    ->onDelete('cascade');
+                ->constrained('alunos')
+                ->onDelete('cascade');
             $table->foreignId('classe_id')
-                    ->constrained('classes')
-                    ->onDelete('cascade');
+                ->constrained('classes')
+                ->onDelete('cascade');
             $table->integer('presença')->default(100);
             $table->integer('faltas')->default(0);
         });
-
     }
 
     /**
@@ -49,7 +48,7 @@ class CreateClassesTable extends Migration
     {
         Schema::dropIfExists('classes');
         Schema::dropIfExists('aluno_classe');
-        
+
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

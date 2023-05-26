@@ -20,24 +20,21 @@ class ClasseFactory extends customFactory
 
     protected function insertClasse()
     {
-        echo "    start insertClasse()". PHP_EOL;
+        echo "    start insertClasse()" . PHP_EOL;
         $disciplinas = \App\Models\Disciplina::all();
         $professores = \App\Models\Professor::all();
-        foreach($disciplinas as $disciplina)
-        {
-            do{
+        foreach ($disciplinas as $disciplina) {
+            do {
                 $professor = $professores->random();
-                if( $disciplina->areas->intersect( $professor->getAreas ) ) 
-                {
+                if ($disciplina->areas->intersect($professor->getAreas)) {
                     $datas[] = [
-                        'professor_id'=> $professor->id,
-                        'disciplina_id'=> $disciplina->id,
-                        'created_at'=>now(),
-                        'updated_at'=>now()
+                        'professor_id' => $professor->id,
+                        'disciplina_id' => $disciplina->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
                     ];
-                }    
-
-            }while( end($datas)['disciplina_id'] != $disciplina->id );
+                }
+            } while (end($datas)['disciplina_id'] != $disciplina->id);
         }
         $this->insertDatas('classes', $datas);
     }
@@ -45,27 +42,24 @@ class ClasseFactory extends customFactory
 
     protected function alunoClasse()
     {
-        echo "    start alunoClasse()". PHP_EOL;
-       
-        \App\Models\Classe::orderBy('id')->chunk(500, function (Collection $classes){
-            foreach($classes as $classe)
-            {
+        echo "    start alunoClasse()" . PHP_EOL;
+
+        \App\Models\Classe::orderBy('id')->chunk(500, function (Collection $classes) {
+            foreach ($classes as $classe) {
                 $disciplina = $classe->disciplina;
 
-                if( count($disciplina->anos)!=0 )
-                {
+                if (count($disciplina->anos) != 0) {
                     $alunos = $disciplina->anos[0]->alunos;
-                    foreach($alunos as $aluno)
-                    {
+                    foreach ($alunos as $aluno) {
                         $datasAlunoClasse[] = [
-                            'aluno_id'=> $aluno->id,
-                            'classe_id'=> $classe->id
+                            'aluno_id' => $aluno->id,
+                            'classe_id' => $classe->id
                         ];
 
                         $datasAlunoDisciplina[] = [
-                            'aluno_id'=> $aluno->id,
-                            'disciplina_id'=> $disciplina->id,
-                            'situacao_id'=> 5
+                            'aluno_id' => $aluno->id,
+                            'disciplina_id' => $disciplina->id,
+                            'situacao_id' => 5
                         ];
                     }
                 }

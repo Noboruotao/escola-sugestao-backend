@@ -61,12 +61,10 @@ class Emprestimo extends Model
                     ->where('aluno_id', $leitor->id)
                     ->where('areas_de_conhecimento_id', $area->id)
                     ->exists();
-                if (!$existingRelation) 
-                {
+                if (!$existingRelation) {
                     $emprestimo->insertAreaValue($leitor->id, $area->id);
                 }
             }
         }
     }
-
 }

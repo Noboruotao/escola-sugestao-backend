@@ -19,14 +19,14 @@ class AcervoFactory extends customFactory
         $acervoSeeder->insertTipoAcervo();
         $acervoSeeder->insertEstadoAcervo();
         $acervoSeeder->insertSituacaoAcervo();
-        
+
         $acervoSeeder->insertCategoriaAcervo();
         $acervoSeeder->insertIdiomas();
         $acervoSeeder->insertEstados();
 
         $acervoSeeder->insertEditoras($num_editoras);
         $acervoSeeder->insertAutores($num_autores);
-        
+
         $acervoSeeder->insertAcervo($num_acervos);
     }
 
@@ -37,18 +37,18 @@ class AcervoFactory extends customFactory
      */
     protected function insertTipoAcervo()
     {
-        echo "    start insertTipoAcervo()". PHP_EOL;
+        echo "    start insertTipoAcervo()" . PHP_EOL;
         $tipos_acervo = [
-                    ['tipo'=>'Livro', 'multa'=>0.6],
-                    ['tipo'=>'Periódicos', 'multa'=>0.6],
-                    ['tipo'=>'Teses e Dissertações', 'multa'=>0.8],
-                    ['tipo'=>'CD e DVD', 'multa'=>0.8],
-                    ['tipo'=>'Mapas e Atlas', 'multa'=>0.6],
-                    ['tipo'=>'Arquivos Digitais', 'multa'=>0.7],
-                    ['tipo'=>'Acervo Infantil', 'multa'=>0.4],
-                    ['tipo'=>'Acervo de Referência', 'multa'=>0.6],
-                    ['tipo'=>'Coleções Especiais', 'multa'=>0.6]
-                ];
+            ['tipo' => 'Livro', 'multa' => 0.6],
+            ['tipo' => 'Periódicos', 'multa' => 0.6],
+            ['tipo' => 'Teses e Dissertações', 'multa' => 0.8],
+            ['tipo' => 'CD e DVD', 'multa' => 0.8],
+            ['tipo' => 'Mapas e Atlas', 'multa' => 0.6],
+            ['tipo' => 'Arquivos Digitais', 'multa' => 0.7],
+            ['tipo' => 'Acervo Infantil', 'multa' => 0.4],
+            ['tipo' => 'Acervo de Referência', 'multa' => 0.6],
+            ['tipo' => 'Coleções Especiais', 'multa' => 0.6]
+        ];
         $this->verifyTable('tipo_de_acervo', $tipos_acervo);
     }
 
@@ -59,15 +59,15 @@ class AcervoFactory extends customFactory
      */
     protected function insertEstadoAcervo()
     {
-        echo "    start insertEstadoAcervo()". PHP_EOL;
+        echo "    start insertEstadoAcervo()" . PHP_EOL;
         $estados_acervo = [
-            ['estado'=>'Bom'],
-            ['estado'=>'Ótimo'],
-            ['estado'=>'Falta Páginas'],
-            ['estado'=>'Capa está Ruim'],
-            ['estado'=>'Descartado'],
-            ['estado'=>'Extraviado'],
-            ['estado'=>'Debuiado'],
+            ['estado' => 'Bom'],
+            ['estado' => 'Ótimo'],
+            ['estado' => 'Falta Páginas'],
+            ['estado' => 'Capa está Ruim'],
+            ['estado' => 'Descartado'],
+            ['estado' => 'Extraviado'],
+            ['estado' => 'Debuiado'],
         ];
 
         $this->verifyTable('estado_do_acervo', $estados_acervo);
@@ -80,27 +80,27 @@ class AcervoFactory extends customFactory
      */
     protected function insertSituacaoAcervo()
     {
-        echo "    start insertSituacaoAcervo()". PHP_EOL;
+        echo "    start insertSituacaoAcervo()" . PHP_EOL;
         $situacao_acervo = [
-            ['situacao'=>'Disponível'],
-            ['situacao'=>'Emprestado'],
-            ['situacao'=>'Reservado'],
-            ['situacao'=>'Em Processamento Técnico'],
-            ['situacao'=>'Em Manutanção'],
-            ['situacao'=>'Extraviado'],
-            ['situacao'=>'Descartado'],
+            ['situacao' => 'Disponível'],
+            ['situacao' => 'Emprestado'],
+            ['situacao' => 'Reservado'],
+            ['situacao' => 'Em Processamento Técnico'],
+            ['situacao' => 'Em Manutanção'],
+            ['situacao' => 'Extraviado'],
+            ['situacao' => 'Descartado'],
         ];
         $this->verifyTable('situacao_do_acervo', $situacao_acervo);
-    }  
-    
-    
+    }
+
+
     /**
      * manda o array com os dados da categoria 
      * do acervo para insertDatas()customFactory
      */
     protected function insertCategoriaAcervo()
     {
-        echo "    start insertCategoriaAcervo()". PHP_EOL;
+        echo "    start insertCategoriaAcervo()" . PHP_EOL;
         $categorias_acervo = [
             ['categoria' => 'Ação e Aventura'],
             ['categoria' => 'Arte e Música'],
@@ -143,7 +143,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertIdiomas()
     {
-        echo "    start insertIdiomas()". PHP_EOL;
+        echo "    start insertIdiomas()" . PHP_EOL;
         $idiomas = [
             ['idioma' => 'Português'],
             ['idioma' => 'Inglês'],
@@ -162,38 +162,68 @@ class AcervoFactory extends customFactory
         ];
         $this->verifyTable('idiomas', $idiomas);
 
-        echo "    start insertNacionalidades()". PHP_EOL;
+        echo "    start insertNacionalidades()" . PHP_EOL;
         $nacionalidades = [
-            ['nacionalidade' => 'Brasil', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Português'], $idiomas)+1],
-            ['nacionalidade' => 'Portugal', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Português'], $idiomas)+1],
-            ['nacionalidade' => 'Estados Unidos', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Inglês'], $idiomas)+1],
-            ['nacionalidade' => 'Espanha', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Espanhol'], $idiomas)+1],
-            ['nacionalidade' => 'França', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Francês'], $idiomas)+1],
-            ['nacionalidade' => 'Alemanha', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Alemão'], $idiomas)+1],
-            ['nacionalidade' => 'Itália', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Italiano'], $idiomas)+1],
-            ['nacionalidade' => 'Japão', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Japonês'], $idiomas)+1],
-            ['nacionalidade' => 'China', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Mandarim'], $idiomas)+1],
-            ['nacionalidade' => 'Coreia do Sul', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Coreano'], $idiomas)+1],
-            ['nacionalidade' => 'Rússia', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Russo'], $idiomas)+1],
-            ['nacionalidade' => 'Emirados Árabes Unidos', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Árabe'], $idiomas)+1],
-            ['nacionalidade' => 'Israel', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Hebraico'], $idiomas)+1],
-            ['nacionalidade' => 'Grécia', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Grego'], $idiomas)+1],
-            ['nacionalidade' => 'Vaticano', 
-            'idioma_oficial_id' => array_search(['idioma'=>'Latim'], $idiomas)+1],
+            [
+                'nacionalidade' => 'Brasil',
+                'idioma_oficial_id' => array_search(['idioma' => 'Português'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Portugal',
+                'idioma_oficial_id' => array_search(['idioma' => 'Português'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Estados Unidos',
+                'idioma_oficial_id' => array_search(['idioma' => 'Inglês'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Espanha',
+                'idioma_oficial_id' => array_search(['idioma' => 'Espanhol'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'França',
+                'idioma_oficial_id' => array_search(['idioma' => 'Francês'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Alemanha',
+                'idioma_oficial_id' => array_search(['idioma' => 'Alemão'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Itália',
+                'idioma_oficial_id' => array_search(['idioma' => 'Italiano'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Japão',
+                'idioma_oficial_id' => array_search(['idioma' => 'Japonês'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'China',
+                'idioma_oficial_id' => array_search(['idioma' => 'Mandarim'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Coreia do Sul',
+                'idioma_oficial_id' => array_search(['idioma' => 'Coreano'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Rússia',
+                'idioma_oficial_id' => array_search(['idioma' => 'Russo'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Emirados Árabes Unidos',
+                'idioma_oficial_id' => array_search(['idioma' => 'Árabe'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Israel',
+                'idioma_oficial_id' => array_search(['idioma' => 'Hebraico'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Grécia',
+                'idioma_oficial_id' => array_search(['idioma' => 'Grego'], $idiomas) + 1
+            ],
+            [
+                'nacionalidade' => 'Vaticano',
+                'idioma_oficial_id' => array_search(['idioma' => 'Latim'], $idiomas) + 1
+            ],
         ];
 
         $this->verifyTable('nacionalidades', $nacionalidades);
@@ -206,7 +236,7 @@ class AcervoFactory extends customFactory
      */
     protected function insertEstados()
     {
-        echo "    start insertEstados()". PHP_EOL;
+        echo "    start insertEstados()" . PHP_EOL;
         $estados = [
             ['estado' => 'Acre', 'sigla' => 'AC'],
             ['estado' => 'Alagoas', 'sigla' => 'AL'],
@@ -244,25 +274,23 @@ class AcervoFactory extends customFactory
      * manda o array com os dados de editoras
      * para a função customFactory::insertDatas
      */
-    protected function insertEditoras($numero_de_editoras=10)
+    protected function insertEditoras($numero_de_editoras = 10)
     {
-        echo "    start insertEditoras()". PHP_EOL;
-        while($numero_de_editoras > 0)
-        {
+        echo "    start insertEditoras()" . PHP_EOL;
+        while ($numero_de_editoras > 0) {
             $editoras[] = [
-                    'nome'=>$this->faker->company(),
-                    'email'=>$this->faker->safeEmail(),
-                    'telefone'=>$this->faker->phoneNumber(),
-                    'endereco'=>$this->faker->address(),
-                    'cnpj'=>$this->faker->cnpj(),
-                    'cidade'=>$this->faker->city(),
-                    'cep'=>$this->faker->postcode(),
-                    'estado_id'=>DB::table('estados')->inRandomOrder()->first()->id
+                'nome' => $this->faker->company(),
+                'email' => $this->faker->safeEmail(),
+                'telefone' => $this->faker->phoneNumber(),
+                'endereco' => $this->faker->address(),
+                'cnpj' => $this->faker->cnpj(),
+                'cidade' => $this->faker->city(),
+                'cep' => $this->faker->postcode(),
+                'estado_id' => DB::table('estados')->inRandomOrder()->first()->id
             ];
             $numero_de_editoras--;
-            
-            if(count($editoras)>200)
-            {
+
+            if (count($editoras) > 200) {
                 $this->insertDatas('editoras', $editoras);
             }
         }
@@ -274,9 +302,9 @@ class AcervoFactory extends customFactory
      * manda o array com os dados de autores
      * para a função customFactory::insertDatas
      */
-    protected function insertAutores($numero_de_autores=10)
+    protected function insertAutores($numero_de_autores = 10)
     {
-        echo "    start insertAutores()". PHP_EOL;
+        echo "    start insertAutores()" . PHP_EOL;
 
         $autores = $this->makeAutores($numero_de_autores);
         $this->insertDatas('autors', $autores);
@@ -289,35 +317,35 @@ class AcervoFactory extends customFactory
      */
     protected function getLocale($nacionalidade)
     {
-        if($nacionalidade==1){
+        if ($nacionalidade == 1) {
             return 'pt_BR';
-        }else if($nacionalidade==2){
+        } else if ($nacionalidade == 2) {
             return 'pt_PT';
-        }else if($nacionalidade==3){
+        } else if ($nacionalidade == 3) {
             return 'en_US';
-        }else if($nacionalidade==4){
+        } else if ($nacionalidade == 4) {
             return 'es_ES';
-        }else if($nacionalidade==5){
+        } else if ($nacionalidade == 5) {
             return 'fr_FR';
-        }else if($nacionalidade==6){
+        } else if ($nacionalidade == 6) {
             return 'de_DE';
-        }else if($nacionalidade==7){
+        } else if ($nacionalidade == 7) {
             return 'it_IT';
-        }else if($nacionalidade==8){
+        } else if ($nacionalidade == 8) {
             return 'ja_JP';
-        }else if($nacionalidade==9){
+        } else if ($nacionalidade == 9) {
             return 'zh_CN';
-        }else if($nacionalidade==10){
+        } else if ($nacionalidade == 10) {
             return 'ko_KR';
-        }else if($nacionalidade==11){
+        } else if ($nacionalidade == 11) {
             return 'ru_RU';
-        }else if($nacionalidade==12){
+        } else if ($nacionalidade == 12) {
             return 'ar_SA';
-        }else if($nacionalidade==13){
+        } else if ($nacionalidade == 13) {
             return 'he_IL';
-        }else if($nacionalidade==14){
+        } else if ($nacionalidade == 14) {
             return 'el_GR';
-        }else if($nacionalidade==15){
+        } else if ($nacionalidade == 15) {
             return 'en_US';
         };
     }
@@ -329,21 +357,19 @@ class AcervoFactory extends customFactory
      */
     protected function makeAutores($numero_de_autores)
     {
-        while($numero_de_autores > 0)
-        {
+        while ($numero_de_autores > 0) {
             $nacionalidade = DB::table('nacionalidades')->inRandomOrder()->first()->id;
-            $faker = \Faker\Factory::create( $this->getLocale($nacionalidade) );
+            $faker = \Faker\Factory::create($this->getLocale($nacionalidade));
             $data_de_nascimento = $faker->dateTimeBetween('-90 years', '-18 years')->format('Y-m-d');
 
             $autores[] = [
-                'nome' => Str::transliterate ($faker->name),
+                'nome' => Str::transliterate($faker->name),
                 'nacionalidade_id' => $nacionalidade,
                 'data_de_nascimento' => $data_de_nascimento,
-                'data_de_falecimento' => (rand(0, 1) ===1)?$faker->dateTimeBetween($data_de_nascimento, 'now')->format('Y-m-d'): null
+                'data_de_falecimento' => (rand(0, 1) === 1) ? $faker->dateTimeBetween($data_de_nascimento, 'now')->format('Y-m-d') : null
             ];
             $numero_de_autores--;
-            if(count($autores)>200)
-            {
+            if (count($autores) > 200) {
                 $this->insertDatas('autors', $autores);
             }
         }
@@ -354,9 +380,9 @@ class AcervoFactory extends customFactory
     /**
      * manda array para a função customFactory::insertDatas()
      */
-    protected function insertAcervo($numero_de_acervos=10)
+    protected function insertAcervo($numero_de_acervos = 10)
     {
-        echo "    start insertAcervo()". PHP_EOL;
+        echo "    start insertAcervo()" . PHP_EOL;
         $acervos = $this->makeAcervo($numero_de_acervos);
         $this->insertDatas('acervos', $acervos);
     }
@@ -376,29 +402,28 @@ class AcervoFactory extends customFactory
         $estados = \App\Models\EstadoAcervo::all();
         $situacoes = \App\Models\SituacaoAcervo::all();
 
-        while($numero_de_acervos>0)
-        {
-            $tipo_acervo = $this->faker->biasedNumberBetween(1, $tipos_acervo_qnt, function($x) {
+        while ($numero_de_acervos > 0) {
+            $tipo_acervo = $this->faker->biasedNumberBetween(1, $tipos_acervo_qnt, function ($x) {
                 return 11 - $x;
             });
 
-            if($tipo_acervo == 1){
+            if ($tipo_acervo == 1) {
                 $capa = 'images/acervo_capa/book.png';
-            }else if($tipo_acervo == 2){
+            } else if ($tipo_acervo == 2) {
                 $capa = 'images/acervo_capa/book1_green.png';
-            }else if($tipo_acervo == 3){
+            } else if ($tipo_acervo == 3) {
                 $capa = 'images/acervo_capa/book2_orange.png';
-            }else if($tipo_acervo == 4){
+            } else if ($tipo_acervo == 4) {
                 $capa = 'images/acervo_capa/media_disc_silver.png';
-            }else if($tipo_acervo == 5){
+            } else if ($tipo_acervo == 5) {
                 $capa = 'images/acervo_capa/map_book.png';
-            }else if($tipo_acervo == 6){
+            } else if ($tipo_acervo == 6) {
                 $capa = 'images/acervo_capa/media_digital.png';
-            }else if($tipo_acervo == 7){
+            } else if ($tipo_acervo == 7) {
                 $capa = 'images/acervo_capa/book_kamishibai_set.png';
-            }else if($tipo_acervo == 8){
+            } else if ($tipo_acervo == 8) {
                 $capa = 'images/acervo_capa/book3_blue.png';
-            }else if($tipo_acervo == 9){
+            } else if ($tipo_acervo == 9) {
                 $capa = 'images/acervo_capa/book_yoko.png';
             }
 
@@ -413,19 +438,17 @@ class AcervoFactory extends customFactory
                 'tipo_id' => $tipo_acervo,
                 'estado_id' => $estados->random()->id,
                 'situacao_id' => $situacoes->random()->id,
-                'IBNS' => ($tipo_acervo==1)? $this->faker->numerify('###-#-##-######-#'): NULL,
-                'ano_de_publicacao' => $this->faker->date($format='Y', $max='now'),
-                'capa'=> $capa,
-                'created_at'=>now(),
-                'updated_at'=>now()
+                'IBNS' => ($tipo_acervo == 1) ? $this->faker->numerify('###-#-##-######-#') : NULL,
+                'ano_de_publicacao' => $this->faker->date($format = 'Y', $max = 'now'),
+                'capa' => $capa,
+                'created_at' => now(),
+                'updated_at' => now()
             ];
             $numero_de_acervos--;
 
-            if(count($acervos)>200)
-            {
+            if (count($acervos) > 200) {
                 $this->insertDatas('acervos', $acervos);
             }
-            
         }
         return $acervos;
     }

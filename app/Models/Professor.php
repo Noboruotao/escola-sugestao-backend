@@ -10,7 +10,7 @@ class Professor extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'professors';
-    
+
     protected $fillable = [
         'experiencia_profissional'
     ];
@@ -42,9 +42,8 @@ class Professor extends Model
         $areasDoCurso = collect([]);
         $cursos = $this->cursos;
 
-        foreach($cursos as $curso)
-        {
-            foreach($curso->areas as $area){
+        foreach ($cursos as $curso) {
+            foreach ($curso->areas as $area) {
                 $areasDoCurso->push($area);
             }
         }

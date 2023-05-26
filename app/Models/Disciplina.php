@@ -38,8 +38,8 @@ class Disciplina extends Model
         $areaDeConhecimentoIds = collect($areaDeConhecimentoIds)->flatten();
         return $this->whereIn('id', function ($query) use ($areaDeConhecimentoIds) {
             $query->select('disciplina_id')
-                  ->from('areas_de_conhecimento_disciplina')
-                  ->whereIn('areas_de_conhecimento_id', $areaDeConhecimentoIds);
+                ->from('areas_de_conhecimento_disciplina')
+                ->whereIn('areas_de_conhecimento_id', $areaDeConhecimentoIds);
         })->get();
     }
 }

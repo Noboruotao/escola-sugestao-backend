@@ -21,7 +21,7 @@ class AuthController extends Controller
     public function homeTest()
     {
         $pessoa = Pessoa::inRandomOrder()->first();
-        return view('home', ['pessoa'=>$pessoa]);
+        return view('home', ['pessoa' => $pessoa]);
     }
 
 
@@ -31,14 +31,12 @@ class AuthController extends Controller
             $credencials = $request->only('cpf', 'senha');
 
             $pessoa = $this->pessoa->getPessoaByCpf($credencials['cpf']);
-            
-            if (!is_null($pessoa) && password_verify( $credencials['senha'], $pessoa->senha) )
-            {
+
+            if (!is_null($pessoa) && password_verify($credencials['senha'], $pessoa->senha)) {
                 Auth::login($pessoa);
                 $request->session()->regenerate();
                 return redirect()->route('home')->with('success', 'Login Success');
             }
-
         } catch (Exception $e) {
             return $this->pessoa->backWithError('The provided email do not match our records');
         }

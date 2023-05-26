@@ -22,7 +22,7 @@ class AtividadeExtracurricularFactory extends customFactory
 
     protected function insertTipoAtivExtra()
     {
-        echo "    start insertTipoAtivExtra()". PHP_EOL;
+        echo "    start insertTipoAtivExtra()" . PHP_EOL;
         $datas = [
             ["nome" => "Esportes"],
             ["nome" => "Artes"],
@@ -48,7 +48,7 @@ class AtividadeExtracurricularFactory extends customFactory
 
     protected function insertAtivExtra()
     {
-        echo "    start insertAtivExtra()". PHP_EOL;
+        echo "    start insertAtivExtra()" . PHP_EOL;
         $atividades = [
             ['nome' => 'Futebol', 'tipo_id' => 1],
             ['nome' => 'Vôlei', 'tipo_id' => 1],
@@ -107,11 +107,11 @@ class AtividadeExtracurricularFactory extends customFactory
             ['nome' => 'Concurso Literário', 'tipo_id' => 5],
 
             ['nome' => 'Empreendedorismo Social', 'tipo_id' => 6],
-            ['nome' => 'Desenvolvimento de Projetos Empresariais','tipo_id' => 6],
-            ['nome' => 'Participação em Competições de Empreendedorismo','tipo_id' => 6],
-            ['nome' => 'Estudo de Casos Empresariais','tipo_id' => 6],
-            ['nome' => 'Palestras sobre Empreendedorismo','tipo_id' => 6],
-            ['nome' => 'Networking com Empreendedores','tipo_id' => 6],
+            ['nome' => 'Desenvolvimento de Projetos Empresariais', 'tipo_id' => 6],
+            ['nome' => 'Participação em Competições de Empreendedorismo', 'tipo_id' => 6],
+            ['nome' => 'Estudo de Casos Empresariais', 'tipo_id' => 6],
+            ['nome' => 'Palestras sobre Empreendedorismo', 'tipo_id' => 6],
+            ['nome' => 'Networking com Empreendedores', 'tipo_id' => 6],
 
             ['nome' => 'Clube de Ciências', 'tipo_id' => 7],
             ['nome' => 'Olimpíada de Ciências', 'tipo_id' => 7],
@@ -119,24 +119,24 @@ class AtividadeExtracurricularFactory extends customFactory
             ['nome' => 'Astronomia', 'tipo_id' => 7],
 
             ['nome' => 'Olimpíada de Matemática', 'tipo_id' => 8],
-            ['nome' => 'Clube de Matemática','tipo_id' => 8],
-            ['nome' => 'Aulas de Reforço de Matemática','tipo_id' => 8],
-            ['nome' => 'Jogos Matemáticos','tipo_id' => 8],
-            ['nome' => 'Desafios Matemáticos','tipo_id' => 8],
+            ['nome' => 'Clube de Matemática', 'tipo_id' => 8],
+            ['nome' => 'Aulas de Reforço de Matemática', 'tipo_id' => 8],
+            ['nome' => 'Jogos Matemáticos', 'tipo_id' => 8],
+            ['nome' => 'Desafios Matemáticos', 'tipo_id' => 8],
 
             ['nome' => 'História em Debate', 'tipo_id' => 9],
-            ['nome' => 'Clube de História','tipo_id' => 9],
-            ['nome' => 'Simulações Históricas','tipo_id' => 9],
-            ['nome' => 'Pesquisa de Campo','tipo_id' => 9],
-            ['nome' => 'Visitas a Museus e Monumentos Históricos','tipo_id' => 9],
-            ['nome' => 'Leitura de Livros de História','tipo_id' => 9],
+            ['nome' => 'Clube de História', 'tipo_id' => 9],
+            ['nome' => 'Simulações Históricas', 'tipo_id' => 9],
+            ['nome' => 'Pesquisa de Campo', 'tipo_id' => 9],
+            ['nome' => 'Visitas a Museus e Monumentos Históricos', 'tipo_id' => 9],
+            ['nome' => 'Leitura de Livros de História', 'tipo_id' => 9],
 
             ['nome' => 'Geografia em Ação', 'tipo_id' => 10],
-            ['nome' => 'Estudo de mapas e cartografia','tipo_id' => 10],
-            ['nome' => 'Pesquisa sobre questões ambientais','tipo_id' => 10],
-            ['nome' => 'Elaboração de projetos de turismo','tipo_id' => 10],
-            ['nome' => 'Participação em simulações de conflitos geopolíticos','tipo_id' => 10],
-            ['nome' => 'Organização de eventos culturais e folclóricos','tipo_id' => 10],
+            ['nome' => 'Estudo de mapas e cartografia', 'tipo_id' => 10],
+            ['nome' => 'Pesquisa sobre questões ambientais', 'tipo_id' => 10],
+            ['nome' => 'Elaboração de projetos de turismo', 'tipo_id' => 10],
+            ['nome' => 'Participação em simulações de conflitos geopolíticos', 'tipo_id' => 10],
+            ['nome' => 'Organização de eventos culturais e folclóricos', 'tipo_id' => 10],
 
             ['nome' => 'Estudos de Religião', 'tipo_id' => 11,],
 
@@ -184,7 +184,7 @@ class AtividadeExtracurricularFactory extends customFactory
             ['nome' => 'Grupo de estudos de Análise de Dados', 'tipo_id' => 15],
             ['nome' => 'Olimpíada de Programação', 'tipo_id' => 15],
             ["nome" => "Oficina de jogos digitais", "tipo_id" => 15],
-            
+
             ["nome" => "Clube de robótica", "tipo_id" => 16],
             ["nome" => "Oficina de programação de robôs", "tipo_id" => 16],
             ["nome" => "Campeonato de robótica", "tipo_id" => 16],
@@ -201,7 +201,7 @@ class AtividadeExtracurricularFactory extends customFactory
             ['nome' => 'Fotografia', 'tipo_id' => 17],
             ['nome' => 'Atividades ao ar livre', 'tipo_id' => 17],
             ['nome' => 'Viagens e excursões', 'tipo_id' => 17],
-              
+
         ];
         $this->verifyTable('atividade_extracurriculares', $atividades);
     }
@@ -211,19 +211,16 @@ class AtividadeExtracurricularFactory extends customFactory
     {
         $todas_as_atividades = \App\Models\AtividadesExtracurriculares::all();
 
-        \App\Models\Aluno::orderBy('id')->chunk(500, function(Collection $alunos) use ($todas_as_atividades){
-            foreach($alunos as $aluno)
-            {
-                if($this->faker->randomDigit()<3)
-                {
+        \App\Models\Aluno::orderBy('id')->chunk(500, function (Collection $alunos) use ($todas_as_atividades) {
+            foreach ($alunos as $aluno) {
+                if ($this->faker->randomDigit() < 3) {
                     $num_de_ativ = rand(1, 2);
                     $atividade_extracurriculares = $todas_as_atividades->shuffle()->take($num_de_ativ);
-                    foreach($atividade_extracurriculares as $ativ_extra)
-                    {
+                    foreach ($atividade_extracurriculares as $ativ_extra) {
                         $datas[] = [
-                            'aluno_id'=> $aluno->id,
-                            'atividades_extracurriculares_id'=>$ativ_extra->id,
-                            'ativo'=> ($atividade_extracurriculares->last() === $ativ_extra)? 1: null
+                            'aluno_id' => $aluno->id,
+                            'atividades_extracurriculares_id' => $ativ_extra->id,
+                            'ativo' => ($atividade_extracurriculares->last() === $ativ_extra) ? 1 : null
                         ];
                     }
                 }

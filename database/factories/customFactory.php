@@ -16,7 +16,7 @@ abstract class customFactory extends Factory
      */
     protected function verifyTable($table_name, $datas)
     {
-        if( DB::table($table_name)->exists()==false ){
+        if (DB::table($table_name)->exists() == false) {
             $this->insertDatas($table_name, $datas);
         }
     }
@@ -28,19 +28,18 @@ abstract class customFactory extends Factory
      */
     protected function insertDatas($table, &$datas)
     {
-        $data = collect($datas)->map(function($data){
+        $data = collect($datas)->map(function ($data) {
             return $data;
         });
 
-        foreach(array_chunk($data->toArray(), 500) as $data_parts)
-        {
-            DB::table($table)->insert($data_parts);    
+        foreach (array_chunk($data->toArray(), 500) as $data_parts) {
+            DB::table($table)->insert($data_parts);
         }
 
         if (is_array($datas)) {
             $datas = [];
         }
-        
+
         if ($datas instanceof \Illuminate\Support\Collection) {
             $datas = collect();
         }

@@ -20,11 +20,10 @@ class SugestaoFactory extends customFactory
 
 
     protected function sugerirCursos()
-    {        
-        echo "    start sugerirCursos()". PHP_EOL;
+    {
+        echo "    start sugerirCursos()" . PHP_EOL;
         Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
-            foreach($alunos as $aluno)
-            {
+            foreach ($alunos as $aluno) {
                 \App\Models\Curso::sugerirCursos($aluno);
             }
         });
@@ -32,12 +31,11 @@ class SugestaoFactory extends customFactory
 
 
     protected function sugerirAtividades()
-    {        
-        echo "    start sugerirAtividades()". PHP_EOL;
+    {
+        echo "    start sugerirAtividades()" . PHP_EOL;
 
         Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
-            foreach($alunos as $aluno)
-            {
+            foreach ($alunos as $aluno) {
                 \App\Models\AtividadesExtracurriculares::sugerirAtividadeExtracurricular($aluno);
             }
         });
