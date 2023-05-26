@@ -380,7 +380,7 @@ class PessoaCursoFactory extends customFactory
 
                 $numero_de_pessoa--;
                 
-                if($pessoas->count()>200)
+                if($pessoas->count()>=200)
                {
                 $this->insertDatas('pessoas', $pessoas);
                 };

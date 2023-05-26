@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Emprestimo;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 use App\Models\Pessoa;
 use App\Models\Aluno;
@@ -30,31 +31,31 @@ class EmprestimoFactory extends customFactory
         $bibliotecarios = Pessoa::getPessoaByRole('Bibliotecário');
         $acervos = \App\Models\Acervo::all();
 
-        Aluno::whereBetween('ano_id', [6, 17])->orderBy('id')->get()->merge(\App\Models\Professor::all())->chunk(500, function (Collection $pessoas) use ($bibliotecarios, $acervos){
-
-            foreach($pessoas as $pessoa)
-            {
+        Aluno::whereBetween('ano_id', [6, 17])->orderBy('id')->chunk(500, function (Collection $pessoas) use ($bibliotecarios, $acervos) {
+            foreach ($pessoas as $pessoa) {
                 $numero_de_emprestimos = $this->faker->numberBetween($min = 0, $max = 20);
-                do
-                {
+                $datas = []; // Initialize the $datas array inside the foreach loop
+                do {
                     $data_de_emprestimo = $this->faker->dateTimeBetween($startDate = '-3 years', $endDate = '-1 week', $timezone = null);
                     $devolucao_date = clone $data_de_emprestimo;
-
+        
                     $datas[] = [
-                        'acervo_id'=> $acervos->random()->id,
-                        'bibliotecario_id'=> $this->faker->randomElement($bibliotecarios)->id,
-                        'leitor_id'=> $pessoa->id,
-                        'data_de_emprestimo'=> $data_de_emprestimo,
-                        'data_de_devolucao'=> $this->faker->dateTimeBetween($data_de_emprestimo, $devolucao_date->modify('+20 days')),
-                        'created_at'=> now(),
-                        'updated_at'=> now()
+                        'acervo_id' => $acervos->random()->id,
+                        'bibliotecario_id' => $this->faker->randomElement($bibliotecarios)->id,
+                        'leitor_id' => $pessoa->id,
+                        'data_de_emprestimo' => $data_de_emprestimo,
+                        'data_de_devolucao' => $this->faker->dateTimeBetween($data_de_emprestimo, $devolucao_date->modify('+20 days')),
+                        'created_at' => now(),
+                        'updated_at' => now()
                     ];
-
+        
                     $numero_de_emprestimos--;
-                }while($numero_de_emprestimos>0);                
+                } while ($numero_de_emprestimos > 0);
+        
+                $this->insertDatas('emprestimos', $datas);
             }
-            $this->insertDatas('emprestimos', $datas);
         });
+        
         $this->insertDatas('emprestimos', $datas);
     }
 
