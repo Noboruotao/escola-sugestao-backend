@@ -51,7 +51,7 @@ class Aluno extends Model
     }
 
 
-    public function getAlunoAreaByDisciplina()
+    public static function getAlunoAreaByDisciplina()
     {
         $disciplinas = $this->disciplinas;
         $areas = collect();

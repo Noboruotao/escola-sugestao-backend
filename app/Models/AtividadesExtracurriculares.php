@@ -43,13 +43,13 @@ class AtividadesExtracurriculares extends Model
     }
 
 
-    public function updateAreaValue($areas_do_aluno, $areaId)
+    public static function updateAreaValue($areas_do_aluno, $areaId)
     {
         $area_do_aluno = $areas_do_aluno->firstWhere('id', $areaId);
         $area_do_aluno->pivot->increment('valor_calculado_por_atividade_extracurricular', 1.0);
     }
 
-    public function insertAreaValue($alunoId, $areaId)
+    public static function insertAreaValue($alunoId, $areaId)
     {
         DB::table('aluno_areas_de_conhecimento')->insert([
             'aluno_id' => $alunoId,
@@ -59,7 +59,7 @@ class AtividadesExtracurriculares extends Model
     }
 
 
-    public function updateAlunoAreas($aluno, $atividade_extracurricular)
+    public static function updateAlunoAreas($aluno, $atividade_extracurricular)
     {
         $atividade = new AtividadesExtracurriculares();
         foreach ($atividade_extracurricular->areas as $area) {
@@ -80,7 +80,7 @@ class AtividadesExtracurriculares extends Model
 
 
 
-    public function sugerirAtividadeExtracurricular($aluno)
+    public static function sugerirAtividadeExtracurricular($aluno)
     {
         $areas_do_aluno = $aluno->areas;
         $atividades_sugerido = DB::table('atividade_extracurricular_sugeridas')->where('aluno_id', $aluno->id)->get();

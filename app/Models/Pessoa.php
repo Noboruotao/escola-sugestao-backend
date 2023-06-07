@@ -46,13 +46,13 @@ class Pessoa extends Authenticatable
 
 
 
-    public function getPessoaByCpf($cpf)
+    public static function getPessoaByCpf($cpf)
     {
         return Pessoa::where('cpf', $cpf)->first();
     }
 
 
-    protected function getPessoaByRole($role_name)
+    public static function getPessoaByRole($role_name)
     {
         return  Pessoa::role($role_name)->get();
     }

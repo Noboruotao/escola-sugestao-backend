@@ -31,13 +31,13 @@ class Professor extends Model
     }
 
 
-    public function getCursos()
+    public static function getCursos()
     {
         return $this->cursos()->pluck('nome');
     }
 
 
-    public function professorAreas()
+    public static function professorAreas()
     {
         $areasDoCurso = collect([]);
         $cursos = $this->cursos;

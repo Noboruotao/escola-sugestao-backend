@@ -33,7 +33,7 @@ class Disciplina extends Model
 
 
 
-    public function hasAreasDeConhecimento($areaDeConhecimentoIds)
+    public static function hasAreasDeConhecimento($areaDeConhecimentoIds)
     {
         $areaDeConhecimentoIds = collect($areaDeConhecimentoIds)->flatten();
         return $this->whereIn('id', function ($query) use ($areaDeConhecimentoIds) {

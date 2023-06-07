@@ -37,7 +37,7 @@ class Curso extends Model
     }
 
 
-    public function sugerirCursos($aluno)
+    public static function sugerirCursos($aluno)
     {
         $areas_do_aluno = $aluno->areas;
         $cusos_sugerido = DB::table('curso_sugerido')->where('aluno_id', $aluno->id)->get();

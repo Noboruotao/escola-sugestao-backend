@@ -13,7 +13,7 @@ class Bolsa extends Model
     protected $fillable = ['nome', 'valor'];
 
 
-    public function getValorMensalidade($id, $valor_bruto = 1500)
+    public static function getValorMensalidade($id, $valor_bruto = 1500)
     {
         return $valor_bruto - \Illuminate\Support\Facades\DB::table('alunos')
             ->where('alunos.id', $id)
