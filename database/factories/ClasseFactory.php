@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Database\Eloquent\Collection;
 
+use App\Models\Classe;
+use App\Models\Professor;
+use App\Models\Disciplina;
+
 class ClasseFactory extends customFactory
 {
     public function definition()
@@ -21,20 +25,25 @@ class ClasseFactory extends customFactory
     protected function insertClasse()
     {
         echo "    start insertClasse()" . PHP_EOL;
-        $disciplinas = \App\Models\Disciplina::all();
-        $professores = \App\Models\Professor::all();
+
+        $disciplinas = Disciplina::all();
+        $professores = Professor::all();
+        $datas = [];
+
         foreach ($disciplinas as $disciplina) {
-            do {
-                $professor = $professores->random();
-                if ($disciplina->areas->intersect($professor->getAreas)) {
-                    $datas[] = [
-                        'professor_id' => $professor->id,
-                        'disciplina_id' => $disciplina->id,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ];
-                }
-            } while (end($datas)['disciplina_id'] != $disciplina->id);
+            $validProfessors = $professores->filter(function ($professor) use ($disciplina) {
+                return $disciplina->areas->intersect($professor->professorAreas())->isNotEmpty();
+            });
+
+            if ($validProfessors->isNotEmpty()) {
+                $randomProfessor = $validProfessors->random();
+                $datas[] = [
+                    'professor_id' => $randomProfessor->id,
+                    'disciplina_id' => $disciplina->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
         }
         $this->insertDatas('classes', $datas);
     }
@@ -44,7 +53,7 @@ class ClasseFactory extends customFactory
     {
         echo "    start alunoClasse()" . PHP_EOL;
 
-        \App\Models\Classe::orderBy('id')->chunk(500, function (Collection $classes) {
+        Classe::orderBy('id')->chunk(500, function (Collection $classes) {
             foreach ($classes as $classe) {
                 $disciplina = $classe->disciplina;
 

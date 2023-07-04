@@ -32,11 +32,17 @@ class Disciplina extends Model
     }
 
 
+    public function acervos()
+    {
+        return $this->belongsToMany(Acervo::class, 'materiais_sugeridos');
+    }
+
 
     public static function hasAreasDeConhecimento($areaDeConhecimentoIds)
     {
         $areaDeConhecimentoIds = collect($areaDeConhecimentoIds)->flatten();
-        return $this->whereIn('id', function ($query) use ($areaDeConhecimentoIds) {
+
+        return self::whereIn('id', function ($query) use ($areaDeConhecimentoIds) {
             $query->select('disciplina_id')
                 ->from('areas_de_conhecimento_disciplina')
                 ->whereIn('areas_de_conhecimento_id', $areaDeConhecimentoIds);

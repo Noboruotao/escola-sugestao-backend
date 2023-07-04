@@ -4,11 +4,25 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+use App\Models\Professor;
+use App\Models\Aluno;
+
 class PermissionAndRoleFactory extends customFactory
 {
+    protected array $seederDatas;
+    protected $faker;
+
+
+    public function __construct()
+    {
+        $this->seederDatas = config('seeder_datas.permissionSeederData');
+        $this->faker = \Faker\Factory::create('pt_BR');
+    }
 
     public function definition()
     {
@@ -29,19 +43,8 @@ class PermissionAndRoleFactory extends customFactory
     protected function insertRoles()
     {
         echo "    start insertRoles()" . PHP_EOL;
-        $roles_data = [
-            'Administrador',
-            'Diretor',
-            'Vice-Diretor',
-            'Professor',
-            'Orientador Educacional',
-            'Coordenador Pedagógico',
-            'Bibliotecário',
-            'Aluno',
-            'Pais/Responsável',
-        ];
 
-        foreach ($roles_data as $role) {
+        foreach ($this->seederDatas['roles'] as $role) {
             $datas[] = [
                 'name' => $role,
                 'guard_name' => \Spatie\Permission\Guard::getDefaultName(static::class),
@@ -58,7 +61,7 @@ class PermissionAndRoleFactory extends customFactory
         echo "    start attributeRolesToAlunos()" . PHP_EOL;
 
 
-        \App\Models\Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
+        Aluno::orderBy('id')->chunk(200, function (Collection $alunos) {
             foreach ($alunos as $aluno) {
                 $model_has_roles[] = [
                     'role_id' => 8,
@@ -75,26 +78,26 @@ class PermissionAndRoleFactory extends customFactory
     {
         echo "    start attributeRolesToProfessor()" . PHP_EOL;
 
-        foreach (\App\Models\Professor::all()->toArray() as $professor) {
-            if (\App\Models\Professor::count() == 0) {
+        foreach (Professor::all()->toArray() as $professor) {
+            if (Professor::count() == 0) {
                 $model_has_roles[] = [
                     'role_id' => 1,
                     'model_type' => 'App\Models\Pessoa',
                     'model_id' => $professor['id']
                 ];
-            } else if (\App\Models\Professor::count() == 1) {
+            } else if (Professor::count() == 1) {
                 $model_has_roles[] = [
                     'role_id' => 2,
                     'model_type' => 'App\Models\Pessoa',
                     'model_id' => $professor['id']
                 ];
-            } else if (\App\Models\Professor::count() == 2) {
+            } else if (Professor::count() == 2) {
                 $model_has_roles[] = [
                     'role_id' => 3,
                     'model_type' => 'App\Models\Pessoa',
                     'model_id' => $professor['id']
                 ];
-            } else if (\App\Models\Professor::count() == 3) {
+            } else if (Professor::count() == 3) {
                 $model_has_roles[] = [
                     'role_id' => 7,
                     'model_type' => 'App\Models\Pessoa',
@@ -119,7 +122,12 @@ class PermissionAndRoleFactory extends customFactory
     {
         echo "    start attributeRolesToPais()" . PHP_EOL;
 
-        \App\Models\Pessoa::whereDoesntHave('Roles')->orderBy('id')->chunk(500, function (Collection $pais) {
+        $parents = DB::table('pais_ou_responsaveis')
+            ->distinct('pais_ou_responsavel_id')
+            ->orderBy('pais_ou_responsavel_id')
+            ->get();
+
+        $parents->chunk(500, function (Collection $pais) {
             foreach ($pais as $pai) {
                 $model_has_roles[] = [
                     'role_id' => 8,
@@ -129,48 +137,20 @@ class PermissionAndRoleFactory extends customFactory
             }
             $this->insertDatas('model_has_roles', $model_has_roles);
         });
-        $this->insertDatas('model_has_roles', $model_has_roles);
     }
 
 
     protected function insertPermissions()
     {
         echo "    start insertPermissions()" . PHP_EOL;
-        $datas = collect([
-            'acervo',
-            'aluno',
-            'ano',
-            'area_de_conhecimento',
-            'atividade_extracurricular',
-            'autor',
-            'bolsa',
-            'categoria_acervo',
-            'classe',
-            'curso',
-            'disciplina',
-            'editora',
-            'estado',
-            'estado_acervo',
-            'idioma',
-            'nacionalidade',
-            'nivel_escolar',
-            'pessoa',
-            'professor',
-            'situacao_acervo',
-            'situacao_aluno',
-            'tipo_acervo',
-            'emprestimo',
-            'multa',
-            'notas',
-            'permission',
-            'role',
-            'mensalidade',
-            'presenca'
-        ])->flatMap(function ($base) {
+
+        $datas = collect($this->seederDatas['permissions'])->flatMap(function ($base) {
             return collect(['.create', '.read', '.update', '.delete', '.*'])->map(function ($action) use ($base) {
+                $guard_name = \Spatie\Permission\Guard::getDefaultName(static::class);
+
                 return [
                     'name' => $base . $action,
-                    'guard_name' => \Spatie\Permission\Guard::getDefaultName(static::class),
+                    'guard_name' => $guard_name,
                     'created_at' => now(),
                     'updated_at' => now()
                 ];
@@ -182,11 +162,13 @@ class PermissionAndRoleFactory extends customFactory
 
     protected function attributePermissionToRoleDatas($rolePermission)
     {
+        $permissions = Permission::all();
+        $roles = Role::all();
         foreach ($rolePermission as $role) {
             foreach ($role['permissions'] as $permission) {
                 $datas[] = [
-                    'permission_id' => Permission::where('name', $permission)->value('id'),
-                    'role_id' => Role::where('name', $role['name'])->value('id')
+                    'permission_id' => $permissions->where('name', $permission)->first()->id,
+                    'role_id' => $roles->where('name', $role['name'])->first()->id,
                 ];
             }
         }
@@ -405,6 +387,6 @@ class PermissionAndRoleFactory extends customFactory
                 ]
             ],
         ];
-        $this->verifyTable('role_has_permissions', $this->attributePermissionToRoleDatas($rolePermission));
+        $this->verifyTable('role_has_permissions', $this->attributePermissionToRoleDatas($this->seederDatas['rolePermission']));
     }
 }

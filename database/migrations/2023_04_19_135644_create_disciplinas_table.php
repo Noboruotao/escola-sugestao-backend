@@ -71,7 +71,6 @@ class CreateDisciplinasTable extends Migration
                                 ->constrained('disciplinas');
                         $table->float('nota')
                                 ->onDelete('cascade');
-                        $table->integer('peso_da_nota');
                 });
 
 

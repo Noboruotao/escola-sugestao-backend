@@ -37,7 +37,7 @@ class Professor extends Model
     }
 
 
-    public static function professorAreas()
+    public function professorAreas()
     {
         $areasDoCurso = collect([]);
         $cursos = $this->cursos;

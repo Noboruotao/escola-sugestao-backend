@@ -4,10 +4,18 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Collection;
+
 use App\Models\Aluno;
+use App\Models\AtividadesExtracurriculares;
 
 class NotaFactory extends customFactory
 {
+    protected $faker;
+
+    public function __construct()
+    {
+        $this->faker = \Faker\Factory::create('pt_BR');
+    }
 
     public function definition()
     {
@@ -31,7 +39,7 @@ class NotaFactory extends customFactory
         echo "    start insertNotas()" . PHP_EOL;
 
         $todos_anos = \App\Models\Ano::all();
-        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) use ($todos_anos) {
+        Aluno::orderBy('id')->chunk(200, function (Collection $alunos) use ($todos_anos) {
             foreach ($alunos as $aluno) {
                 for ($i = 1; $i < ($aluno->ano->id); $i++) {
                     $disciplinas = $todos_anos->where('id', $i)->first()->disciplinas;
@@ -44,7 +52,6 @@ class NotaFactory extends customFactory
                             'tipo_de_avaliacao_id' => 1,
                             'disciplina_id' => $disciplina->id,
                             'nota' => $notaP1,
-                            'peso_da_nota' => 4
                         ];
 
                         $notas[] = [
@@ -52,7 +59,6 @@ class NotaFactory extends customFactory
                             'tipo_de_avaliacao_id' => 2,
                             'disciplina_id' => $disciplina->id,
                             'nota' => $notaP2,
-                            'peso_da_nota' => 6
                         ];
 
                         if ((($notaP1 * 4 + $notaP2 * 6) / 10) < 5) {
@@ -64,7 +70,6 @@ class NotaFactory extends customFactory
                                     'tipo_de_avaliacao_id' => 4,
                                     'disciplina_id' => $disciplina->id,
                                     'nota' => $notaP1,
-                                    'peso_da_nota' => 4
                                 ];
                             } else {
 
@@ -75,7 +80,6 @@ class NotaFactory extends customFactory
                                     'tipo_de_avaliacao_id' => 4,
                                     'disciplina_id' => $disciplina->id,
                                     'nota' => $notaP2,
-                                    'peso_da_nota' => 6
                                 ];
                             }
                         }
@@ -99,7 +103,7 @@ class NotaFactory extends customFactory
     {
         echo "    start inserirAlunoArea()" . PHP_EOL;
 
-        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
+        Aluno::orderBy('id')->chunk(200, function (Collection $alunos) {
             foreach ($alunos as $aluno) {
                 foreach ($aluno->getAlunoAreaByDisciplina() as $area) {
                     $soma = 0;
@@ -128,10 +132,10 @@ class NotaFactory extends customFactory
     {
         echo "    start attributeAtivExtraAreasToAluno()" . PHP_EOL;
 
-        Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
+        Aluno::orderBy('id')->chunk(200, function (Collection $alunos) {
             foreach ($alunos as $aluno) {
                 foreach ($aluno->atividades_extracurriculares as $ativExtra) {
-                    \App\Models\AtividadesExtracurriculares::updateAlunoAreas($aluno, $ativExtra);
+                    AtividadesExtracurriculares::updateAlunoAreas($aluno, $ativExtra);
                 }
             }
         });

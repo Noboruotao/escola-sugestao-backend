@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+use Illuminate\Support\Collection;
+
 abstract class customFactory extends Factory
 {
     /**
@@ -40,7 +42,7 @@ abstract class customFactory extends Factory
             $datas = [];
         }
 
-        if ($datas instanceof \Illuminate\Support\Collection) {
+        if ($datas instanceof Collection) {
             $datas = collect();
         }
     }

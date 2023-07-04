@@ -4,7 +4,10 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Collection;
-use \App\Models\Aluno;
+
+use App\Models\Aluno;
+use App\Models\Curso;
+use App\Models\AtividadesExtracurriculares;
 
 class SugestaoFactory extends customFactory
 {
@@ -24,7 +27,7 @@ class SugestaoFactory extends customFactory
         echo "    start sugerirCursos()" . PHP_EOL;
         Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
             foreach ($alunos as $aluno) {
-                \App\Models\Curso::sugerirCursos($aluno);
+                Curso::sugerirCursos($aluno);
             }
         });
     }
@@ -36,7 +39,7 @@ class SugestaoFactory extends customFactory
 
         Aluno::orderBy('id')->chunk(500, function (Collection $alunos) {
             foreach ($alunos as $aluno) {
-                \App\Models\AtividadesExtracurriculares::sugerirAtividadeExtracurricular($aluno);
+                AtividadesExtracurriculares::sugerirAtividadeExtracurricular($aluno);
             }
         });
     }

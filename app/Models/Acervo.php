@@ -70,4 +70,10 @@ class Acervo extends Model
     {
         return $this->belongsToMany(AreasDeConhecimento::class);
     }
+
+
+    public function disciplinas()
+    {
+        return $this->belongsToMany(Disciplina::class, 'materiais_sugeridos');
+    }
 }

@@ -97,7 +97,7 @@ class CreateAcervosTable extends Migration
                         $table->text('resumo');
                         $table->string('tradutor');
                         $table->foreignId('autor_id')
-                                ->constrained('autores')
+                                ->constrained('autors')
                                 ->onDelete('cascade');
                         $table->foreignId('idioma_id')
                                 ->constrained('idiomas')
