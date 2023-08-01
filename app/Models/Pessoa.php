@@ -48,4 +48,22 @@ class Pessoa extends Authenticatable
     {
         return $this->hasOne(Professor::class, 'id', 'id');
     }
+
+
+    public function protegido()
+    {
+        return $this->hasMany(Aluno::class, 'responsavel', 'responsavel_id', 'aluno_id');
+    }
+
+
+    public function bibliotecaMulta()
+    {
+        return $this->morphedByMany(Emprestimo::class, 'multas');
+    }
+
+
+    public function mensalidadeMulta()
+    {
+        return $this->morphedByMany(Mensalidade::class, 'multas');
+    }
 }

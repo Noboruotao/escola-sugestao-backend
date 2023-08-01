@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Nacionalidade extends Model
+class Aula extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'nacionalidade',
-        'idioma_oficial_id'
+        'classe_id',
+        'dia_semana',
+        'horario'
     ];
 
 
-    public function idioma()
+    public function classe()
     {
-        return $this->hasOne(Idioma::class);
+        return $this->hasOne(Classe::class);
     }
 }

@@ -8,4 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Mensalidade extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'aluno_id',
+        'valor',
+        'validade',
+    ];
+
+    public function aluno()
+    {
+        return $this->belongsTo(Aluno::class);
+    }
+
+
+    public function multa()
+    {
+        return $this->morphOne(Pessoa::class, 'multas');
+    }
 }

@@ -28,8 +28,8 @@ class CreateCursosTable extends Migration
             $table->foreignId('aluno_id')
                 ->constrained('alunos')
                 ->onDelete('cascade');
-            $table->unsignedBigInteger('model_id');
-            $table->string('model_type');
+            $table->unsignedBigInteger('sugerido_id');
+            $table->string('sugerido_type');
             $table->date('desaparecer')
                 ->default(null)
                 ->nullable();

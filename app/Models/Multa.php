@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Multa extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'pessoa_id',
+        'multa_type',
+        'multa_id',
+        'mensagem',
+        'dias_atrasados',
+        'valor',
+        'pago'
+    ];
 }

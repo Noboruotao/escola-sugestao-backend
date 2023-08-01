@@ -155,11 +155,11 @@ class CreatePessoasTable extends Migration
             $table->foreignId('pessoa_id')
                 ->constrained('pessoas')
                 ->onDelete('cascade');
-            $table->string('model_type');
-            $table->unsignedBigInteger('model_id');
+            $table->string('multa_type');
+            $table->unsignedBigInteger('multa_id');
             $table->string('mensagem');
             $table->integer('dias_atrasados');
-            $table->float('valor_da_multa');
+            $table->float('valor');
             $table->date('pago')
                 ->default(NULL)
                 ->nullable();

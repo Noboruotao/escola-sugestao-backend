@@ -143,8 +143,8 @@ class CreateAcervosTable extends Migration
                         $table->foreignId('leitor_id')
                                 ->constrained('pessoas')
                                 ->onDelete('cascade');
-                        $table->date('data_de_emprestimo');
-                        $table->date('data_de_devolucao')
+                        $table->date('data_emprestimo');
+                        $table->date('data_devolucao')
                                 ->default(NULL)
                                 ->nullable();
                         $table->timestamps();

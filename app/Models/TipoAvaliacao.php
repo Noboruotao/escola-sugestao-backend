@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TipoAvaliacao extends Model
 {
     use HasFactory;
+
+    protected $table = 'tipos_de_avaliacoes';
+    protected $fillable = ['nome'];
 }
