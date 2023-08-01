@@ -44,11 +44,11 @@ class CreateAcervosTable extends Migration
                 });
 
 
-                Schema::create('estados', function (Blueprint $table) {
-                        $table->id();
-                        $table->string('estado');
-                        $table->string('sigla', 2);
-                });
+                // Schema::create('estados', function (Blueprint $table) {
+                //         $table->id();
+                //         $table->string('estado');
+                //         $table->string('sigla', 2);
+                // });
 
 
                 schema::create('editoras', function (Blueprint $table) {
@@ -56,13 +56,14 @@ class CreateAcervosTable extends Migration
                         $table->string('nome');
                         $table->string('email');
                         $table->string('telefone', 20);
-                        $table->string('endereco');
+                        // $table->string('endereco');
                         $table->string('cnpj')->unique();
-                        $table->string('cidade');
-                        $table->string('cep', 10);
-                        $table->foreignId('estado_id')
-                                ->constrained('estados')
-                                ->onDelete('cascade');
+                        // $table->string('cidade');
+                        // $table->string('cep', 10);
+                        // $table->foreignId('estado_id')
+                        //         ->constrained('estados')
+                        //         ->onDelete('cascade');
+                        $table->foreignId('endereco_id');
                 });
 
 
@@ -81,7 +82,8 @@ class CreateAcervosTable extends Migration
                 Schema::create('tipo_de_acervo', function (Blueprint $table) {
                         $table->id();
                         $table->string('tipo');
-                        $table->float('multa', 8, 2, true)->default(0.5);
+                        $table->float('multa')
+                                ->default(0.5);
                 });
 
 
@@ -94,6 +96,7 @@ class CreateAcervosTable extends Migration
                 Schema::create('acervos', function (Blueprint $table) {
                         $table->id();
                         $table->string('titulo');
+                        $table->string('subtitulo');
                         $table->text('resumo');
                         $table->string('tradutor');
                         $table->foreignId('autor_id')
@@ -117,9 +120,14 @@ class CreateAcervosTable extends Migration
                         $table->foreignId('situacao_id')
                                 ->constrained('situacao_do_acervo')
                                 ->onDelete('cascade');
-                        $table->string('IBNS', 21)->nullable();
+                        $table->string('IBNS', 21)
+                                ->nullable();
                         $table->string('ano_de_publicacao', 4);
-                        $table->string('capa')->nullable()->default(null);
+                        $table->string('capa')
+                                ->nullable()
+                                ->default(null);
+                        $table->string('edicao');
+                        $table->date('data_aquisicao');
                         $table->timestamps();
                 });
 
@@ -136,22 +144,14 @@ class CreateAcervosTable extends Migration
                                 ->constrained('pessoas')
                                 ->onDelete('cascade');
                         $table->date('data_de_emprestimo');
-                        $table->date('data_de_devolucao')->default(NULL)->nullable();
+                        $table->date('data_de_devolucao')
+                                ->default(NULL)
+                                ->nullable();
                         $table->timestamps();
                 });
 
 
-                Schema::create('multas', function (Blueprint $table) {
-                        $table->id();
-                        $table->foreignId('emprestimo_id')
-                                ->constrained('emprestimos')
-                                ->onDelete('cascade');
-                        $table->integer('dias_atrasados');
-                        $table->float('valor_da_multa', 8, 2, true);
-                        $table->date('pago')
-                                ->default(NULL)
-                                ->nullable();
-                });
+                
         }
 
         /**
@@ -170,7 +170,8 @@ class CreateAcervosTable extends Migration
                 Schema::dropIfExists('nacionalidades');
                 Schema::dropIfExists('idiomas');
                 Schema::dropIfExists('editoras');
-                Schema::dropIfExists('estados');
+                Schema::dropIfExists('emprestimos');
+                // Schema::dropIfExists('estados');
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }

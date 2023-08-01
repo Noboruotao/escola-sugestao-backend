@@ -24,25 +24,26 @@ class CreateCursosTable extends Migration
         });
 
 
-        Schema::create('curso_sugerido', function (Blueprint $table) {
+        Schema::create('sugeridos', function (Blueprint $table) {
             $table->foreignId('aluno_id')
                 ->constrained('alunos')
                 ->onDelete('cascade');
-            $table->foreignId('curso_id')
-                ->constrained('cursos')
-                ->onDelete('cascade');
-            $table->date('desaparecer')->default(null)->nullable();
+            $table->unsignedBigInteger('model_id');
+            $table->string('model_type');
+            $table->date('desaparecer')
+                ->default(null)
+                ->nullable();
         });
 
 
-        Schema::create('curso_professor', function (Blueprint $table) {
-            $table->foreignId('professor_id')
-                ->constrained('professores')
-                ->onDelete('cascade');
-            $table->foreignId('curso_id')
-                ->constrained('cursos')
-                ->onDelete('cascade');
-        });
+        // Schema::create('curso_professor', function (Blueprint $table) {
+        //     $table->foreignId('professor_id')
+        //         ->constrained('professores')
+        //         ->onDelete('cascade');
+        //     $table->foreignId('curso_id')
+        //         ->constrained('cursos')
+        //         ->onDelete('cascade');
+        // });
     }
 
     /**
@@ -53,8 +54,8 @@ class CreateCursosTable extends Migration
     public function down()
     {
         Schema::dropIfExists('cursos');
-        Schema::dropIfExists('cursos_sugeridos');
-        Schema::dropIfExists('curso_professors');
+        Schema::dropIfExists('sugeridos');
+        // Schema::dropIfExists('curso_professors');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

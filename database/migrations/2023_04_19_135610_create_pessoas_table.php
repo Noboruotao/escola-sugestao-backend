@@ -22,18 +22,49 @@ class CreatePessoasTable extends Migration
             $table->string('nome');
             $table->string('primeiro_nome');
             $table->string('ultimo_nome');
-            $table->string('email')->unique();
-            $table->date('data_de_nascimento');
+            $table->string('email')
+                ->unique();
+            $table->date('data_nascimento');
             $table->string('genero');
-            $table->string('cpf', 14)->unique();
-            $table->string('rg', 20)->unique();
-            $table->string('endereco');
-            $table->string('telefone', 20)->nullable();
-            $table->string('celular', 20)->nullable();
+            $table->string('cpf', 14)
+                ->unique();
+            $table->string('rg', 20)
+                ->unique();
+            $table->string('telefone_1', 20)
+                ->nullable();
+            $table->string('telefone_2', 20)
+                ->nullable();
             $table->string('senha');
-            $table->string('foto')->nullable()->default(null);
+            $table->string('foto')
+                ->nullable()
+                ->default(null);
             $table->timestamps();
             $table->softDeletes();
+        });
+
+
+        Schema::create('enderecos', function (Blueprint $table) {
+            $table->id();
+            $table->string('cep');
+            $table->string('rua');
+            $table->string('bairro');
+            $table->string('numero');
+            $table->string('cidade');
+            $table->string('uf');
+            $table->string('complemento')
+                ->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+
+        Schema::create('endereco_pessoa', function (Blueprint $table) {
+            $table->foreignId('endereco_id')
+                ->constrained('enderecos')
+                ->onDelete('cascade');
+            $table->foreignId('pessoa_id')
+                ->constrained('pessoas')
+                ->onDelete('cascade');
         });
 
 
@@ -57,12 +88,12 @@ class CreatePessoasTable extends Migration
         });
 
 
-        Schema::create('anos', function (Blueprint $table) {
+        Schema::create('periodos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('nivel_escolar_id')
                 ->constrained('nivel_escolar')
                 ->onDelete('cascade');
-            $table->integer('ano');
+            $table->integer('periodo');
         });
 
 
@@ -70,8 +101,8 @@ class CreatePessoasTable extends Migration
             $table->foreignId('id')
                 ->constrained('pessoas')
                 ->onDelete('cascade');
-            $table->foreignId('ano_id')
-                ->constrained('anos')
+            $table->foreignId('periodo_id')
+                ->constrained('periodos')
                 ->onDelete('cascade');
             $table->foreignId('situacao_id')
                 ->constrained('situacao_aluno')
@@ -96,8 +127,8 @@ class CreatePessoasTable extends Migration
         });
 
 
-        Schema::create('pais_ou_responsaveis', function (Blueprint $table) {
-            $table->foreignId('pais_ou_responsavel_id')
+        Schema::create('responsavel', function (Blueprint $table) {
+            $table->foreignId('responsavel_id')
                 ->constrained('pessoas')
                 ->onDelete('cascade');
             $table->foreignId('aluno_id')
@@ -108,9 +139,31 @@ class CreatePessoasTable extends Migration
 
         Schema::create('mensalidades', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('aluno_id');
+            $table->foreignId('aluno_id')
+                ->constrained('alunos')
+                ->onDelete('cascade');
             $table->float('valor');
-            $table->date('pago')->default(null)->nullable();
+            $table->date('validade');
+            $table->date('pago')
+                ->default(null)
+                ->nullable();
+        });
+
+
+        Schema::create('multas', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('pessoa_id')
+                ->constrained('pessoas')
+                ->onDelete('cascade');
+            $table->string('model_type');
+            $table->unsignedBigInteger('model_id');
+            $table->string('mensagem');
+            $table->integer('dias_atrasados');
+            $table->float('valor_da_multa');
+            $table->date('pago')
+                ->default(NULL)
+                ->nullable();
+            $table->timestamps();
         });
     }
 
@@ -128,7 +181,10 @@ class CreatePessoasTable extends Migration
         Schema::dropIfExists('bolsas');
         Schema::dropIfExists('aluno_bolsa');
         Schema::dropIfExists('nivel_escolar');
-        Schema::dropIfExists('pais_ou_responsaveis');
+        Schema::dropIfExists('responsavel');
+        Schema::dropIfExists('enderecos');
+        Schema::dropIfExists('endereco_pessoa');
+        Schema::dropIfExists('multas');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

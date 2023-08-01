@@ -6,13 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Permission\Traits\HasRoles;
-
 
 class Pessoa extends Authenticatable
 {
     use HasFactory;
-    use hasRoles;
     use SoftDeletes;
 
     protected $fillable = [
@@ -20,40 +17,35 @@ class Pessoa extends Authenticatable
         'primeiro_nome',
         'ultimo_nome',
         'email',
-        'data_de_nascimento',
+        'data_nascimento',
         'genero',
         'cpf',
         'rg',
-        'endereco',
-        'telefone',
-        'celular',
+        'telefone_1',
+        'telefone_2',
         'senha',
-        'foto',
+        'foto'
     ];
 
-    protected $guarded = [
-        'id',
-        'created_at',
-        'updated_at',
-        'deleted_at'
+    protected $hidden = [
+        'primeiro_nome',
+        'ultimo_nome',
+        'data_nascimento',
+        'genero',
+        'telefone_1',
+        'telefone_2',
+        'senha',
+        'foto'
     ];
 
-    protected $casts = [
-        'data_de_nascimento' => 'date',
-        'telefone' => 'string',
-        'celular' => 'string',
-    ];
-
-
-
-    public static function getPessoaByCpf($cpf)
+    public function enderecos()
     {
-        return Pessoa::where('cpf', $cpf)->first();
+        return $this->hasMany(Endereco::class);
     }
 
 
-    public static function getPessoaByRole($role_name)
+    public function professor()
     {
-        return  Pessoa::role($role_name)->get();
+        return $this->hasOne(Professor::class, 'id', 'id');
     }
 }

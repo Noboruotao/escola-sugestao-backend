@@ -18,6 +18,7 @@ return [
         ["nome" => "Psicologia"],
         ["nome" => "Informática"],
         ["nome" => "Robótica"],
+        ["nome" => "Palestra"],
         ["nome" => "Outros"],
     ],
 

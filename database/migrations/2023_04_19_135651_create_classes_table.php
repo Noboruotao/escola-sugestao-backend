@@ -22,7 +22,8 @@ class CreateClassesTable extends Migration
                 ->constrained('professors');
             $table->foreignId('disciplina_id')
                 ->constrained('disciplinas');
-
+            $table->boolean('ativo')
+                ->default(true);
             $table->timestamps();
         });
 
@@ -34,8 +35,20 @@ class CreateClassesTable extends Migration
             $table->foreignId('classe_id')
                 ->constrained('classes')
                 ->onDelete('cascade');
-            $table->integer('presença')->default(100);
-            $table->integer('faltas')->default(0);
+            $table->integer('presença')
+                ->default(0);
+            $table->integer('faltas')
+                ->default(0);
+        });
+
+
+        Schema::create('aulas', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('classe_id')
+                ->constrained('classes')
+                ->onDelete('cascade');
+            $table->string('dia_semana');
+            $table->string('horario');
         });
     }
 
@@ -48,6 +61,7 @@ class CreateClassesTable extends Migration
     {
         Schema::dropIfExists('classes');
         Schema::dropIfExists('aluno_classe');
+        Schema::dropIfExists('aulas');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

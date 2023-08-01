@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Factories\AcervoFactory::definition($num_editoras = 1000, $num_autores = 2000, $num_acervos = 50000);
-        // Factories\PessoaCursoFactory::definition($num_pessoas = 15000);
-        // Factories\AtividadeExtracurricularFactory::definition();
-        // Factories\DisciplinaFactory::definition();
+        Factories\AcervoFactory::definition($num_editoras = 100, $num_autores = 200, $num_acervos = 500);
+        Factories\PessoaCursoFactory::definition($num_pessoas = 150);
+        Factories\AtividadeExtracurricularFactory::definition();
+        Factories\DisciplinaFactory::definition();
         Factories\AreaDeConhecimentoFactory::definition();
         Factories\ClasseFactory::definition();
         Factories\NotaFactory::definition();
