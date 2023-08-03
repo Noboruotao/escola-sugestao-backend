@@ -80,6 +80,7 @@ class CreatePessoasTable extends Migration
             $table->id();
             $table->string('situacao');
         });
+        \App\Models\AlunoSituacao::insert(config('seeder_datas.situacao_aluno'));
 
 
         Schema::create('nivel_escolar', function (Blueprint $table) {
@@ -87,14 +88,17 @@ class CreatePessoasTable extends Migration
             $table->string('nome');
         });
 
+        \App\Models\NivelEscolar::insert(config('seeder_datas.nivel_escolar'));
+
 
         Schema::create('periodos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('nivel_escolar_id')
                 ->constrained('nivel_escolar')
                 ->onDelete('cascade');
-            $table->integer('periodo');
+            $table->string('periodo');
         });
+        \Database\Factories\DisciplinaFactory::createPeriodos();
 
 
         Schema::create('alunos', function (Blueprint $table) {
@@ -115,6 +119,7 @@ class CreatePessoasTable extends Migration
             $table->string('nome');
             $table->float('valor');
         });
+        \App\Models\Bolsa::insert(config('seeder_datas.bolsas'));
 
 
         Schema::create('aluno_bolsa', function (Blueprint $table) {
@@ -137,7 +142,7 @@ class CreatePessoasTable extends Migration
         });
 
 
-        Schema::create('mensalidades', function (Blueprint $table) {
+        Schema::create('pagamentos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('aluno_id')
                 ->constrained('alunos')
@@ -185,6 +190,7 @@ class CreatePessoasTable extends Migration
         Schema::dropIfExists('enderecos');
         Schema::dropIfExists('endereco_pessoa');
         Schema::dropIfExists('multas');
+        Schema::dropIfExists('pagamentos');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

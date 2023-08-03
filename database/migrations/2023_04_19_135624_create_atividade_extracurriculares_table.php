@@ -21,6 +21,8 @@ class CreateAtividadeExtracurricularesTable extends Migration
             $table->string('nome');
         });
 
+        \App\models\AtivExtraTipo::insert(config('seeder_datas.tipoAtivExtra'));
+
 
         Schema::create('atividade_extracurriculares', function (Blueprint $table) {
             $table->id();
@@ -32,20 +34,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-
-        // Schema::create('atividade_extracurricular_sugeridas', function (Blueprint $table) {
-        //     $table->foreignId('aluno_id')
-        //         ->constrained('alunos')
-        //         ->onDelete('cascade')
-        //         ->name('ativ_extra_sugeridas_aluno_id_foreign');
-        //     $table->foreignId('atividade_extracurricular_id')
-        //         ->constrained('atividade_extracurriculares')
-        //         ->onDelete('cascade')
-        //         ->name('ativ_extra_sugeridas_atividade_extracurricular_id_foreign');
-        //     // $table->integer('vezes_mostradas')->default(0);
-        //     $table->date('desaparecer')->default(null)->nullable();
-        // });
+        \App\Models\AtividadeExtra::insert(config('seeder_datas.ativExtra'));
 
 
         Schema::create('aluno_atividades_extracurriculares', function (Blueprint $table) {
@@ -71,7 +60,6 @@ class CreateAtividadeExtracurricularesTable extends Migration
     {
         Schema::dropIfExists('atividade_extracurriculares');
         Schema::dropIfExists('tipos_de_atividade_extracurricular');
-        // Schema::dropIfExists('atividades_extracurricular_sugeridas');
         Schema::dropIfExists('aluno_atividade_extracurricular');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

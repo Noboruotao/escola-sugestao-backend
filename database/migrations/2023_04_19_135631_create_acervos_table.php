@@ -20,6 +20,7 @@ class CreateAcervosTable extends Migration
                         $table->id();
                         $table->string('idioma');
                 });
+                \App\Models\Idioma::insert(config('seeder_datas.idiomas'));
 
 
                 Schema::create('nacionalidades', function (Blueprint $table) {
@@ -29,6 +30,7 @@ class CreateAcervosTable extends Migration
                                 ->constrained('idiomas')
                                 ->onDelete('cascade');
                 });
+                \App\Models\Nacionalidade::insert(config('seeder_datas.nacionalidade'));
 
 
                 Schema::create('autors', function (Blueprint $table) {
@@ -44,25 +46,12 @@ class CreateAcervosTable extends Migration
                 });
 
 
-                // Schema::create('estados', function (Blueprint $table) {
-                //         $table->id();
-                //         $table->string('estado');
-                //         $table->string('sigla', 2);
-                // });
-
-
                 schema::create('editoras', function (Blueprint $table) {
                         $table->id();
                         $table->string('nome');
                         $table->string('email');
                         $table->string('telefone', 20);
-                        // $table->string('endereco');
                         $table->string('cnpj')->unique();
-                        // $table->string('cidade');
-                        // $table->string('cep', 10);
-                        // $table->foreignId('estado_id')
-                        //         ->constrained('estados')
-                        //         ->onDelete('cascade');
                         $table->foreignId('endereco_id');
                 });
 
@@ -71,12 +60,14 @@ class CreateAcervosTable extends Migration
                         $table->id();
                         $table->string('situacao');
                 });
+                \App\Models\AcervoSituacao::insert(config('seeder_datas.situacao_acervo'));
 
 
                 Schema::create('estado_do_acervo', function (Blueprint $table) {
                         $table->id();
                         $table->string('estado');
                 });
+                \App\Models\AcervoEstado::insert(config('seeder_datas.estados_acervo'));
 
 
                 Schema::create('tipo_de_acervo', function (Blueprint $table) {
@@ -85,12 +76,14 @@ class CreateAcervosTable extends Migration
                         $table->float('multa')
                                 ->default(0.5);
                 });
+                \App\Models\AcervoTipo::insert(config('seeder_datas.tipos_acervo'));
 
 
                 Schema::create('categorias', function (Blueprint $table) {
                         $table->id();
                         $table->string('categoria');
                 });
+                \App\Models\Categoria::insert(config('seeder_datas.categorias_acervo'));
 
 
                 Schema::create('acervos', function (Blueprint $table) {
@@ -149,9 +142,6 @@ class CreateAcervosTable extends Migration
                                 ->nullable();
                         $table->timestamps();
                 });
-
-
-                
         }
 
         /**

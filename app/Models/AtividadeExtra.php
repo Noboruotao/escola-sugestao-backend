@@ -9,6 +9,7 @@ class AtividadeExtra extends Model
 {
     use HasFactory;
 
+    protected $table = 'atividade_extracurriculares';
     protected $fillable = [
         'nome',
         'tipo_id',

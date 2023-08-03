@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pessoa extends Authenticatable
 {
     use HasFactory;
+    use hasRoles;
     use SoftDeletes;
 
     protected $fillable = [
@@ -62,8 +64,8 @@ class Pessoa extends Authenticatable
     }
 
 
-    public function mensalidadeMulta()
+    public function PagamentoMulta()
     {
-        return $this->morphedByMany(Mensalidade::class, 'multas');
+        return $this->morphedByMany(Pagamento::class, 'multas');
     }
 }

@@ -127,6 +127,13 @@ class CreatePermissionTables extends Migration
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
+
+
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        \Database\Factories\PermissionAndRoleFactory::insertRoles();
+        \Database\Factories\PermissionAndRoleFactory::insertPermissions();
+        \Database\Factories\PermissionAndRoleFactory::attributePermissionToRole();
     }
 
     /**

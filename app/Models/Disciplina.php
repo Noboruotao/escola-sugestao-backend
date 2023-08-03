@@ -25,6 +25,12 @@ class Disciplina extends Model
     }
 
 
+    public function periodos()
+    {
+        return $this->belongsToMany(Periodo::class, 'disciplina_periodo', 'disciplina_id', 'periodo_id');
+    }
+
+
     public function materialSugeridos()
     {
         return $this->belongsToMany(Acervo::class, 'materiais_sugeridos');

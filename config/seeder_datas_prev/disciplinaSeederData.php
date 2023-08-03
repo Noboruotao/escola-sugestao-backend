@@ -1,6 +1,6 @@
 <?php
 return [
-    'tipos_de_valiacao' => [
+    'tipos_de_avaliacao' => [
         ['nome' => 'Primeira Avaliação Semestral(P1)'],
         ['nome' => 'Segunda Avaliação Semestral(P2)'],
         ['nome' => 'Entrega de Trabalho'],

@@ -18,17 +18,18 @@ class CreateDisciplinasTable extends Migration
 
                 Schema::create('disciplinas', function (Blueprint $table) {
                         $table->id();
-                        $table->string('nome')
-                                ->unique();
+                        $table->string('nome');
                         $table->integer('carga_horaria');
                         $table->timestamps();
                 });
+                \App\Models\Disciplina::insert(config('seeder_datas.disciplinas'));
 
 
                 Schema::create('situacao_da_disciplina', function (Blueprint $table) {
                         $table->id();
                         $table->string('nome');
                 });
+                \App\Models\DisciplinaSituacao::insert(config('seeder_datas.situacao_da_disciplina'));
 
 
                 Schema::create('aluno_Disciplina', function (Blueprint $table) {
@@ -46,20 +47,11 @@ class CreateDisciplinasTable extends Migration
                 });
 
 
-                // Schema::create('disciplina_professor', function (Blueprint $table){
-                //     $table->foreignId('professor_id')
-                //             ->constrained('professores')
-                //             ->onDelete('cascade');
-                //     $table->foreignId('disciplina_id')
-                //             ->constrained('disciplinas')
-                //             ->onDelete('cascade');
-                // });
-
-
                 Schema::create('tipos_de_avaliacoes', function (Blueprint $table) {
                         $table->id();
                         $table->string('nome');
                 });
+                \App\Models\TipoAvaliacao::insert(config('seeder_datas.tipos_de_avaliacao'));
 
 
                 Schema::create('notas', function (Blueprint $table) {
@@ -86,7 +78,7 @@ class CreateDisciplinasTable extends Migration
                 });
 
 
-                Schema::create('periodo_disciplina', function (Blueprint $table) {
+                Schema::create('disciplina_periodo', function (Blueprint $table) {
                         $table->foreignId('periodo_id')
                                 ->constrained('periodos')
                                 ->onDelete('cascade');
@@ -94,6 +86,7 @@ class CreateDisciplinasTable extends Migration
                                 ->constrained('disciplinas')
                                 ->onDelete('cascade');
                 });
+                \Database\Factories\DisciplinaFactory::attributeDisciplinaPeriodo();
         }
 
         /**

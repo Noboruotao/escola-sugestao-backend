@@ -1,0 +1,21 @@
+<?php
+return [
+    ["nome" => "Esportes"],
+    ["nome" => "Artes"],
+    ["nome" => "Voluntariado"],
+    ["nome" => "Clube de Debate"],
+    ["nome" => "Leitura"],
+    ["nome" => "Empreendedorismo"],
+    ["nome" => "Ciências"],
+    ["nome" => "Matemática"],
+    ["nome" => "História"],
+    ["nome" => "Geografia"],
+    ["nome" => "Religião"],
+    ["nome" => "Filosofia"],
+    ["nome" => "Sociologia"],
+    ["nome" => "Psicologia"],
+    ["nome" => "Informática"],
+    ["nome" => "Robótica"],
+    ["nome" => "Palestra"],
+    ["nome" => "Outros"],
+];

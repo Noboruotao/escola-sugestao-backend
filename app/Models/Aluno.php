@@ -46,9 +46,9 @@ class Aluno extends Model
     }
 
 
-    public function mensalidades()
+    public function pagamentos()
     {
-        return $this->hasMany(Mensalidade::class);
+        return $this->hasMany(Pagamento::class);
     }
 
 

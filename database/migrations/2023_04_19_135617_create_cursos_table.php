@@ -22,6 +22,7 @@ class CreateCursosTable extends Migration
             $table->text('descricao');
             $table->timestamps();
         });
+        \App\Models\Curso::insert(config('seeder_datas.cursos'));
 
 
         Schema::create('sugeridos', function (Blueprint $table) {
@@ -34,16 +35,6 @@ class CreateCursosTable extends Migration
                 ->default(null)
                 ->nullable();
         });
-
-
-        // Schema::create('curso_professor', function (Blueprint $table) {
-        //     $table->foreignId('professor_id')
-        //         ->constrained('professores')
-        //         ->onDelete('cascade');
-        //     $table->foreignId('curso_id')
-        //         ->constrained('cursos')
-        //         ->onDelete('cascade');
-        // });
     }
 
     /**
@@ -55,7 +46,6 @@ class CreateCursosTable extends Migration
     {
         Schema::dropIfExists('cursos');
         Schema::dropIfExists('sugeridos');
-        // Schema::dropIfExists('curso_professors');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
