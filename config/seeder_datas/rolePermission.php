@@ -186,7 +186,7 @@ return [
         ]
     ],
     [
-        'name' => 'Pais/Responsável',
+        'name' => 'Responsável',
         'permissions' => [
             'acervo.read',
             'aluno.read',

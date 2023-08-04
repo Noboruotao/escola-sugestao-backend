@@ -39,11 +39,12 @@ class CreateAcervosTable extends Migration
                         $table->foreignId('nacionalidade_id')
                                 ->constrained('nacionalidades')
                                 ->onDelete('cascade');
-                        $table->date('data_de_nascimento')
+                        $table->string('ano_nascimento', 4)
                                 ->nullable();
-                        $table->date('data_de_falecimento')
+                        $table->string('ano_falecimento', 4)
                                 ->nullable();
                 });
+                \Database\Factories\AcervoFactory::createAutor(50);
 
 
                 schema::create('editoras', function (Blueprint $table) {
@@ -54,6 +55,7 @@ class CreateAcervosTable extends Migration
                         $table->string('cnpj')->unique();
                         $table->foreignId('endereco_id');
                 });
+                \Database\Factories\AcervoFactory::createEditoras();
 
 
                 Schema::create('situacao_do_acervo', function (Blueprint $table) {

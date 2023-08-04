@@ -99,11 +99,9 @@ class CreateDisciplinasTable extends Migration
                 Schema::dropIfExists('disciplinas');
                 Schema::dropIfExists('aluno_Disciplina');
                 Schema::dropIfExists('situacao_da_disciplina');
-                // Schema::dropIfExists('disciplina_professor');
                 Schema::dropIfExists('notas');
                 Schema::dropIfExists('tipos_de_avaliacoes');
                 Schema::dropIfExists('materiais_recomendados');
-                // Schema::dropIfExists('ano_disciplina');
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }

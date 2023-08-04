@@ -24,6 +24,8 @@ class CreateAreaDeConhecimentosTable extends Migration
                         $table->timestamps();
                 });
                 \App\Models\AreaConhecimento::insert(config('seeder_datas.CDU'));
+                \Database\Factories\AcervoFactory::createAcervo();
+
 
 
                 Schema::create('aluno_areas_de_conhecimento', function (Blueprint $table) {

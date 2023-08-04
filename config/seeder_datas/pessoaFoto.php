@@ -72,7 +72,4 @@ return [
     70 => 'woman_70.png',
     71 => 'woman_71.png',
     72 => 'woman_72.png',
-
-
-
 ];

@@ -45,6 +45,10 @@ class Pessoa extends Authenticatable
         return $this->hasMany(Endereco::class);
     }
 
+    public function aluno()
+    {
+        return $this->hasOne(Aluno::class, 'id', 'id');
+    }
 
     public function professor()
     {
@@ -52,9 +56,9 @@ class Pessoa extends Authenticatable
     }
 
 
-    public function protegido()
+    public function responsavel()
     {
-        return $this->hasMany(Aluno::class, 'responsavel', 'responsavel_id', 'aluno_id');
+        return $this->hasOne(Responsavel::class, 'responsavel_id', 'id');
     }
 
 

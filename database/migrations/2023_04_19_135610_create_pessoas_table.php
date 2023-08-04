@@ -23,7 +23,8 @@ class CreatePessoasTable extends Migration
             $table->string('primeiro_nome');
             $table->string('ultimo_nome');
             $table->string('email')
-                ->unique();
+                ->unique()
+                ->nullable();
             $table->date('data_nascimento');
             $table->string('genero');
             $table->string('cpf', 14)
@@ -138,7 +139,7 @@ class CreatePessoasTable extends Migration
                 ->onDelete('cascade');
             $table->foreignId('aluno_id')
                 ->constrained('alunos')
-                ->inDelete('cascade');
+                ->onDelete('cascade');
         });
 
 

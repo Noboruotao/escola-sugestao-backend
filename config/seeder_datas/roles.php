@@ -8,5 +8,5 @@ return [
     'Coordenador Pedagógico',
     'Bibliotecário',
     'Aluno',
-    'Pais/Responsável',
+    'Responsável',
 ];

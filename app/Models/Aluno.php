@@ -9,6 +9,8 @@ class Aluno extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    
     protected $fillable = [
         'id',
         'periodo_id',
@@ -18,7 +20,7 @@ class Aluno extends Model
 
     public function pessoa()
     {
-        return $this->hasOne(Pessoa::class, 'id', 'id');
+        return $this->belongsTo(Pessoa::class, 'id', 'id');
     }
 
 
