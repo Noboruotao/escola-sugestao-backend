@@ -21,6 +21,7 @@ class PessoaFactory extends Factory
     {
         dump('Starting Pessoa seeding');
         PessoaFactory::createPessoas();
+        PessoaFactory::attributeEndereco();
     }
 
     public static function createPessoas()
@@ -143,7 +144,7 @@ class PessoaFactory extends Factory
     protected function createPais()
     {
         $pais = Pessoa::role('Responsável')->inRandomOrder()->get();
-        Pessoa::role('Aluno')->chunk(200, function (Collection $alunos) use(&$pais) {
+        Pessoa::role('Aluno')->chunk(200, function (Collection $alunos) use (&$pais) {
             foreach ($alunos as $aluno) {
                 if ($pais->isEmpty()) {
                     $pais = Pessoa::role('Responsável')->inRandomOrder()->get();
@@ -187,6 +188,37 @@ class PessoaFactory extends Factory
         return $fotos[$randomKey];
     }
 
+
+    private static function attribuirPessoaEndereco($pessoa)
+    {
+        $endereco = PessoaFactory::createEndereco();
+        $pessoa->enderecos()->attach($endereco);
+    }
+
+
+    private static function attributeProtegidoEndereco($responsavel)
+    {
+        foreach ($responsavel->protegidos as $protegido) {
+            dump($protegido->pessoa->nome);
+            $protegido->pessoa->enderecos()->attach($responsavel->enderecos->first());
+        }
+    }
+
+
+    private static function attributeEndereco()
+    {
+        $alunoRole = Role::where('name', 'aluno')->first();
+        Pessoa::whereDoesntHave('roles', function ($query) use ($alunoRole) {
+            $query->where('role_id', $alunoRole->id);
+        })->chunk(100, function (Collection $adultos) {
+            foreach ($adultos as $adulto) {
+                PessoaFactory::attribuirPessoaEndereco($adulto);
+                if ($adulto->has('protegidos')->exists()) {
+                    PessoaFactory::attributeProtegidoEndereco($adulto);
+                }
+            }
+        });
+    }
 
 
     public static function createEndereco()

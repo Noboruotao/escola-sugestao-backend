@@ -10,7 +10,7 @@ class Aluno extends Model
     use HasFactory;
 
     public $timestamps = false;
-    
+
     protected $fillable = [
         'id',
         'periodo_id',
@@ -44,7 +44,7 @@ class Aluno extends Model
 
     public function responsavel()
     {
-        return $this->belongsToMany(Pessoa::class, 'responsavel', 'responsavel_id', 'aluno_id');
+        return $this->belongsToMany(Pessoa::class, 'responsavel', 'aluno_id', 'responsavel_id');
     }
 
 
