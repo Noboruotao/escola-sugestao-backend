@@ -16,7 +16,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Schema::create('tipos_de_atividade_extracurricular', function (Blueprint $table) {
+        Schema::create('tipos_atividade_extracurricular', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
         });
@@ -28,7 +28,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
             $table->id();
             $table->string('nome');
             $table->foreignId('tipo_id')
-                ->constrained('tipos_de_atividade_extracurricular');
+                ->constrained('tipos_atividade_extracurricular');
             $table->boolean('ativo')
                 ->default(true);
             $table->timestamps();
@@ -59,7 +59,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('atividade_extracurriculares');
-        Schema::dropIfExists('tipos_de_atividade_extracurricular');
+        Schema::dropIfExists('tipos_atividade_extracurricular');
         Schema::dropIfExists('aluno_atividade_extracurricular');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

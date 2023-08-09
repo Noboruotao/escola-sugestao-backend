@@ -9,6 +9,6 @@ class AcervoSituacao extends Model
 {
     use HasFactory;
 
-    protected $table = 'situacao_do_acervo';
+    protected $table = 'situacao_acervo';
     protected $fillable = ['situacao'];
 }

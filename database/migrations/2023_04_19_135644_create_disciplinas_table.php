@@ -25,14 +25,14 @@ class CreateDisciplinasTable extends Migration
                 \App\Models\Disciplina::insert(config('seeder_datas.disciplinas'));
 
 
-                Schema::create('situacao_da_disciplina', function (Blueprint $table) {
+                Schema::create('situacao_disciplina', function (Blueprint $table) {
                         $table->id();
                         $table->string('nome');
                 });
-                \App\Models\DisciplinaSituacao::insert(config('seeder_datas.situacao_da_disciplina'));
+                \App\Models\DisciplinaSituacao::insert(config('seeder_datas.situacao_disciplina'));
 
 
-                Schema::create('aluno_Disciplina', function (Blueprint $table) {
+                Schema::create('aluno_disciplina', function (Blueprint $table) {
                         $table->foreignId('aluno_id')
                                 ->constrained('alunos')
                                 ->onDelete('cascade');
@@ -40,26 +40,26 @@ class CreateDisciplinasTable extends Migration
                                 ->constrained('disciplinas')
                                 ->onDelete('cascade');
                         $table->foreignId('situacao_id')
-                                ->constrained('situacao_da_disciplina');
+                                ->constrained('situacao_disciplina');
                         $table->float('nota_final')
                                 ->default(null)
                                 ->nullable();
                 });
 
 
-                Schema::create('tipos_de_avaliacoes', function (Blueprint $table) {
+                Schema::create('tipos_avaliacoes', function (Blueprint $table) {
                         $table->id();
                         $table->string('nome');
                 });
-                \App\Models\TipoAvaliacao::insert(config('seeder_datas.tipos_de_avaliacao'));
+                \App\Models\TipoAvaliacao::insert(config('seeder_datas.tipos_avaliacao'));
 
 
                 Schema::create('notas', function (Blueprint $table) {
                         $table->id();
                         $table->foreignId('aluno_id')
                                 ->constrained('alunos');
-                        $table->foreignId('tipo_de_avaliacao_id')
-                                ->constrained('tipos_de_avaliacoes');
+                        $table->foreignId('tipo_avaliacao_id')
+                                ->constrained('tipos_avaliacoes');
                         $table->foreignId('disciplina_id')
                                 ->constrained('disciplinas');
                         $table->float('nota')
@@ -97,10 +97,10 @@ class CreateDisciplinasTable extends Migration
         public function down()
         {
                 Schema::dropIfExists('disciplinas');
-                Schema::dropIfExists('aluno_Disciplina');
-                Schema::dropIfExists('situacao_da_disciplina');
+                Schema::dropIfExists('aluno_disciplina');
+                Schema::dropIfExists('situacao_disciplina');
                 Schema::dropIfExists('notas');
-                Schema::dropIfExists('tipos_de_avaliacoes');
+                Schema::dropIfExists('tipos_avaliacoes');
                 Schema::dropIfExists('materiais_recomendados');
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1;');

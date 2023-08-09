@@ -23,7 +23,7 @@ class Acervo extends Model
         'estado_id',
         'situacao_id',
         'IBNS',
-        'ano_de_publicacao',
+        'ano_publicacao',
         'capa',
         'edicao',
         'data_aquisicao'

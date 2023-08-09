@@ -9,7 +9,7 @@ class AcervoTipo extends Model
 {
     use HasFactory;
 
-    protected $table = 'tipo_de_acervo';
+    protected $table = 'tipo_acervo';
     protected $fillable = ['tipo', 'multa'];
 
 

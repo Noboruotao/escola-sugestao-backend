@@ -12,8 +12,8 @@ class Autor extends Model
     protected $fillabel = [
         'nome',
         'nacionalidade_id',
-        'data_de_nascimento',
-        'data_de_falecimento'
+        'data_nascimento',
+        'data_falecimento'
     ];
 
 

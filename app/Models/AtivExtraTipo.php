@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AtivExtraTipo extends Model
 {
     use HasFactory;
-    protected $table = 'tipos_de_atividade_extracurricular';
+    protected $table = 'tipos_atividade_extracurricular';
     protected $fillable = ['nome'];
 }

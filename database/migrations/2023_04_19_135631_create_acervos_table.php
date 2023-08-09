@@ -58,21 +58,21 @@ class CreateAcervosTable extends Migration
                 \Database\Factories\AcervoFactory::createEditoras();
 
 
-                Schema::create('situacao_do_acervo', function (Blueprint $table) {
+                Schema::create('situacao_acervo', function (Blueprint $table) {
                         $table->id();
                         $table->string('situacao');
                 });
                 \App\Models\AcervoSituacao::insert(config('seeder_datas.situacao_acervo'));
 
 
-                Schema::create('estado_do_acervo', function (Blueprint $table) {
+                Schema::create('estado_acervo', function (Blueprint $table) {
                         $table->id();
                         $table->string('estado');
                 });
                 \App\Models\AcervoEstado::insert(config('seeder_datas.estados_acervo'));
 
 
-                Schema::create('tipo_de_acervo', function (Blueprint $table) {
+                Schema::create('tipo_acervo', function (Blueprint $table) {
                         $table->id();
                         $table->string('tipo');
                         $table->float('multa')
@@ -107,17 +107,17 @@ class CreateAcervosTable extends Migration
                                 ->constrained('categorias')
                                 ->onDelete('cascade');
                         $table->foreignId('tipo_id')
-                                ->constrained('tipo_de_acervo')
+                                ->constrained('tipo_acervo')
                                 ->onDelete('cascade');
                         $table->foreignId('estado_id')
-                                ->constrained('estado_do_acervo')
+                                ->constrained('estado_acervo')
                                 ->onDelete('cascade');
                         $table->foreignId('situacao_id')
-                                ->constrained('situacao_do_acervo')
+                                ->constrained('situacao_acervo')
                                 ->onDelete('cascade');
                         $table->string('IBNS', 21)
                                 ->nullable();
-                        $table->string('ano_de_publicacao', 4);
+                        $table->string('ano_publicacao', 4);
                         $table->string('capa')
                                 ->nullable()
                                 ->default(null);
@@ -154,9 +154,9 @@ class CreateAcervosTable extends Migration
         public function down()
         {
                 Schema::dropIfExists('acervos');
-                Schema::dropIfExists('situacao_do_acervo');
-                Schema::dropIfExists('estado_do_acervo');
-                Schema::dropIfExists('tipo_de_acervo');
+                Schema::dropIfExists('situacao_acervo');
+                Schema::dropIfExists('estado_acervo');
+                Schema::dropIfExists('tipo_acervo');
                 Schema::dropIfExists('categoria');
                 Schema::dropIfExists('autores');
                 Schema::dropIfExists('nacionalidades');

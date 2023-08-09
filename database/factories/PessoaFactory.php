@@ -199,7 +199,6 @@ class PessoaFactory extends Factory
     private static function attributeProtegidoEndereco($responsavel)
     {
         foreach ($responsavel->protegidos as $protegido) {
-            dump($protegido->pessoa->nome);
             $protegido->pessoa->enderecos()->attach($responsavel->enderecos->first());
         }
     }

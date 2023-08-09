@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Acervo;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Collection;
 
 use App\Models\Autor;
 use App\Models\Idioma;
@@ -132,12 +133,23 @@ class AcervoFactory extends Factory
                 'estado_id' => $estados->random(),
                 'situacao_id' => $situacoes->random(),
                 'IBNS' => $ibns,
-                'ano_de_publicacao' => AcervoFactory::getBirthYear($faker, 1, 100),
+                'ano_publicacao' => AcervoFactory::getBirthYear($faker, 1, 100),
                 'capa' => AcervoFactory::getAcervoCapa($tipo),
                 'edicao' => $faker->randomDigit() . 'º edição',
                 'data_aquisicao' => $faker->dateTimeBetween('-20 years', 'now')->format('Y-m-d'),
             ];
         }
         Acervo::insert($acervos);
+    }
+
+
+    private static function createMateriaisSugeridos()
+    {
+        Acervo::orderBy('id')->chunk(100, function(Collection $acervos){
+            foreach($acervos as $acervo){
+                
+            }
+        
+        });
     }
 }

@@ -11,9 +11,9 @@ class Nota extends Model
 
     protected $fillable = [
         'aluno_id',
-        'tipo_de_avaliacao_id',
+        'tipo_avaliacao_id',
         'disciplina_id',
-        'nota'
+        'nota',
     ];
 
 
