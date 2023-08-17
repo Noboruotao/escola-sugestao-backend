@@ -72,6 +72,12 @@ class Acervo extends Model
     }
 
 
+    public function areas()
+    {
+        return $this->morphToMany(AreaConhecimento::class, 'model', 'model_has_areas', 'model_id', 'area_codigo');
+    }
+
+
     public function materialSugerido()
     {
         return $this->belongsToMany(Disciplina::class, 'materiais_sugeridos');

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Factories;
-
+use Database\Factories\AreaFactory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,5 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         Factories\PessoaFactory::definition();
         Factories\AlunoFactory::definition();
+        Factories\AcervoFactory::definition();
+        Factories\AreaFactory::definition();
     }
 }

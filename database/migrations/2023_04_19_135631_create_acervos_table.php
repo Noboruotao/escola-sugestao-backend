@@ -53,7 +53,8 @@ class CreateAcervosTable extends Migration
                         $table->string('email');
                         $table->string('telefone', 20);
                         $table->string('cnpj')->unique();
-                        $table->foreignId('endereco_id');
+                        $table->foreignId('endereco_id')
+                                ->constrained('enderecos');
                 });
                 \Database\Factories\AcervoFactory::createEditoras();
 
@@ -153,17 +154,16 @@ class CreateAcervosTable extends Migration
          */
         public function down()
         {
-                Schema::dropIfExists('acervos');
-                Schema::dropIfExists('situacao_acervo');
-                Schema::dropIfExists('estado_acervo');
-                Schema::dropIfExists('tipo_acervo');
-                Schema::dropIfExists('categoria');
-                Schema::dropIfExists('autores');
-                Schema::dropIfExists('nacionalidades');
-                Schema::dropIfExists('idiomas');
-                Schema::dropIfExists('editoras');
                 Schema::dropIfExists('emprestimos');
-                // Schema::dropIfExists('estados');
+                Schema::dropIfExists('acervos');
+                Schema::dropIfExists('categorias');
+                Schema::dropIfExists('tipo_acervo');
+                Schema::dropIfExists('estado_acervo');
+                Schema::dropIfExists('situacao_acervo');
+                Schema::dropIfExists('editoras');
+                Schema::dropIfExists('idiomas');
+                Schema::dropIfExists('nacionalidades');
+                Schema::dropIfExists('autores');
 
                 DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }

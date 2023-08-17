@@ -15,4 +15,10 @@ class Periodo extends Model
     {
         return $this->belongsToMany(Disciplina::class, 'disciplina_periodo', 'periodo_id', 'disciplina_id');
     }
+
+
+    public function alunos()
+    {
+        return $this->hasMany(Aluno::class, 'periodo_id', 'id');
+    }
 }

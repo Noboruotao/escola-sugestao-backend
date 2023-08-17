@@ -72,6 +72,12 @@ class Aluno extends Model
     }
 
 
+    public function classes()
+    {
+        return $this->belongsToMany(Classe::class)->withPivot(['presenca', 'faltas']);;
+    }
+
+
     public function disciplinas()
     {
         return $this->belongsToMany(Disciplina::class, 'aluno_Disciplina')

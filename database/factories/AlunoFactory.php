@@ -5,12 +5,16 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 use App\Models\Aluno;
 use App\Models\AlunoDisciplina;
+use App\Models\Aula;
+use App\Models\Classe;
 use App\Models\Disciplina;
 use App\Models\Periodo;
 use App\Models\Nota;
+use App\Models\Professor;
 
 class AlunoFactory extends Factory
 {
@@ -23,6 +27,8 @@ class AlunoFactory extends Factory
     {
         dump('Starting Aluno seeding');
         AlunoFactory::attributeAlunoDisciplina();
+        AlunoFactory::createClasses();
+        AlunoFactory::createAulas();
     }
 
 
@@ -48,17 +54,7 @@ class AlunoFactory extends Factory
     }
 
 
-    private static function alunoDisciplinaAtual($aluno)
-    {
-        $alunoDisciplina = [];
-        foreach ($aluno->periodo->disciplinas as $disciplina) {
-            $alunoDisciplina[] = AlunoFactory::makeAlunoDisciplina($aluno->id, $disciplina->id, 5, null);
-        }
-        return $alunoDisciplina;
-    }
-
-
-    public static function generateNotaValue($target, $probability = 0.7)
+    private static function generateRandomNota($target, $probability = 0.7)
     {
         $faker = \Faker\Factory::create('pt_BR');
         $randomValue = $faker->randomFloat(2, 0, 10);
@@ -69,41 +65,153 @@ class AlunoFactory extends Factory
     }
 
 
-    private static function attributeAlunoDisciplina()
+    private static function calculateFinalNota($nota_p1, $nota_p2, $nota_sub)
     {
+        if ($nota_sub !== null) {
+            return max(($nota_p1 + $nota_sub) / 2, ($nota_p2 + $nota_sub) / 2, ($nota_p1 + $nota_p2) / 2);
+        }
+        return ($nota_p1 + $nota_p2) / 2;
+    }
 
-        $all_periodos = Periodo::all();
-        Aluno::orderBy('id')->chunk(100, function (Collection $alunos) use ($all_periodos) {
-            $alunoDisciplina = [];
-            foreach ($alunos as $aluno) {
-                $periodos = $all_periodos->where('id', '<', $aluno->periodo_id);
-                $alunoDisciplina = AlunoFactory::alunoDisciplinaAtual($aluno);
-                foreach ($periodos as $periodo) {
-                    foreach ($periodo->disciplinas as $disciplina) {
-                        $notas = [];
-                        $nota_p1 = AlunoFactory::generateNotaValue(0, 10.00, 9.00);
-                        $nota_p2 = AlunoFactory::generateNotaValue(0, 10.00, 9.00);
-                        $nota_final = ($nota_p1 + $nota_p2) / 2;
 
-                        $notas[] = AlunoFactory::makeNota($aluno->id, 1, $disciplina->id, $nota_p1);
-                        $notas[] = AlunoFactory::makeNota($aluno->id, 2, $disciplina->id, $nota_p2);
+    private static function generateNotasForDisciplina($aluno_id, $disciplina_id)
+    {
+        $nota_p1 = self::generateRandomNota(9.00);
+        $nota_p2 = self::generateRandomNota(9.00);
+        $nota_sub = null;
 
-                        if ($nota_final < 5) {
-                            $nota_sub = AlunoFactory::generateNotaValue(0, 10.00, 9.00);
-                            $notas[] = AlunoFactory::makeNota($aluno->id, 4, $disciplina->id, $nota_sub);
+        if (self::calculateFinalNota($nota_p1, $nota_p2, null) < 5) {
+            $nota_sub = self::generateRandomNota(9.00);
+            $nota_final = self::calculateFinalNota($nota_p1, $nota_p2, $nota_sub);
+        } else {
+            $nota_final = self::calculateFinalNota($nota_p1, $nota_p2, null);
+        }
 
-                            if ($nota_p1 < $nota_p2) {
-                                $nota_final = ($nota_sub + $nota_p2) / 2;
-                            } else {
-                                $nota_final = ($nota_p1 + $nota_sub) / 2;
-                            }
-                        }
-                        $alunoDisciplina[] = AlunoFactory::makeAlunoDisciplina($aluno->id, $disciplina->id, ($nota_final >= 5) ? 1 : 2, $nota_final);
-                        Nota::insert($notas);
-                    }
+        $notasArray = [
+            self::makeNota($aluno_id, 1, $disciplina_id, $nota_p1),
+            self::makeNota($aluno_id, 2, $disciplina_id, $nota_p2),
+        ];
+
+        if ($nota_sub !== null) {
+            $notasArray[] = self::makeNota($aluno_id, 4, $disciplina_id, $nota_sub);
+        }
+
+        return $notasArray;
+    }
+
+
+
+    private static function generateAlunoDisciplina($aluno, $all_periodos)
+    {
+        $alunoDisciplina = [];
+
+        foreach ($aluno->periodo->disciplinas as $disciplina) {
+            $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id, 5, null);
+        }
+
+        foreach ($all_periodos as $periodo) {
+            if ($periodo->id < $aluno->periodo_id) {
+                foreach ($periodo->disciplinas as $disciplina) {
+                    $notas = self::generateNotasForDisciplina($aluno->id, $disciplina->id);
+                    $nota_final = (count($notas) == 3) ?
+                        self::calculateFinalNota($notas[0]['nota'], $notas[1]['nota'], $notas[2]['nota'])
+                        :  self::calculateFinalNota($notas[0]['nota'], $notas[1]['nota'], null);
+
+                    $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id, ($nota_final >= 5) ? 1 : 2, $nota_final);
+                    Nota::insert($notas);
                 }
             }
-            AlunoDisciplina::insert($alunoDisciplina);
+        }
+        return $alunoDisciplina;
+    }
+
+
+    public static function attributeAlunoDisciplina()
+    {
+        $all_periodos = Periodo::all();
+
+        Aluno::orderBy('id')->chunk(100, function (Collection $alunos) use ($all_periodos) {
+            foreach ($alunos as $aluno) {
+                $alunoDisciplina = self::generateAlunoDisciplina($aluno, $all_periodos);
+                AlunoDisciplina::insert($alunoDisciplina);
+            }
+        });
+    }
+
+
+    private static function makeClasse($professor_id, $disciplina_id, $ativo, $ano)
+    {
+        return Classe::create([
+            'professor_id' => $professor_id,
+            'disciplina_id' => $disciplina_id,
+            'ativo' => $ativo,
+            'ano' => $ano,
+        ]);
+    }
+
+
+    private static function makePresenca($minPresenca = 75, $total = 51)
+    {
+        $minValue = $total * ($minPresenca / 100);
+        $presenca = mt_rand($minValue, $total);
+        return [
+            'presenca' => $presenca,
+            'faltas' => $total - $presenca,
+        ];
+    }
+
+
+
+    private static function attributeAlunoClasse($alunos, $classe)
+    {
+        foreach ($alunos as $aluno) {
+            $classe->alunos()->attach($aluno, self::makePresenca(75, 51));
+        }
+    }
+
+
+    private static function createClasses()
+    {
+        $professor_ids = Professor::pluck('id');
+        $currentYear = Carbon::now()->year;
+
+        foreach (Periodo::all() as $periodo) {
+            $alunoClasse = [];
+            $alunos = $periodo->alunos;
+            $ano = $currentYear;
+            foreach (Periodo::orderBy('id', 'desc')->where('id', '<=', $periodo->id)->get() as $sub_periodo) {
+                $ativo = $sub_periodo->id == $periodo->id ? true : false;
+                $disciplinas = $sub_periodo->disciplinas;
+                if ($disciplinas->isEmpty()) {
+                    $classe = self::makeClasse($professor_ids->random(), null, $ativo, $ano);
+                    self::attributeAlunoClasse($alunos, $classe);
+                } else {
+                    list($turma_a, $turma_b) = $alunos->split(2);
+                    foreach ($disciplinas as $disciplina) {
+                        $classe_a = self::makeClasse($professor_ids->random(), $disciplina->id, $ativo, $ano);
+                        $classe_b = self::makeClasse($professor_ids->random(), $disciplina->id, $ativo, $ano);
+                        self::attributeAlunoClasse($turma_a, $classe_a);
+                        self::attributeAlunoClasse($turma_b, $classe_b);
+                    }
+                }
+                $ano--;
+            }
+        }
+    }
+
+
+    private static function createAulas()
+    {
+        Classe::whereNotNull('disciplina_id')->orderBy('id')->chunk(500, function ($classes) {
+            $aulas = [];
+            foreach ($classes as $classe) {
+                $aulas[] = [
+                    'classe_id' => $classe->id,
+                    'dia_semana' => 'dia de semana',
+                    'horario' => 'horario',
+                ];
+            }
+            Aula::insert($aulas);
         });
     }
 }

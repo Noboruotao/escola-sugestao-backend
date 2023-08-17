@@ -14,7 +14,7 @@ class CreateDisciplinasTable extends Migration
          */
         public function up()
         {
-                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+                // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
                 Schema::create('disciplinas', function (Blueprint $table) {
                         $table->id();
@@ -96,13 +96,14 @@ class CreateDisciplinasTable extends Migration
          */
         public function down()
         {
-                Schema::dropIfExists('disciplinas');
-                Schema::dropIfExists('aluno_disciplina');
-                Schema::dropIfExists('situacao_disciplina');
+                Schema::dropIfExists('materiais_sugeridos');
                 Schema::dropIfExists('notas');
+                Schema::dropIfExists('aluno_disciplina');
                 Schema::dropIfExists('tipos_avaliacoes');
-                Schema::dropIfExists('materiais_recomendados');
+                Schema::dropIfExists('disciplina_periodo');
+                Schema::dropIfExists('situacao_disciplina');
+                Schema::dropIfExists('disciplinas');
 
-                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }
 }

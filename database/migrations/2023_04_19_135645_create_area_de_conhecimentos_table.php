@@ -15,25 +15,31 @@ class CreateAreaDeConhecimentosTable extends Migration
          */
         public function up()
         {
-                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+                // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
                 Schema::create('areas_de_conhecimentos', function (Blueprint $table) {
-                        $table->id();
-                        $table->string('codigo');
+                        // $table->id();
+                        $table->string('codigo')
+                                ->primary()
+                                ->unique();
                         $table->string('nome');
                         $table->timestamps();
                 });
                 \App\Models\AreaConhecimento::insert(config('seeder_datas.CDU'));
                 \Database\Factories\AcervoFactory::createAcervo();
+                \Database\Factories\AreaFactory::attributeAreaDisciplina();
 
 
 
                 Schema::create('aluno_areas_de_conhecimento', function (Blueprint $table) {
+
                         $table->foreignId('aluno_id')
                                 ->constrained('alunos')
                                 ->onDelete('cascade');
-                        $table->foreignId('areas_de_conhecimento_id')
-                                ->constrained('areas_de_conhecimentos')
+                        $table->string('area_codigo');
+                        $table->foreign('area_codigo')
+                                ->references('codigo')
+                                ->on('areas_de_conhecimentos')
                                 ->onDelete('cascade');
                         $table->float('valor_notas')
                                 ->default(NULL)
@@ -51,9 +57,11 @@ class CreateAreaDeConhecimentosTable extends Migration
 
 
                 Schema::create('parametros', function (Blueprint $table) {
-                        $table->foreignId('area_id')
-                                ->constrained('areas_de_conhecimentos')
-                                ->cascadeOnDelete();
+                        $table->string('area_codigo');
+                        $table->foreign('area_codigo')
+                                ->references('codigo')
+                                ->on('areas_de_conhecimentos')
+                                ->onDelete('cascade');
                         $table->unsignedBigInteger('model_id');
                         $table->string('model_type');
                         $table->float('valor');
@@ -61,12 +69,15 @@ class CreateAreaDeConhecimentosTable extends Migration
 
 
                 Schema::create('model_has_areas', function (Blueprint $table) {
-                        $table->foreignId('area_id')
-                                ->constrained('areas_de_conhecimentos')
-                                ->cascadeOnDelete();
-                        $table->unsignedBigInteger('model_id');
+                        $table->string('area_codigo');
+                        $table->foreign('area_codigo')
+                                ->references('codigo')
+                                ->on('areas_de_conhecimentos')
+                                ->onDelete('cascade');
+                        $table->string('model_id');
                         $table->string('model_type');
                 });
+                \Database\Factories\AcervoFactory::createAcervoAreas();
         }
 
         /**
@@ -76,11 +87,11 @@ class CreateAreaDeConhecimentosTable extends Migration
          */
         public function down()
         {
-                Schema::dropIfExists('areas_de_conhecimentos');
                 Schema::dropIfExists('aluno_areas_de_conhecimento');
-                Schema::dropIfExists('parameters');
-                Schema::dropIfExists('model_has_area');
+                Schema::dropIfExists('parametros');
+                Schema::dropIfExists('model_has_areas');
+                Schema::dropIfExists('areas_de_conhecimentos');
 
-                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+                // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }
 }

@@ -14,7 +14,7 @@ class CreateClassesTable extends Migration
      */
     public function up()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
@@ -24,7 +24,11 @@ class CreateClassesTable extends Migration
                 ->constrained('disciplinas');
             $table->boolean('ativo')
                 ->default(true);
+            $table->integer('ano');
             $table->timestamps();
+        });
+        Schema::table('classes', function (Blueprint $table) {
+            $table->foreignId('disciplina_id')->nullable()->change();
         });
 
 
@@ -35,7 +39,7 @@ class CreateClassesTable extends Migration
             $table->foreignId('classe_id')
                 ->constrained('classes')
                 ->onDelete('cascade');
-            $table->integer('presença')
+            $table->integer('presenca')
                 ->default(0);
             $table->integer('faltas')
                 ->default(0);
@@ -59,10 +63,10 @@ class CreateClassesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('classes');
         Schema::dropIfExists('aluno_classe');
         Schema::dropIfExists('aulas');
+        Schema::dropIfExists('classes');
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
