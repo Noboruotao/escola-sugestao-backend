@@ -130,12 +130,21 @@ class AlunoFactory extends Factory
     {
         $all_periodos = Periodo::all();
 
-        Aluno::orderBy('id')->chunk(100, function (Collection $alunos) use ($all_periodos) {
+        Aluno::orderBy('id')->chunk(200, function (Collection $alunos) use ($all_periodos) {
             foreach ($alunos as $aluno) {
                 $alunoDisciplina = self::generateAlunoDisciplina($aluno, $all_periodos);
                 AlunoDisciplina::insert($alunoDisciplina);
+                AlunoFactory::attributeAlunoArea($aluno);
             }
         });
+    }
+
+
+    private static function attributeAlunoArea($aluno)
+    {
+        foreach ($aluno->disciplinas as $disciplina) {
+            $aluno->AttributeAlunoAreaByNota($disciplina->id);
+        }
     }
 
 

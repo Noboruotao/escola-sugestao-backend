@@ -16,6 +16,9 @@ use App\Models\AcervoSituacao;
 use App\Models\AreaConhecimento;
 use App\Models\Nacionalidade;
 use App\Models\Editora;
+use App\Models\Emprestimo;
+use App\Models\Multa;
+use App\Models\Pessoa;
 
 class AcervoFactory extends Factory
 {
@@ -26,6 +29,7 @@ class AcervoFactory extends Factory
      */
     public function definition()
     {
+        self::generateEmprestimos();
     }
 
 
@@ -156,14 +160,76 @@ class AcervoFactory extends Factory
 
 
 
-    public static function createAcervoAreas()
+    public static function attributeAcervoAreas()
     {
 
         Acervo::orderBy('id')->chunk(100, function (Collection $acervos) {
+            $acervo_areas = [];
             foreach ($acervos as $acervo) {
                 foreach (AreaConhecimento::where('nome', $acervo->titulo)->first()->getRelatedAreas() as $area) {
-                    $acervo->areas()->attach($area);
+                    // $acervo->areas()->attach($area);
+                    $acervo_areas[] = [
+                        'area_codigo' => $area->codigo,
+                        'model_id' => $acervo->id,
+                        'model_type' => Acervo::class,
+                    ];
                 }
+            }
+            DB::table('model_has_areas')->insert($acervo_areas);
+        });
+    }
+
+
+    private static function createEmprestimo($aluno, $faker, $bibliotecarios)
+    {
+        $ano = 1;
+        for ($j = $aluno->aluno->periodo_id; $j > 0; $j--) {
+            $ano_fim = $ano - 1;
+            for ($i = 0; $i < $faker->randomDigit(); $i++) {
+                $data_emprestimo = $faker->dateTimeBetween("-$ano years", "-$ano_fim years");
+                $data_devolucao = $faker->dateTimeBetween($data_emprestimo, (clone $data_emprestimo)->modify('+30 days'));
+                $acervo = Acervo::inRandomOrder()->first();
+
+                $emprestimo = Emprestimo::create([
+                    'acervo_id' => $acervo->id,
+                    'bibliotecario_id' => $bibliotecarios->random(),
+                    'leitor_id' => $aluno->id,
+                    'data_emprestimo' => $data_emprestimo,
+                    'data_devolucao' => $data_devolucao,
+                ]);
+
+                $aluno->aluno->AttributeAlunoAreaByAcervo($acervo);
+
+                $interval = $data_devolucao->diff($data_emprestimo);
+                $daysInterval = $interval->days;
+
+                if ($daysInterval > 14) {
+                    $valor_multa = $acervo->tipo->multa * $daysInterval;
+
+                    $multa = Multa::create([
+                        'pessoa_id' => $aluno->id,
+                        'multa_type' => Emprestimo::class,
+                        'multa_id' => $emprestimo->id,
+                        'mensagem' => config('mensagens.devolucao_de_acervo_atrasado'),
+                        'dias_atrasados' => $daysInterval,
+                        'valor' => $valor_multa,
+                        'pago' => $data_devolucao,
+                    ]);
+                }
+            }
+            $ano++;
+        }
+    }
+
+
+    private static function generateEmprestimos()
+    {
+        $blibliotecarios = Pessoa::role('Bibliotecário')->pluck('id');
+        $faker = \Faker\Factory::create('pt_BR');
+
+        Pessoa::role('Aluno')->where('id', '>=', 118)->orderBy('id')->chunk(200, function (Collection $alunos) use ($blibliotecarios, $faker) {
+            foreach ($alunos as $aluno) {
+                self::createEmprestimo($aluno, $faker, $blibliotecarios);
             }
         });
     }

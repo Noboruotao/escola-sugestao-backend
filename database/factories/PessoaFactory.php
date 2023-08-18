@@ -20,8 +20,8 @@ class PessoaFactory extends Factory
     public function definition()
     {
         dump('Starting Pessoa seeding');
-        PessoaFactory::createPessoas();
-        PessoaFactory::attributeEndereco();
+        self::createPessoas();
+        self::attributeEndereco();
     }
 
     public static function createPessoas()
@@ -29,14 +29,14 @@ class PessoaFactory extends Factory
         $faker = \Faker\Factory::create('pt_BR');
 
         //Administrador
-        PessoaFactory::makePessoa(['Administrador'], 60, 30, $faker);
+        self::makePessoa(['Administrador'], 60, 30, $faker);
 
         //Diretor
-        PessoaFactory::makePessoa(['Diretor'], 60, 40, $faker);
+        self::makePessoa(['Diretor'], 60, 40, $faker);
 
         //Bibliotecario
         for ($i = 0; $i < 5; $i++) {
-            PessoaFactory::makePessoa(['Bibliotecário'], 60, 20, $faker);
+            self::makePessoa(['Bibliotecário'], 60, 20, $faker);
         }
 
         //Professor
@@ -44,29 +44,29 @@ class PessoaFactory extends Factory
             $roles = $faker->boolean(10) ?
                 ['Professor', 'Responsável']
                 : ['Professor'];
-            PessoaFactory::makePessoa($roles, 60, 25, $faker);
+            self::makePessoa($roles, 60, 25, $faker);
         }
-        PessoaFactory::createProfessor();
+        self::createProfessor();
 
         //alunos ensino infantil
         for ($i = 0; $i < 60; $i++) {
-            PessoaFactory::makePessoa(['Aluno'], 5, 4, $faker);
+            self::makePessoa(['Aluno'], 5, 4, $faker);
         }
         //alunos ensino fundamental
         for ($i = 0; $i < 360; $i++) {
-            PessoaFactory::makePessoa(['Aluno'], 15, 5, $faker);
+            self::makePessoa(['Aluno'], 15, 5, $faker);
         }
         //alunos ensino medio
         for ($i = 0; $i < 150; $i++) {
-            PessoaFactory::makePessoa(['Aluno'], 18, 14, $faker);
+            self::makePessoa(['Aluno'], 18, 14, $faker);
         }
-        PessoaFactory::createAlunos();
+        self::createAlunos();
 
         //Responsavel
         for ($i = 0; $i < Aluno::count() * 0.9; $i++) {
-            PessoaFactory::makePessoa(['Responsável'], 50, 25, $faker);
+            self::makePessoa(['Responsável'], 50, 25, $faker);
         }
-        PessoaFactory::createPais();
+        self::createPais();
     }
 
 
@@ -76,7 +76,7 @@ class PessoaFactory extends Factory
         $firstName = $faker->firstName($gender == 'Masculino' ? 'male' : 'female');
         $lastName = $faker->lastName;
         $data_nascimento = $faker->dateTimeBetween("-$maxIdade years", "-$minIdade years")->format('Y-m-d');
-        $idade = PessoaFactory::getIdade($data_nascimento);
+        $idade = self::getIdade($data_nascimento);
 
         $pessoa = Pessoa::create([
             'nome' => "$firstName $lastName",
@@ -90,7 +90,7 @@ class PessoaFactory extends Factory
             'telefone_1' => $faker->numerify('(##) ####-####'),
             'telefone_2' => $faker->numerify('(##) ####-####'),
             'senha' => \Illuminate\Support\Facades\Hash::make('password'),
-            'foto' => PessoaFactory::getFoto($gender, $idade),
+            'foto' => self::getFoto($gender, $idade),
         ]);
 
         foreach ($roles as $role) {
@@ -191,7 +191,7 @@ class PessoaFactory extends Factory
 
     private static function attribuirPessoaEndereco($pessoa)
     {
-        $endereco = PessoaFactory::createEndereco();
+        $endereco = self::createEndereco();
         $pessoa->enderecos()->attach($endereco);
     }
 
@@ -211,9 +211,9 @@ class PessoaFactory extends Factory
             $query->where('role_id', $alunoRole->id);
         })->chunk(100, function (Collection $adultos) {
             foreach ($adultos as $adulto) {
-                PessoaFactory::attribuirPessoaEndereco($adulto);
+                self::attribuirPessoaEndereco($adulto);
                 if ($adulto->has('protegidos')->exists()) {
-                    PessoaFactory::attributeProtegidoEndereco($adulto);
+                    self::attributeProtegidoEndereco($adulto);
                 }
             }
         });

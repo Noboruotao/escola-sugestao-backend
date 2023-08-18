@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+
 
 class AlunoAreasDeConhecimento extends Pivot
 {
@@ -11,11 +13,11 @@ class AlunoAreasDeConhecimento extends Pivot
 
     public function aluno()
     {
-        return $this->belongsTo(Aluno::class);
+        return $this->belongsTo(Aluno::class, 'aluno_id', 'id');
     }
 
-    public function areasDeConhecimento()
+    public function area()
     {
-        return $this->belongsTo(AreaConhecimento::class);
+        return $this->belongsTo(AreaConhecimento::class, 'area_codigo', 'codigo');
     }
 }

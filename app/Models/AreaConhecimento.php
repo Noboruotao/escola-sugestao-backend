@@ -20,9 +20,21 @@ class AreaConhecimento extends Model
 
     public function alunos()
     {
-        return $this->belongsToMany(Aluno::class, 'aluno_areas_de_conhecimento')
+        return $this->belongsToMany(
+            Aluno::class,
+            'aluno_areas_de_conhecimento',
+            'area_codigo',
+            'aluno_id',
+            'codigo',
+            'id'
+        )
             ->using(AlunoAreasDeConhecimento::class)
             ->withPivot('valor_notas', 'valor_acervos', 'valor_atividades', 'valor_respondido');
+    }
+
+
+    public function disciplinas(){
+        return $this->morphedByMany(Acervo::class, 'model', 'model_has_areas', 'area_codigo', 'model_id');
     }
 
 

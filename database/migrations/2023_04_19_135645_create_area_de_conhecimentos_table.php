@@ -5,6 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Database\Factories;
 
 class CreateAreaDeConhecimentosTable extends Migration
 {
@@ -26,8 +27,7 @@ class CreateAreaDeConhecimentosTable extends Migration
                         $table->timestamps();
                 });
                 \App\Models\AreaConhecimento::insert(config('seeder_datas.CDU'));
-                \Database\Factories\AcervoFactory::createAcervo();
-                \Database\Factories\AreaFactory::attributeAreaDisciplina();
+                Factories\AcervoFactory::createAcervo();
 
 
 
@@ -45,13 +45,13 @@ class CreateAreaDeConhecimentosTable extends Migration
                                 ->default(NULL)
                                 ->nullable();
                         $table->float('valor_acervos')
-                                ->default(NULL)
+                                ->default(0)
                                 ->nullable();
                         $table->float('valor_atividades')
-                                ->default(NULL)
+                                ->default(0)
                                 ->nullable();
                         $table->float('valor_respondido')
-                                ->default(NULL)
+                                ->default(0)
                                 ->nullable();
                 });
 
@@ -77,7 +77,12 @@ class CreateAreaDeConhecimentosTable extends Migration
                         $table->string('model_id');
                         $table->string('model_type');
                 });
-                \Database\Factories\AcervoFactory::createAcervoAreas();
+                Factories\AcervoFactory::attributeAcervoAreas();
+                Factories\AreaFactory::attributeAreaAtviExtra();
+                
+
+                Factories\AreaFactory::attributeAreaDisciplina();
+                Factories\AreaFactory::generateCursoSugestao();
         }
 
         /**

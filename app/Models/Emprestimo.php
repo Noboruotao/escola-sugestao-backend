@@ -19,7 +19,7 @@ class Emprestimo extends Model
 
     public function multa()
     {
-        return $this->morphOne(Pessoa::class, 'multas');
+        return $this->morphOne(Multa::class, 'multas');
     }
 
 

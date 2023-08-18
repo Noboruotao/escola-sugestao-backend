@@ -18,6 +18,5 @@ class DatabaseSeeder extends Seeder
         Factories\PessoaFactory::definition();
         Factories\AlunoFactory::definition();
         Factories\AcervoFactory::definition();
-        Factories\AreaFactory::definition();
     }
 }

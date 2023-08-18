@@ -17,7 +17,6 @@ class PermissionAndRoleFactory extends Factory
     public function definition()
     {
         dump('Starting Permission seeding');
-        
     }
 
 

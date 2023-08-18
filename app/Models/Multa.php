@@ -18,4 +18,10 @@ class Multa extends Model
         'valor',
         'pago'
     ];
+
+
+    public function emprestimos(){
+        return $this->morphOne(Emprestimo::class, 'multas');
+    }
+
 }

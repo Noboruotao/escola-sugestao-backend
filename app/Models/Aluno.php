@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Aluno extends Model
@@ -86,10 +87,48 @@ class Aluno extends Model
     }
 
 
-    public function areasDeConhecimento()
+    public function areas()
     {
-        return $this->belongsToMany(AreaConhecimento::class, 'aluno_areas_de_conhecimento')
+        return $this->belongsToMany(AreaConhecimento::class, 'aluno_areas_de_conhecimento', 'aluno_id', 'area_codigo', 'id', 'codigo', 'areas')
             ->using(AlunoAreasDeConhecimento::class)
             ->withPivot('valor_notas', 'valor_acervos', 'valor_atividades', 'valor_respondido');
+    }
+
+
+    public function AttributeAlunoAreaByNota($disciplina_id)
+    {
+        $disciplina = Disciplina::find($disciplina_id);
+
+        foreach ($disciplina->areas as $area) {
+            $disciplinas = $this->disciplinas()
+                ->wherePivotNotNull('nota_final')
+                ->where('nota_final', '<>', null)
+                ->whereHas('areas', function ($query) use ($area) {
+                    $query->where('area_codigo', $area->codigo);
+                })
+                ->get();
+
+            if ($disciplinas->count() > 0) {
+                $valor_total = $disciplinas->sum('pivot.nota_final');
+                $valor_final = $valor_total / $disciplinas->count();
+
+                $this->areas()->syncWithoutDetaching([$area->codigo => ['valor_notas' => $valor_final]]);
+            }
+        }
+    }
+
+
+    public function AttributeAlunoAreaByAcervo($acervo)
+    {
+        foreach ($acervo->areas as $area) {
+            $existingPivotData = $this->areas()->whereIn('area_codigo', [$area->codigo])->get();
+
+            if ($existingPivotData->isEmpty()) {
+                $this->areas()->attach([$area->codigo => ['valor_acervos' => config('valor_aluno_area.area_acervo')]]);
+            } else {
+                $pivotData = ['valor_acervos' => DB::raw('valor_acervos + ' . config('valor_aluno_area.area_acervo'))];
+                $this->areas()->syncWithoutDetaching([$area->codigo => $pivotData]);
+            }
+        }
     }
 }
