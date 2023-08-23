@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Pessoa;
 use App\Models\Endereco;
@@ -26,20 +27,26 @@ class PessoaFactory extends Factory
 
     public static function createPessoas()
     {
+
+        echo 'createPessoas' . PHP_EOL;
         $faker = \Faker\Factory::create('pt_BR');
 
         //Administrador
+        echo '    Administrador' . PHP_EOL;
         self::makePessoa(['Administrador'], 60, 30, $faker);
 
         //Diretor
+        echo '    Diretor' . PHP_EOL;
         self::makePessoa(['Diretor'], 60, 40, $faker);
 
         //Bibliotecario
+        echo '    Bibliotecario' . PHP_EOL;
         for ($i = 0; $i < 5; $i++) {
             self::makePessoa(['Bibliotecário'], 60, 20, $faker);
         }
 
         //Professor
+        echo '    Professor' . PHP_EOL;
         for ($i = 0; $i < 50; $i++) {
             $roles = $faker->boolean(10) ?
                 ['Professor', 'Responsável']
@@ -49,20 +56,24 @@ class PessoaFactory extends Factory
         self::createProfessor();
 
         //alunos ensino infantil
+        echo '    alunos ensino infantil' . PHP_EOL;
         for ($i = 0; $i < 60; $i++) {
             self::makePessoa(['Aluno'], 5, 4, $faker);
         }
         //alunos ensino fundamental
+        echo '    alunos ensino fundamental' . PHP_EOL;
         for ($i = 0; $i < 360; $i++) {
             self::makePessoa(['Aluno'], 15, 5, $faker);
         }
         //alunos ensino medio
+        echo '    alunos ensino medio' . PHP_EOL;
         for ($i = 0; $i < 150; $i++) {
             self::makePessoa(['Aluno'], 18, 14, $faker);
         }
         self::createAlunos();
 
         //Responsavel
+        echo '    Responsavel' . PHP_EOL;
         for ($i = 0; $i < Aluno::count() * 0.9; $i++) {
             self::makePessoa(['Responsável'], 50, 25, $faker);
         }

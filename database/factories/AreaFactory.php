@@ -49,6 +49,7 @@ class AreaFactory extends Factory
 
     public static function attributeAreaDisciplina()
     {
+        $area_disciplina = [];
         foreach (config('seeder_datas.areaDisciplina') as $disciplina_id => $disciplina_data) {
             $disciplina = Disciplina::find($disciplina_id);
             $areas = collect([]);
@@ -61,9 +62,7 @@ class AreaFactory extends Factory
                 $areas = $areas->merge($relatedAreas)->unique('codigo');
             }
 
-            $area_disciplina = [];
             foreach ($areas as $area) {
-                // $disciplina->areas()->attach($area->codigo);
                 $area_disciplina[] = self::makeModelArea($area->codigo, $disciplina->id, Disciplina::class);
             }
         }
@@ -98,9 +97,9 @@ class AreaFactory extends Factory
     public function attributeAreaAtviExtra()
     {
         $parametros = [];
+        $ativExtra_areas = [];
         foreach (config('seeder_datas.ativExtraArea') as $ativExtra_area) {
             $areas = collect();
-            $ativExtra_areas = [];
             $ativExtra = AtividadeExtra::where('nome', $ativExtra_area['nome'])->first();
             foreach ($ativExtra_area['udc'] as $codigo => $valor) {
 
@@ -116,8 +115,8 @@ class AreaFactory extends Factory
                 }
                 $parametros[] = self::makeParameter($codigo, $ativExtra->id, AtividadeExtra::class, $valor);
             }
-            DB::table('model_has_areas')->insert($ativExtra_areas);
         }
+        DB::table('model_has_areas')->insert($ativExtra_areas);
         DB::table('parametros')->insert($parametros);
     }
 }

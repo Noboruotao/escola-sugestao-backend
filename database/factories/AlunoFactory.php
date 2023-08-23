@@ -128,6 +128,7 @@ class AlunoFactory extends Factory
 
     public static function attributeAlunoDisciplina()
     {
+        echo 'attributeAlunoDisciplina' . PHP_EOL;
         $all_periodos = Periodo::all();
 
         Aluno::orderBy('id')->chunk(200, function (Collection $alunos) use ($all_periodos) {
@@ -181,6 +182,7 @@ class AlunoFactory extends Factory
 
     private static function createClasses()
     {
+        echo 'createClasses' . PHP_EOL;
         $professor_ids = Professor::pluck('id');
         $currentYear = Carbon::now()->year;
 
@@ -211,6 +213,7 @@ class AlunoFactory extends Factory
 
     private static function createAulas()
     {
+        echo 'createAulas' . PHP_EOL;
         Classe::whereNotNull('disciplina_id')->orderBy('id')->chunk(500, function ($classes) {
             $aulas = [];
             foreach ($classes as $classe) {
