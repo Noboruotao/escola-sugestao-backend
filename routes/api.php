@@ -23,9 +23,8 @@ use App\http\Controllers\AuthController;
 Route::post('login', [AuthController::class, 'login']);
 
 Route::group([
-    'middleware' => ['apiauth', 'auth'],
+    'middleware' => 'api',
 ], function ($router) {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('check', [AuthController::class, 'check']);
-    Route::post('get', [AuthController::class, 'get']);
 });

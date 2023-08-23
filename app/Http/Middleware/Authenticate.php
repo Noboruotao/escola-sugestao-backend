@@ -2,55 +2,43 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Pessoa;
-use Exception;
+use Closure;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use Firebase\JWT\ExpiredException;
-
-class Authenticate extends Middleware
+class Authenticate
 {
     /**
-     * Get the path the user should be redirected to when they are not authenticated.
+     * The authentication guard factory instance.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
+     * @var \Illuminate\Contracts\Auth\Factory
      */
-    protected function redirectTo($request)
+    protected $auth;
+
+    /**
+     * Create a new middleware instance.
+     *
+     * @param  \Illuminate\Contracts\Auth\Factory  $auth
+     * @return void
+     */
+    public function __construct(Auth $auth)
     {
-        $accessToken = $request->header('Authorization');
-        // dd($accessToken);
-
-        if (empty($accessToken)) {
-            return response()->json(['error' => 'Token not provided'], 401);
-        }
-
-        try {
-            $decoded = self::decodeToken($accessToken);
-            $user = Pessoa::find($decoded->id);
-            Auth::guard('web')->login($user);
-            dd(Auth::guard('web')->user());
-
-            return $next($request);
-        } catch (ExpiredException $e) {
-            $refreshToken = $request->cookie('refresh_token');
-            dd($refreshToken);
-        } catch (Exception $e) {
-            dd($e);
-        }
-
-
-        // if (!$request->expectsJson()) {
-        //     return route('login');
-        // }
+        $this->auth = $auth;
     }
 
-
-    private static function decodeToken($token)
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string|null  $guard
+     * @return mixed
+     */
+    public function handle($request, Closure $next, $guard = null)
     {
-        return JWT::decode($token, new Key(env('JWT_SECRET'), env('JWT_ALGO')));
+        if ($this->auth->guard($guard)->guest()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        return $next($request);
     }
 }

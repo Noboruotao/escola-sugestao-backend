@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response;
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-
 use App\Models\Pessoa;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -20,66 +18,50 @@ class AuthController extends Controller
     }
 
 
-    public function homeTest()
-    {
-        $pessoa = Pessoa::inRandomOrder()->first();
-        return view('home', ['pessoa' => $pessoa]);
-    }
-
-
     public function login(Request $request)
     {
         try {
-            $credencials = $request->only('cpf', 'senha');
+            $credencials = $request->only('email', 'senha');
 
-            $pessoa = $this->pessoa->getPessoaByCpf($credencials['cpf']);
+            $pessoa = $this->pessoa->getPessoaByEmail($credencials['email']);
 
-            if (!is_null($pessoa) && password_verify($credencials['senha'], $pessoa->senha)) {
+            if (!$pessoa || !password_verify($credencials['senha'], $pessoa->senha)) {
 
-                $response = self::creatAccessToken($pessoa);
-
-                return $response;
+                return response()->json(['success' => false, 'erro' => 'Usuário ou Senha inválidos!', 'message' => 'NOT FOUND'], 200);
             }
-        } catch (Exception $e) {
+
+            // $token = auth()->setTTL(44640)->login($pessoa);
+            $token = auth()->login($pessoa);
+
+            return response()->json(['success' => true, 'token' => $token, 'message' => 'LOGGED'], 200);
+        } catch (JWTException $e) {
+            return response()->json(['success' => false, 'erro' => $th, 'message' => 'FAILED'], 500);
         }
     }
 
 
-    public function check()
+    public function logout(Request $request)
     {
-        dump('check');
-        // JWT::parseToken
-        dd(Auth::user());
+        $logout = auth()->logout();
+        return response()->json(['success' => true, 'token' => $logout, 'message' => 'LOGGED'], 200);
     }
 
 
-    private static function createToken($user, $time = 15)
+    public function check(Request $request)
     {
-        $private_key = env('JWT_SECRET');
-        $alg = env('JWT_ALGO');
-        $now_seconds = time();
 
-        $payload = [
-            "id" => $user->id,
-            "nome" => $user->nome,
-            "roles" => $user->roles->pluck('name'),
-            "aut" => env('APP_URL'),
-            "iat" => $now_seconds,
-            "exp" => $now_seconds + (60 * $time),
-        ];
+        try {
 
-        return JWT::encode($payload, $private_key, $alg);
-    }
-
-
-    private static function creatAccessToken($user)
-    {
-        $accessToken = self::createToken($user);
-        $refreshToken = self::createToken($user, 60 * 24 * 30);
-
-        $response = new Response(['success' => true, 'data' => compact('accessToken')]);
-        $response->cookie('refresh_token', $refreshToken, 60 * 24 * 30, null, null, false, true);
-
-        return $response;
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['success' => false, 'message' => 'user_not_found'], 404);
+            }
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['success' => false, 'message' => 'token_expired'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['success' => false, 'message' => 'token_invalid'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['success' => false, 'message' => 'token_absent'], 401);
+        }
+        return response()->json(['success' => true, 'data' => compact('user')], 200);
     }
 }

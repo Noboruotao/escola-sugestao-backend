@@ -8,7 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Pessoa extends Authenticatable
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class Pessoa extends Authenticatable implements JWTSubject
 {
     use HasFactory;
     use hasRoles;
@@ -77,5 +79,23 @@ class Pessoa extends Authenticatable
     public function PagamentoMulta()
     {
         return $this->morphedByMany(Pagamento::class, 'multas');
+    }
+
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+
+    public function getPessoaByEmail($email)
+    {
+        return Pessoa::where('email', $email)->first();
     }
 }
