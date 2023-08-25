@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\http\Controllers\AuthController;
+use App\Http\Controllers\PessoaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,6 @@ Route::group([
 ], function ($router) {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('check', [AuthController::class, 'check']);
+
+    Route::get('pessoa/foto/{id}', [PessoaController::class, 'getFoto']);
 });

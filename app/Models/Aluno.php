@@ -39,7 +39,13 @@ class Aluno extends Model
 
     public function bolsas()
     {
-        return $this->hasMany(Bolsa::class);
+        return $this->belongsToMany(Bolsa::class, 'aluno_bolsa', 'aluno_id', 'bolsa_id');
+    }
+
+
+    public function bolsaValor()
+    {
+        return $this->bolsas()->sum('valor');
     }
 
 
@@ -69,7 +75,7 @@ class Aluno extends Model
 
     public function ativExtra()
     {
-        return $this->belongsToMany(AtividadeExtra::class, 'aluno_atividades_extracurriculares', 'atividades_extracurriculares_id', 'aluno_id');
+        return $this->belongsToMany(AtividadeExtra::class, 'aluno_ativExtra', 'ativExtra_id', 'aluno_id');
     }
 
 
@@ -118,17 +124,50 @@ class Aluno extends Model
     }
 
 
-    public function AttributeAlunoAreaByAcervo($acervo)
+    // public function AttributeAlunoAreaByAcervo($acervo)
+    // {
+    //     foreach ($acervo->areas as $area) {
+    //         $existingPivotData = $this->areas()->whereIn('area_codigo', [$area->codigo])->get();
+
+    //         if ($existingPivotData->isEmpty()) {
+    //             $this->areas()->attach([$area->codigo => ['valor_acervos' => config('valor_aluno_area.area_acervo')]]);
+    //         } else {
+    //             $pivotData = ['valor_acervos' => DB::raw('valor_acervos + ' . config('valor_aluno_area.area_acervo'))];
+    //             $this->areas()->syncWithoutDetaching([$area->codigo => $pivotData]);
+    //         }
+    //     }
+    // }
+
+
+    public function attachAreasWithValues($areas, $valorKey)
     {
-        foreach ($acervo->areas as $area) {
-            $existingPivotData = $this->areas()->whereIn('area_codigo', [$area->codigo])->get();
+        $existingPivotData = $this->areas()
+            ->whereIn('area_codigo', $areas->pluck('codigo'))
+            ->get();
+
+        $attachData = [];
+
+        foreach ($areas as $area) {
+            $pivotData = [$area->codigo => [$valorKey => config("valor_aluno_area.$valorKey")]];
 
             if ($existingPivotData->isEmpty()) {
-                $this->areas()->attach([$area->codigo => ['valor_acervos' => config('valor_aluno_area.area_acervo')]]);
+                $attachData += $pivotData;
             } else {
-                $pivotData = ['valor_acervos' => DB::raw('valor_acervos + ' . config('valor_aluno_area.area_acervo'))];
-                $this->areas()->syncWithoutDetaching([$area->codigo => $pivotData]);
+                $attachData += [$area->codigo => ['valor_atividades' => DB::raw($valorKey . ' + ' . config("valor_aluno_area.$valorKey"))]];
             }
         }
+
+        $this->areas()->syncWithoutDetaching($attachData);
+    }
+
+    public function AttributeAlunoAreaByAcervo($acervo)
+    {
+        $this->attachAreasWithValues($acervo->areas, 'area_acervo');
+    }
+
+    public function attributeAtivExtra($ativExtra)
+    {
+        $this->ativExtra()->attach($ativExtra);
+        $this->attachAreasWithValues($ativExtra->areas(), 'area_ativExtra');
     }
 }

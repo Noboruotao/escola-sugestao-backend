@@ -32,14 +32,7 @@ class Pessoa extends Authenticatable implements JWTSubject
     ];
 
     protected $hidden = [
-        'primeiro_nome',
-        'ultimo_nome',
-        'data_nascimento',
-        'genero',
-        'telefone_1',
-        'telefone_2',
         'senha',
-        'foto'
     ];
 
     public function enderecos()
@@ -97,5 +90,11 @@ class Pessoa extends Authenticatable implements JWTSubject
     public function getPessoaByEmail($email)
     {
         return Pessoa::where('email', $email)->first();
+    }
+
+
+    public function getFotoById($id)
+    {
+        return Pessoa::find($id)->foto;
     }
 }

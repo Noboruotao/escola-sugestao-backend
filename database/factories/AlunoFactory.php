@@ -9,12 +9,15 @@ use Illuminate\Support\Carbon;
 
 use App\Models\Aluno;
 use App\Models\AlunoDisciplina;
+use App\Models\AtividadeExtra;
 use App\Models\Aula;
 use App\Models\Classe;
 use App\Models\Disciplina;
 use App\Models\Periodo;
 use App\Models\Nota;
 use App\Models\Professor;
+use App\Models\Bolsa;
+use App\Models\Pagamento;
 
 class AlunoFactory extends Factory
 {
@@ -26,9 +29,10 @@ class AlunoFactory extends Factory
     public function definition()
     {
         dump('Starting Aluno seeding');
-        AlunoFactory::attributeAlunoDisciplina();
-        AlunoFactory::createClasses();
-        AlunoFactory::createAulas();
+        self::attributeAlunoDisciplina();
+        self::createClasses();
+        self::createAulas();
+        self::attributeBolsas();
     }
 
 
@@ -54,9 +58,8 @@ class AlunoFactory extends Factory
     }
 
 
-    private static function generateRandomNota($target, $probability = 0.7)
+    private static function generateRandomNota($target, $probability = 0.7, $faker)
     {
-        $faker = \Faker\Factory::create('pt_BR');
         $randomValue = $faker->randomFloat(2, 0, 10);
         if ($faker->randomFloat(2, 0, 1) < $probability) {
             $randomValue = $target - (10 - $target) * $faker->randomFloat(2, 0, 1);
@@ -74,14 +77,14 @@ class AlunoFactory extends Factory
     }
 
 
-    private static function generateNotasForDisciplina($aluno_id, $disciplina_id)
+    private static function generateNotasForDisciplina($aluno_id, $disciplina_id, $faker)
     {
-        $nota_p1 = self::generateRandomNota(9.00);
-        $nota_p2 = self::generateRandomNota(9.00);
+        $nota_p1 = self::generateRandomNota(9.00, null, $faker);
+        $nota_p2 = self::generateRandomNota(9.00, null, $faker);
         $nota_sub = null;
 
         if (self::calculateFinalNota($nota_p1, $nota_p2, null) < 5) {
-            $nota_sub = self::generateRandomNota(9.00);
+            $nota_sub = self::generateRandomNota(9.00, null, $faker);
             $nota_final = self::calculateFinalNota($nota_p1, $nota_p2, $nota_sub);
         } else {
             $nota_final = self::calculateFinalNota($nota_p1, $nota_p2, null);
@@ -103,7 +106,10 @@ class AlunoFactory extends Factory
 
     private static function generateAlunoDisciplina($aluno, $all_periodos)
     {
+        $faker = \Faker\Factory::create('pt_BR');
+
         $alunoDisciplina = [];
+        $notas = [];
 
         foreach ($aluno->periodo->disciplinas as $disciplina) {
             $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id, 5, null);
@@ -112,16 +118,17 @@ class AlunoFactory extends Factory
         foreach ($all_periodos as $periodo) {
             if ($periodo->id < $aluno->periodo_id) {
                 foreach ($periodo->disciplinas as $disciplina) {
-                    $notas = self::generateNotasForDisciplina($aluno->id, $disciplina->id);
-                    $nota_final = (count($notas) == 3) ?
-                        self::calculateFinalNota($notas[0]['nota'], $notas[1]['nota'], $notas[2]['nota'])
-                        :  self::calculateFinalNota($notas[0]['nota'], $notas[1]['nota'], null);
+                    $notasDisciplina = self::generateNotasForDisciplina($aluno->id, $disciplina->id, $faker);
+                    $nota_final = (count($notasDisciplina) == 3) ?
+                        self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], $notasDisciplina[2]['nota'])
+                        :  self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], null);
 
                     $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id, ($nota_final >= 5) ? 1 : 2, $nota_final);
-                    Nota::insert($notas);
+                    $notas = array_merge($notas, $notasDisciplina);
                 }
             }
         }
+        Nota::insert($notas);
         return $alunoDisciplina;
     }
 
@@ -135,7 +142,7 @@ class AlunoFactory extends Factory
             foreach ($alunos as $aluno) {
                 $alunoDisciplina = self::generateAlunoDisciplina($aluno, $all_periodos);
                 AlunoDisciplina::insert($alunoDisciplina);
-                AlunoFactory::attributeAlunoArea($aluno);
+                self::attributeAlunoArea($aluno);
             }
         });
     }
@@ -180,33 +187,82 @@ class AlunoFactory extends Factory
     }
 
 
+    // private static function createClasses()
+    // {
+    //     echo 'createClasses' . PHP_EOL;
+    //     $professor_ids = Professor::pluck('id');
+    //     $currentYear = Carbon::now()->year;
+
+    //     foreach (Periodo::all() as $periodo) {
+    //         $alunoClasse = [];
+    //         $alunos = $periodo->alunos;
+    //         $ano = $currentYear;
+    //         foreach (Periodo::orderBy('id', 'desc')->where('id', '<=', $periodo->id)->get() as $sub_periodo) {
+    //             $ativo = $sub_periodo->id == $periodo->id ? true : false;
+    //             $disciplinas = $sub_periodo->disciplinas;
+    //             if ($disciplinas->isEmpty()) {
+    //                 $classe = self::makeClasse($professor_ids->random(), null, $ativo, $ano);
+    //                 self::attributeAlunoClasse($alunos, $classe);
+    //             } else {
+    //                 list($turma_a, $turma_b) = $alunos->split(2);
+    //                 foreach ($disciplinas as $disciplina) {
+    //                     $classe_a = self::makeClasse($professor_ids->random(), $disciplina->id, $ativo, $ano);
+    //                     $classe_b = self::makeClasse($professor_ids->random(), $disciplina->id, $ativo, $ano);
+    //                     self::attributeAlunoClasse($turma_a, $classe_a);
+    //                     self::attributeAlunoClasse($turma_b, $classe_b);
+    //                 }
+    //             }
+    //             $ano--;
+    //         }
+    //     }
+    // }
+
+
     private static function createClasses()
     {
         echo 'createClasses' . PHP_EOL;
-        $professor_ids = Professor::pluck('id');
-        $currentYear = Carbon::now()->year;
 
-        foreach (Periodo::all() as $periodo) {
-            $alunoClasse = [];
-            $alunos = $periodo->alunos;
-            $ano = $currentYear;
-            foreach (Periodo::orderBy('id', 'desc')->where('id', '<=', $periodo->id)->get() as $sub_periodo) {
-                $ativo = $sub_periodo->id == $periodo->id ? true : false;
-                $disciplinas = $sub_periodo->disciplinas;
-                if ($disciplinas->isEmpty()) {
-                    $classe = self::makeClasse($professor_ids->random(), null, $ativo, $ano);
-                    self::attributeAlunoClasse($alunos, $classe);
-                } else {
-                    list($turma_a, $turma_b) = $alunos->split(2);
-                    foreach ($disciplinas as $disciplina) {
-                        $classe_a = self::makeClasse($professor_ids->random(), $disciplina->id, $ativo, $ano);
-                        $classe_b = self::makeClasse($professor_ids->random(), $disciplina->id, $ativo, $ano);
-                        self::attributeAlunoClasse($turma_a, $classe_a);
-                        self::attributeAlunoClasse($turma_b, $classe_b);
-                    }
-                }
-                $ano--;
+        $professorIds = Professor::pluck('id')->toArray();
+        $currentYear = Carbon::now()->year;
+        $periodos = Periodo::with('disciplinas', 'alunos')->get();
+
+        foreach ($periodos as $periodo) {
+            self::processPeriodo($periodo, $professorIds, $currentYear, $periodos);
+        }
+    }
+
+    private static function processPeriodo($periodo, $professorIds, &$currentYear, $allPeriodos)
+    {
+        $alunos = $periodo->alunos;
+        $ano = $currentYear;
+
+        foreach ($allPeriodos->where('id', '<=', $periodo->id)->sortByDesc('id') as $subPeriodo) {
+            $ativo = $subPeriodo->id === $periodo->id;
+            $disciplinas = $subPeriodo->disciplinas;
+
+            if ($disciplinas->isEmpty()) {
+                $classe = self::makeClasse(array_rand($professorIds), null, $ativo, $ano);
+                self::attributeAlunoClasse($alunos, $classe);
+            } else {
+                self::processDisciplinas($disciplinas, $alunos, $professorIds, $ativo, $ano);
             }
+            $ano--;
+        }
+    }
+
+    private static function processDisciplinas($disciplinas, $alunos, $professorIds, $ativo, &$ano)
+    {
+        list($turmaA, $turmaB) = $alunos->split(2);
+
+        foreach ($disciplinas as $disciplina) {
+            $professorIdA = $professorIds[array_rand($professorIds)];
+            $professorIdB = $professorIds[array_rand($professorIds)];
+
+            $classeA = self::makeClasse($professorIdA, $disciplina->id, $ativo, $ano);
+            $classeB = self::makeClasse($professorIdB, $disciplina->id, $ativo, $ano);
+
+            self::attributeAlunoClasse($turmaA, $classeA);
+            self::attributeAlunoClasse($turmaB, $classeB);
         }
     }
 
@@ -224,6 +280,84 @@ class AlunoFactory extends Factory
                 ];
             }
             Aula::insert($aulas);
+        });
+    }
+
+
+    private static function attributeBolsas()
+    {
+        $faker = \Faker\Factory::create('pt_BR');
+        $bolsas = Bolsa::all();
+        Aluno::orderBy('id')->chunk(200, function (Collection $alunos) use ($faker, $bolsas) {
+            foreach ($alunos as $aluno) {
+                $pagamentos = [];
+                if ($faker->boolean(10)) {
+                    $aluno->bolsas()->attach($bolsas->random());
+                }
+                $pagamentos = array_merge($pagamentos, self::createPagamentosForAluno($aluno));
+            }
+            Pagamento::insert($pagamentos);
+        });
+    }
+
+
+    private static function createPagamento($aluno, $startDate)
+    {
+        $faker = \Faker\Factory::create('pt_BR');
+        $validade = $startDate->copy()->day(10);
+        $nextValidade = $validade->copy()->addMonth()->day(10);
+        $pago = $faker->dateTimeBetween($validade, $nextValidade);
+        $valor = 1200 - $aluno->bolsaValor();
+
+        return [
+            'aluno_id' => $aluno->id,
+            'valor' => $valor,
+            'validade' => $nextValidade,
+            'pago' => $pago,
+        ];
+    }
+
+    private static function createPagamentosForAluno($aluno)
+    {
+        $pagamentos = [];
+        $startDate = self::calculateStartDate($aluno->periodo_id);
+        $endDate = Carbon::now();
+
+        while ($startDate->lt($endDate)) {
+            $pagamento = self::createPagamento($aluno, $startDate);
+            $pagamentos[] = $pagamento;
+
+            $startDate->addMonth();
+        }
+
+        return $pagamentos;
+    }
+
+    // private static function attributePagamentos()
+    // {
+    //     Aluno::orderBy('id')->chunk(200, function ($alunos) {
+    //         $pagamentos = [];
+
+    //         foreach ($alunos as $aluno) {
+    //             $pagamentos = array_merge($pagamentos, self::createPagamentosForAluno($aluno));
+    //         }
+
+    //         Pagamento::insert($pagamentos);
+    //     });
+    // }
+
+
+
+    public static function attributeAlunoAtivExtra()
+    {
+        $ativExtras = AtividadeExtra::all();
+        $faker = \Faker\Factory::create('pt_BR');
+        Aluno::orderBy('id')->where('periodo_id', '>', 2)->chunk(200, function ($alunos) use ($ativExtras, $faker) {
+            foreach ($alunos as $aluno) {
+                if ($faker->boolean(30)) {
+                    $aluno->attributeAtivExtra($ativExtras->random());
+                }
+            }
         });
     }
 }

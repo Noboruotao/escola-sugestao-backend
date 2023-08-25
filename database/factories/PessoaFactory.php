@@ -87,7 +87,6 @@ class PessoaFactory extends Factory
         $firstName = $faker->firstName($gender == 'Masculino' ? 'male' : 'female');
         $lastName = $faker->lastName;
         $data_nascimento = $faker->dateTimeBetween("-$maxIdade years", "-$minIdade years")->format('Y-m-d');
-        $idade = self::getIdade($data_nascimento);
 
         $pessoa = Pessoa::create([
             'nome' => "$firstName $lastName",
@@ -101,7 +100,7 @@ class PessoaFactory extends Factory
             'telefone_1' => $faker->numerify('(##) ####-####'),
             'telefone_2' => $faker->numerify('(##) ####-####'),
             'senha' => \Illuminate\Support\Facades\Hash::make('password'),
-            'foto' => self::getFoto($gender, $idade),
+            'foto' => self::getFoto($gender, self::getIdade($data_nascimento)),
         ]);
 
         foreach ($roles as $role) {
@@ -141,28 +140,37 @@ class PessoaFactory extends Factory
                 ->limit($number)
                 ->get();
 
+            $alunosData = [];
+
             foreach ($alunos as $aluno) {
-                Aluno::create([
+                $alunosData[] = [
                     'id' => $aluno->id,
                     'periodo_id' => $periodo->id,
                     'situacao_id' => 11,
-                ]);
+                ];
             }
+            Aluno::insert($alunosData);
         }
     }
 
 
     protected function createPais()
     {
-        $pais = Pessoa::role('Responsável')->inRandomOrder()->get();
+        $pais = Pessoa::role('Responsável')->inRandomOrder()->pluck('id');
         Pessoa::role('Aluno')->chunk(200, function (Collection $alunos) use (&$pais) {
+            $responsaveis = [];
             foreach ($alunos as $aluno) {
                 if ($pais->isEmpty()) {
-                    $pais = Pessoa::role('Responsável')->inRandomOrder()->get();
+                    $pais = Pessoa::role('Responsável')->inRandomOrder()->pluck('id');
                 }
-                Responsavel::attributeAlunoResponsavel($aluno->id, $pais->first()->id);
+                // Responsavel::attributeAlunoResponsavel($aluno->id, $pais->first()->id);
+                $responsaveis[] = [
+                    'responsavel_id' => $pais->first(),
+                    'aluno_id' => $aluno->id,
+                ];
                 $pais->shift();
             }
+            Responsavel::insert($responsaveis);
         });
     }
 
@@ -217,9 +225,10 @@ class PessoaFactory extends Factory
 
     private static function attributeEndereco()
     {
-        $alunoRole = Role::where('name', 'aluno')->first();
+        $alunoRole = Role::where('name', 'Aluno')->first();
+
         Pessoa::whereDoesntHave('roles', function ($query) use ($alunoRole) {
-            $query->where('role_id', $alunoRole->id);
+            $query->where('id', $alunoRole->id);
         })->chunk(100, function (Collection $adultos) {
             foreach ($adultos as $adulto) {
                 self::attribuirPessoaEndereco($adulto);

@@ -37,14 +37,13 @@ class CreateAtividadeExtracurricularesTable extends Migration
         \App\Models\AtividadeExtra::insert(config('seeder_datas.ativExtra'));
 
 
-        Schema::create('aluno_atividades_extracurriculares', function (Blueprint $table) {
+        Schema::create('aluno_ativExtra', function (Blueprint $table) {
             $table->foreignId('aluno_id')
                 ->constrained('alunos')
                 ->onDelete('cascade');
-            $table->foreignId('atividades_extracurriculares_id')
+            $table->foreignId('ativExtra_id')
                 ->constrained('atividade_extracurriculares')
-                ->onDelete('cascade')
-                ->name('aluno_ativ_extra_atividade_extracurricular_id_foreign');
+                ->onDelete('cascade');
             $table->integer('ativo')
                 ->default(1)
                 ->nullable();
