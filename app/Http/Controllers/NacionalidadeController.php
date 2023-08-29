@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class NivelEscolarContoller extends Controller
+class NacionalidadeController extends Controller
 {
     //
 }

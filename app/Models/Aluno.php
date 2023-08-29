@@ -138,21 +138,20 @@ class Aluno extends Model
             if ($existingPivotData->isEmpty()) {
                 $attachData += $pivotData;
             } else {
-                $attachData += [$area->codigo => ['valor_atividades' => DB::raw($valorKey . ' + ' . config("valor_aluno_area.$valorKey"))]];
+                $attachData += [$area->codigo => [$valorKey => DB::raw($valorKey . ' + ' . config("valor_aluno_area.$valorKey"))]];
             }
         }
-
         $this->areas()->syncWithoutDetaching($attachData);
     }
 
-    public static function AttributeAlunoAreaByAcervo($acervo)
+    public function AttributeAlunoAreaByAcervo($acervo)
     {
-        $this->attachAreasWithValues($acervo->areas, 'area_acervo');
+        $this->attachAreasWithValues($acervo->areas, 'valor_acervos');
     }
 
-    public static function attributeAtivExtra($ativExtra)
+    public function attributeAtivExtra($ativExtra)
     {
         $this->ativExtra()->attach($ativExtra);
-        $this->attachAreasWithValues($ativExtra->areas(), 'area_ativExtra');
+        $this->attachAreasWithValues($ativExtra->areas(), 'valor_atividades');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class Acervo extends Model
 {
@@ -91,98 +92,57 @@ class Acervo extends Model
     }
 
 
-    public static function getAcervoList($page = 0, $limit = 10)
+    public static function getAcervoList($page = 0, $limit = 10, $disponivel = true)
     {
-        return Acervo::orderBy('titulo')
+        $query = Acervo::orderBy('titulo')
             ->offset($page * $limit)
             ->limit($limit)
             ->with(['emprestimos' => function ($query) {
                 $query->whereNull('data_devolucao');
-            }])
-            ->get();
-    }
+            }]);
 
-
-    public static function makeEmprestimo($bibliotecario_id, $acervo_id, $leitor_id)
-    {
-        $emprestimo = Emprestimo::create([
-            'acervo_id' => $acervo_id,
-            'bibliotecario_id' => $bibliotecario_id,
-            'leitor_id' => $leitor_id,
-            'data_emprestimo' => Carbon::now()->format('Y-m-d'),
-        ]);
-
-        if ($aluno = Aluno::find($leitor_id)->first()) {
-            $aluno->AttributeAlunoAreaByAcervo(Acervo::find($acervo_id));
+        if ($disponivel) {
+            $query->whereNotIn('situacao_id', [6, 7]);
         }
-        return $emprestimo;
+
+        return $query->get();
     }
 
 
-    public static function getEmprestimos($page = 0, $limit = null, $pendente = false)
+    public static function createCapa($acervo, $file)
     {
-        $emprestimos = Emprestimo::orderBy('data_emprestimo', 'desc')
-            ->offset($page * $limit)
+        try {
+            $path = $file->store('capas', 'local');
+
+            $filename = pathinfo($path, PATHINFO_FILENAME);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $uniqueFilename = $originalFilename . '_' . $acervo->id . '_' . now()->format('YmdHis') . '.' . $extension;
+
+            $newPath = str_replace($filename, $uniqueFilename, $path);
+            Storage::move($path, 'capas/' . $uniqueFilename);
+
+            return $uniqueFilename;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+
+    public static function createAcervo($data)
+    {
+        return Acervo::create($data);
+    }
+
+
+
+
+
+    public static function getAcervosBySituacao($situacao_id, $offset, $limit)
+    {
+        return Acervo::where('situacao_id', $situacao_id)
+            ->offset($offset)
             ->limit($limit)
-            ->when($pendente, function ($query) {
-                return $query->whereNull('data_devolucao');
-            })
             ->get();
-
-        if ($pendente) {
-            foreach ($emprestimos as $emprestimo) {
-                self::makeMulta($emprestimo);
-            }
-        }
-
-        return $emprestimos;
-    }
-
-
-    public static function makeDevolucao($emprestimo_id)
-    {
-        $emprestimo = Emprestimo::find($emprestimo_id);
-        $emprestimo->update(['data_devolucao' => Carbon::now()->format('Y-m-d')]);
-
-        self::makeMulta($emprestimo);
-
-        return $emprestimo;
-    }
-
-
-    private static function valueForsearchMulta($emprestimo)
-    {
-        return [
-            'pessoa_id' => $emprestimo->leitor_id,
-            'multa_type' => Emprestimo::class,
-            'multa_id' => $emprestimo->id,
-            'mensagem' => config('multa_mensagens.emprestimo_devolucao_atrasado'),
-        ];
-    }
-
-
-    private static function valueForMultaDiasValor($daysInterval, $valorMulta)
-    {
-        return [
-            'dias_atrasados' => $daysInterval,
-            'valor' => $valorMulta,
-        ];
-    }
-
-
-    public static function makeMulta(Emprestimo $emprestimo)
-    {
-        $daysInterval = $emprestimo->data_devolucao
-            ->diff($emprestimo->data_emprestimo)
-            ->days;
-
-        if ($daysInterval > 14) {
-            $valorMulta = $emprestimo->acervo->tipo->multa * $daysInterval;
-            if (!$multa = Multa::where(self::valueForsearchMulta($emprestimo))->first()) {
-                $multa = Multa::create(self::valueForsearchMulta($emprestimo)->push(self::valueForMultaDiasValor($daysInterval, $valorMulta)));
-            } else {
-                $multa->update(self::valueForMultaDiasValor($daysInterval, $valorMulta));
-            }
-        }
     }
 }

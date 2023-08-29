@@ -1,22 +1,26 @@
 <?php
 
-use App\Http\Controllers\AcervoContoller;
-use App\Http\Controllers\AutorContoller;
-use App\Http\Controllers\CategoriaContoller;
+use App\Http\Controllers\AcervoController;
+use App\Http\Controllers\AutorController;
+use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\EmprestimoController;
 
-Route::get('listAcervos', [AcervoContoller::class, 'listAcervos']);
-Route::post('createEmprestimo', [AcervoContoller::class, 'createEmprestimo']);
+Route::get('listAcervos', [AcervoController::class, 'listAcervos']);
+Route::post('createEmprestimo', [EmprestimoController::class, 'createEmprestimo']);
 
-Route::get('listAllEmprestimos', [AcervoContoller::class, 'getAllEmprestimos']);
-Route::get('listEmprestimosPendentes', [AcervoContoller::class, 'getEmprestimosPendentes']);
+Route::post('createAcervo', [AcervoController::class, 'createAcervo']);
 
-Route::get('listAutors', [AutorContoller::class, 'getAutors']);
-Route::get('getAutor/{id}', [AutorContoller::class, 'getAutor']);
-Route::post('createAutor', [AutorContoller::class, 'createAutor']);
-Route::get('deleteAutor/{id}', [AutorContoller::class, 'deleteAutor']);
+Route::post('makeDevolucao', [EmprestimoController::class, 'makeDevolucao']);
+Route::get('listAllEmprestimos', [EmprestimoController::class, 'getAllEmprestimos']);
+Route::get('listEmprestimosPendentes', [EmprestimoController::class, 'getEmprestimosPendentes']);
 
-Route::get('listCategorias', [CategoriaContoller::class, 'getCategorias']);
-Route::get('getAcervosByCategoria/{id}', [CategoriaContoller::class, 'getAcervosByCategoria']);
+Route::get('listAutors', [AutorController::class, 'getAutors']);
+Route::get('getAutor/{id}', [AutorController::class, 'getAutor']);
+Route::post('createAutor', [AutorController::class, 'createAutor']);
+Route::get('deleteAutor/{id}', [AutorController::class, 'deleteAutor']);
 
-Route::post('createCategoria', [CategoriaContoller::class, 'createCategoria']);
-Route::get('deleteCategoria/{id}', [CategoriaContoller::class, 'deleteCategoria']);
+Route::get('listCategorias', [CategoriaController::class, 'getCategorias']);
+Route::get('getAcervosByCategoria/{id}', [CategoriaController::class, 'getAcervosByCategoria']);
+
+Route::post('createCategoria', [CategoriaController::class, 'createCategoria']);
+Route::get('deleteCategoria/{id}', [CategoriaController::class, 'deleteCategoria']);

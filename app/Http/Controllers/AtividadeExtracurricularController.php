@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class AnoContoller extends Controller
+class AtividadeExtracurricularController extends Controller
 {
     //
 }

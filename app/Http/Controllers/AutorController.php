@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Autor;
 
-class AutorContoller extends Controller
+class AutorController extends Controller
 {
     public function getAutors(Request $request)
     {
@@ -29,7 +29,7 @@ class AutorContoller extends Controller
         $data['ano_nascimento'] = $request->input('ano_nascimento');
         $data['ano_falecimento'] = $request->input('ano_falecimento');
 
-        return response()->json(['success' => true, 'data' => Autor::createAutor($data), 'dados' => $data]);
+        return response()->json(['success' => true, 'data' => Autor::createAutor($data)]);
     }
 
 

@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Exception;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Acervo;
@@ -49,10 +47,6 @@ class Categoria extends Model
 
     public static function deleteCategoria($id)
     {
-        try {
-            return Categoria::find($id)->delete();
-        } catch (Exception $e) {
-            return $e;
-        }
+        return Categoria::find($id)->delete();
     }
 }

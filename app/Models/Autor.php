@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -56,10 +55,6 @@ class Autor extends Model
 
     public static function deleteAutor($id)
     {
-        try {
-            return Autor::find($id)->delete();
-        } catch (Exception $e) {
-            return $e;
-        }
+        return Autor::find($id)->delete();
     }
 }

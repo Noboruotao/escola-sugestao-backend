@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class IdiomaContoller extends Controller
+class SituacaoAlunoController extends Controller
 {
     //
 }
