@@ -124,21 +124,6 @@ class Aluno extends Model
     }
 
 
-    // public function AttributeAlunoAreaByAcervo($acervo)
-    // {
-    //     foreach ($acervo->areas as $area) {
-    //         $existingPivotData = $this->areas()->whereIn('area_codigo', [$area->codigo])->get();
-
-    //         if ($existingPivotData->isEmpty()) {
-    //             $this->areas()->attach([$area->codigo => ['valor_acervos' => config('valor_aluno_area.area_acervo')]]);
-    //         } else {
-    //             $pivotData = ['valor_acervos' => DB::raw('valor_acervos + ' . config('valor_aluno_area.area_acervo'))];
-    //             $this->areas()->syncWithoutDetaching([$area->codigo => $pivotData]);
-    //         }
-    //     }
-    // }
-
-
     public function attachAreasWithValues($areas, $valorKey)
     {
         $existingPivotData = $this->areas()
@@ -160,12 +145,12 @@ class Aluno extends Model
         $this->areas()->syncWithoutDetaching($attachData);
     }
 
-    public function AttributeAlunoAreaByAcervo($acervo)
+    public static function AttributeAlunoAreaByAcervo($acervo)
     {
         $this->attachAreasWithValues($acervo->areas, 'area_acervo');
     }
 
-    public function attributeAtivExtra($ativExtra)
+    public static function attributeAtivExtra($ativExtra)
     {
         $this->ativExtra()->attach($ativExtra);
         $this->attachAreasWithValues($ativExtra->areas(), 'area_ativExtra');

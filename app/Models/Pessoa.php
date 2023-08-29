@@ -89,7 +89,9 @@ class Pessoa extends Authenticatable implements JWTSubject
 
     public function getPessoaByEmail($email)
     {
-        return Pessoa::where('email', $email)->first();
+        return Pessoa::where('email', $email)
+            ->whereNull('deleted_at')
+            ->first();
     }
 
 

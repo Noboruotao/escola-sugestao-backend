@@ -33,6 +33,7 @@ class AlunoFactory extends Factory
         self::createClasses();
         self::createAulas();
         self::attributeBolsas();
+        self::attributeAlunoAtivExtra();
     }
 
 

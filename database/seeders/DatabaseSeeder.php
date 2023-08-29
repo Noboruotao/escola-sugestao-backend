@@ -15,9 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Factories\PessoaFactory::definition();
+        Factories\PessoaFactory::definition();
         Factories\AlunoFactory::definition();
-        // Factories\AcervoFactory::definition();
+        Factories\AcervoFactory::definition();
 
     }
 }

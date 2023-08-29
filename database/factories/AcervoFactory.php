@@ -196,6 +196,8 @@ class AcervoFactory extends Factory
                     'leitor_id' => $aluno->id,
                     'data_emprestimo' => $data_emprestimo,
                     'data_devolucao' => $data_devolucao,
+                    'created_at' => $data_emprestimo,
+                    'updated_at' => $data_devolucao,
                 ]);
 
                 $aluno->aluno->AttributeAlunoAreaByAcervo($acervo);

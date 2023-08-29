@@ -101,8 +101,10 @@ return [
             'pessoa.read',
             'professor.read',
             'situacao_aluno.read',
-            'notas.*',
-            'presenca.*'
+            'notas.read',
+            'notas.create',
+            'presenca.read',
+            'presenca.create',
         ]
     ],
     [
@@ -122,7 +124,7 @@ return [
             'emprestimo.read',
             'multa.read',
             'notas.read',
-            'presenca.read'
+            'presenca.read',
         ]
     ],
     [
@@ -145,7 +147,8 @@ return [
             'professor.update',
             'situacao_aluno.read',
             'situacao_aluno.update',
-            'notas.*',
+            'notas.read',
+            'notas.update',
             'mensalidade.read',
             'presenca.read',
             'presenca.update'
@@ -200,8 +203,7 @@ return [
             'multa.read',
             'notas.read',
             'mensalidade.read',
-            'mensalidade.update',
-            'presenca.read'
+            'presenca.read',
         ]
     ],
 ];

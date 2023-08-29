@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Pessoa;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Cookie;
+use Spatie\Permission\Models\Permission;
 
 class AuthController extends Controller
 {
@@ -53,11 +55,9 @@ class AuthController extends Controller
     public function check(Request $request)
     {
         error_log('check');
-        try {
 
-            if (!$user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['success' => false, 'message' => 'user_not_found'], 404);
-            }
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return response()->json(['success' => false, 'message' => 'token_expired'], 401);
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
@@ -65,6 +65,27 @@ class AuthController extends Controller
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json(['success' => false, 'message' => 'token_absent'], 401);
         }
-        return response()->json(['success' => true, 'data' => compact('user')], 200);
+
+        $userDatas = $user->toArray();
+        $permissions = [];
+        $roles = [];
+
+        foreach ($user->roles as $role) {
+            $rolePermissionsCacheKey = "role_permissions:$role->name";
+
+            $rolePermissions = Cache::remember($rolePermissionsCacheKey, 86400, function () use ($role) {
+                return $role->permissions()->pluck('name')->toArray();
+            });
+
+            foreach ($rolePermissions as $permission) {
+                $permissions[$permission] = true;
+            }
+
+            $roles[] = $role->name;
+        }
+
+        return response()->json([
+            'success' => true, 'data' => $userDatas, 'roles' => $roles, 'permissions' => array_keys($permissions)
+        ], 200);
     }
 }
