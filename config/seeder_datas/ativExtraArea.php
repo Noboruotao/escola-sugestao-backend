@@ -713,7 +713,7 @@ return [
         'udc' => [
             '5' => 7.5, // MATEMÁTICA. CIÊNCIAS NATURAIS
         ]
-    ], 
+    ],
     [
         'nome' => 'Observação Astronômica',
         'udc' => [
@@ -758,19 +758,6 @@ return [
             '53' => 7.5, // Física
         ]
     ],
-    [
-        'nome' => 'Clube de Matemática',
-        'udc' => [
-            '51' => 7.5, // Matemática
-        ]
-    ],
-    [
-        'nome' => 'Clube de Robótica',
-        'udc' => [
-            '62' => 7.5, // Engenharia. Tecnologia em geral
-        ]
-    ],
-
     [
         'nome' => 'Clube de Matemática',
         'udc' => [
@@ -964,7 +951,7 @@ return [
         'udc' => [
             '91' => 7.5, // Geografia. Exploração da terra e de países. Viagens. Geografia regional
         ]
-    ], 
+    ],
     [
         'nome' => 'Pesquisa e Análise de Mapas e Cartografias',
         'udc' => [
@@ -1299,7 +1286,9 @@ return [
     ],
     [
         'nome' => 'Clube de Ciência de Dados',
-        'udc' => []
+        'udc' => [
+            '004.6' => 7.5, //Dados
+        ]
     ],
     [
         'nome' => 'Oficina de Design Gráfico',
@@ -1379,12 +1368,6 @@ return [
         'nome' => 'Palestra sobre Empreendedorismo',
         'udc' => [
             '658' => 7.5, // Gestão, administração de empresas. Organização comercial
-        ]
-    ],
-    [
-        'nome' => 'Palestra sobre Saúde Mental',
-        'udc' => [
-            '159.91' => 7.5, // nome like '%mental%'
         ]
     ],
     [

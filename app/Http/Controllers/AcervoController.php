@@ -12,7 +12,18 @@ class AcervoController extends Controller
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => Acervo::getAcervoList($page, $limit)], 200);
+        $sortColumn = $request->input('sortColumn');
+        $sortOrder = $request->input('sortOrder');
+        $search = $request->query('search', null);
+
+        return response()->json(['success' => true, 'data' => Acervo::getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search)], 200);
+    }
+
+
+    public function getAcervo(Request $request)
+    {
+        $acervo_id = $request->acervo_id;
+        return response()->json(['success' => true, 'data' => Acervo::getAcervo($acervo_id)], 200);
     }
 
 

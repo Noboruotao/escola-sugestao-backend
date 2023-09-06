@@ -9,6 +9,7 @@ Route::get('listAcervos', [AcervoController::class, 'listAcervos']);
 Route::post('createEmprestimo', [EmprestimoController::class, 'createEmprestimo']);
 
 Route::post('createAcervo', [AcervoController::class, 'createAcervo']);
+Route::get('getAcervo/{acervo_id}', [AcervoController::class, 'getAcervo']);
 
 Route::post('makeDevolucao', [EmprestimoController::class, 'makeDevolucao']);
 Route::get('listAllEmprestimos', [EmprestimoController::class, 'getAllEmprestimos']);

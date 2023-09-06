@@ -130,8 +130,6 @@ return [
     ['nome' => 'Clube de Biologia', 'tipo_id' => 7],
     ['nome' => 'Clube de Química', 'tipo_id' => 7],
     ['nome' => 'Clube de Física', 'tipo_id' => 7],
-    ['nome' => 'Clube de Matemática', 'tipo_id' => 7],
-    ['nome' => 'Clube de Robótica', 'tipo_id' => 7],
 
     ['nome' => 'Clube de Matemática', 'tipo_id' => 8],
     ['nome' => 'Olimpíada de Matemática', 'tipo_id' => 8],
@@ -206,7 +204,6 @@ return [
     ['nome' => 'Sociologia e Política', 'tipo_id' => 13],
 
     ['nome' => 'Clube de Psicologia', 'tipo_id' => 14],
-    ['nome' => 'Palestra sobre Saúde Mental', 'tipo_id' => 14],
     ['nome' => 'Oficina de Autoconhecimento', 'tipo_id' => 14],
     ['nome' => 'Estudo de Teorias Psicológicas', 'tipo_id' => 14],
     ['nome' => 'Filmes e Documentários sobre Psicologia', 'tipo_id' => 14],

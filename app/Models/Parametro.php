@@ -15,10 +15,4 @@ class Parametro extends Model
     {
         return $this->belongsTo(AreaDeConhecimento::class, 'area_id');
     }
-
-    
-    public function model()
-    {
-        return $this->morphTo();
-    }
 }

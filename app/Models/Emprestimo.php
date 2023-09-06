@@ -27,7 +27,7 @@ class Emprestimo extends Model
 
     public function acervo()
     {
-        return $this->hasOne(Acervo::class);
+        return $this->hasOne(Acervo::class, 'id', 'acervo_id');
     }
 
 
@@ -44,12 +44,14 @@ class Emprestimo extends Model
 
     public static function makeEmprestimo($bibliotecario_id, $acervo_id, $leitor_id)
     {
-        $emprestimo = Emprestimo::create([
+        $emprestimo = self::create([
             'acervo_id' => $acervo_id,
             'bibliotecario_id' => $bibliotecario_id,
             'leitor_id' => $leitor_id,
             'data_emprestimo' => Carbon::now()->format('Y-m-d'),
         ]);
+
+        Acervo::find($acervo_id)->update(['situacao_id' => 2]);
 
         if ($aluno = Aluno::find($leitor_id)) {
             $aluno->AttributeAlunoAreaByAcervo(Acervo::find($acervo_id));
@@ -60,7 +62,7 @@ class Emprestimo extends Model
 
     public static function getEmprestimos($page = 0, $limit = null, $pendente = false)
     {
-        $emprestimos = Emprestimo::orderBy('data_emprestimo', 'desc')
+        $emprestimos = self::orderBy('data_emprestimo', 'desc')
             ->offset($page * $limit)
             ->limit($limit)
             ->when($pendente, function ($query) {
@@ -80,8 +82,9 @@ class Emprestimo extends Model
 
     public static function makeDevolucao($emprestimo_id)
     {
-        $emprestimo = Emprestimo::find($emprestimo_id);
+        $emprestimo = self::find($emprestimo_id);
         $emprestimo->update(['data_devolucao' => Carbon::now()->format('Y-m-d')]);
+        $emprestimo->acervo->update(['situacao_id' => 1]);
 
         self::makeMulta($emprestimo);
 
@@ -93,7 +96,7 @@ class Emprestimo extends Model
     {
         return [
             'pessoa_id' => $emprestimo->leitor_id,
-            'multa_type' => Emprestimo::class,
+            'multa_type' => self::class,
             'multa_id' => $emprestimo->id,
             'mensagem' => config('multa_mensagens.emprestimo_devolucao_atrasado'),
         ];
@@ -111,17 +114,25 @@ class Emprestimo extends Model
 
     public static function makeMulta(Emprestimo $emprestimo)
     {
-        $daysInterval = $emprestimo->data_devolucao
-            ->diff($emprestimo->data_emprestimo)
-            ->days;
+        $data_devolucao = \Carbon\Carbon::parse($emprestimo->data_devolucao);
+        $data_emprestimo = \Carbon\Carbon::parse($emprestimo->data_emprestimo);
+
+        $daysInterval = $data_devolucao
+            ? $data_devolucao->diffInDays($data_emprestimo)
+            : now()->diffInDays($data_emprestimo);
 
         if ($daysInterval > 14) {
-            $valorMulta = $emprestimo->acervo->tipo->multa * $daysInterval;
-            if (!$multa = Multa::where(self::valueForsearchMulta($emprestimo))->first()) {
-                $multa = Multa::create(self::valueForsearchMulta($emprestimo)->push(self::valueForMultaDiasValor($daysInterval, $valorMulta)));
-            } else {
-                $multa->update(self::valueForMultaDiasValor($daysInterval, $valorMulta));
-            }
+            $valorMulta = min($emprestimo->acervo->tipo->multa * $daysInterval, 100);
+
+            $multaData = array_merge(
+                self::valueForsearchMulta($emprestimo),
+                self::valueForMultaDiasValor($daysInterval, $valorMulta)
+            );
+
+            Multa::updateOrCreate(
+                self::valueForsearchMulta($emprestimo),
+                $multaData
+            );
         }
     }
 }

@@ -24,7 +24,7 @@ class EmprestimoController extends Controller
 
     public function makeDevolucao(Request $request)
     {
-        $emprestimo_id = $request->emprestimo_id;
+        $emprestimo_id = $request->input('emprestimo_id');
         return response()->json(['success' => true, 'data' => Emprestimo::makeDevolucao($emprestimo_id)]);
     }
 

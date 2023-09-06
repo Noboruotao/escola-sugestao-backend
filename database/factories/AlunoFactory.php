@@ -223,10 +223,9 @@ class AlunoFactory extends Factory
     {
         echo 'createClasses' . PHP_EOL;
 
-        $professorIds = Professor::pluck('id')->toArray();
+        $professorIds = Professor::pluck('id');
         $currentYear = Carbon::now()->year;
         $periodos = Periodo::with('disciplinas', 'alunos')->get();
-
         foreach ($periodos as $periodo) {
             self::processPeriodo($periodo, $professorIds, $currentYear, $periodos);
         }
@@ -242,7 +241,7 @@ class AlunoFactory extends Factory
             $disciplinas = $subPeriodo->disciplinas;
 
             if ($disciplinas->isEmpty()) {
-                $classe = self::makeClasse(array_rand($professorIds), null, $ativo, $ano);
+                $classe = self::makeClasse($professorIds->random(), null, $ativo, $ano);
                 self::attributeAlunoClasse($alunos, $classe);
             } else {
                 self::processDisciplinas($disciplinas, $alunos, $professorIds, $ativo, $ano);
@@ -256,8 +255,8 @@ class AlunoFactory extends Factory
         list($turmaA, $turmaB) = $alunos->split(2);
 
         foreach ($disciplinas as $disciplina) {
-            $professorIdA = $professorIds[array_rand($professorIds)];
-            $professorIdB = $professorIds[array_rand($professorIds)];
+            $professorIdA = $professorIds->random();
+            $professorIdB = $professorIds->random();
 
             $classeA = self::makeClasse($professorIdA, $disciplina->id, $ativo, $ano);
             $classeB = self::makeClasse($professorIdB, $disciplina->id, $ativo, $ano);
@@ -317,6 +316,16 @@ class AlunoFactory extends Factory
             'pago' => $pago,
         ];
     }
+
+
+    private static function calculateStartDate($periodo)
+    {
+        $currentDate = Carbon::now();
+        $nineYearsAgo = $currentDate->subYears($periodo - 1);
+        $startOfYear = $nineYearsAgo->startOfYear();
+        return $startOfYear;
+    }
+
 
     private static function createPagamentosForAluno($aluno)
     {

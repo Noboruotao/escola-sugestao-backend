@@ -113,7 +113,7 @@ class AcervoFactory extends Factory
         $categorias = Categoria::pluck('id');
         $tipos = AcervoTipo::pluck('id');
         $estados = AcervoEstado::pluck('id');
-        $situacoes = AcervoSituacao::pluck('id');
+        $situacoes = AcervoSituacao::whereNot('id', 2)->pluck('id');
         $nomes = AreaConhecimento::pluck('nome');
         $faker = \Faker\Factory::create('pt_BR');
         $acervos = [];
