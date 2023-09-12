@@ -6,6 +6,9 @@ use App\Models\Acervo;
 use App\Models\Autor;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
 class AcervoController extends Controller
 {
     public function listAcervos(Request $request)
@@ -16,7 +19,10 @@ class AcervoController extends Controller
         $sortOrder = $request->input('sortOrder');
         $search = $request->query('search', null);
 
-        return response()->json(['success' => true, 'data' => Acervo::getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search)], 200);
+        return response()->json([
+            'success' => true,
+            'data' => Acervo::getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search)
+        ], 200);
     }
 
 
@@ -61,5 +67,26 @@ class AcervoController extends Controller
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
         return response()->json(['success' => true, 'data' => Acervo::getAcervosBySituacao($id, $page, $limit)]);
+    }
+
+
+    public function getCapa(Request $request, $capa)
+    {
+        try {
+            $capaNome = $capa;
+            $filePath = 'capas/' . $capaNome;
+            $fileContents = Storage::get($filePath);
+            $fileType = Storage::mimeType($filePath);
+            if ($fileContents) {
+                return response()->make($fileContents, 200, [
+                    'Content-Type' => $fileType,
+                    'Content-Disposition' => 'inline; filename="' . $capa . '"',
+                ]);
+            } else {
+                return response()->make('File not found.', 404);
+            }
+        } catch (\Throwable $th) {
+            return response()->make($th->getMessage(), 404);
+        }
     }
 }

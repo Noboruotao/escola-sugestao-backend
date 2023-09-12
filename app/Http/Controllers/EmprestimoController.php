@@ -29,18 +29,17 @@ class EmprestimoController extends Controller
     }
 
 
-    public function getAllEmprestimos(Request $request)
+    public function listEmprestimos(Request $request)
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => Emprestimo::getEmprestimos($page, $limit)], 200);
+        $pendente = $request->query('pendente', false);
+        return response()->json([
+            'success' => true,
+            'data' => Emprestimo::getEmprestimos($page, $limit, $pendente)
+        ], 200);
     }
 
 
-    public function getEmprestimosPendentes(Request $request)
-    {
-        $page = $request->query('page', 0);
-        $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => Emprestimo::getEmprestimos($page, $limit, true)], 200);
-    }
+    
 }

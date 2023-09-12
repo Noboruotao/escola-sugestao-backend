@@ -12,8 +12,7 @@ Route::post('createAcervo', [AcervoController::class, 'createAcervo']);
 Route::get('getAcervo/{acervo_id}', [AcervoController::class, 'getAcervo']);
 
 Route::post('makeDevolucao', [EmprestimoController::class, 'makeDevolucao']);
-Route::get('listAllEmprestimos', [EmprestimoController::class, 'getAllEmprestimos']);
-Route::get('listEmprestimosPendentes', [EmprestimoController::class, 'getEmprestimosPendentes']);
+Route::get('listEmprestimos', [EmprestimoController::class, 'listEmprestimos']);
 
 Route::get('listAutors', [AutorController::class, 'getAutors']);
 Route::get('getAutor/{id}', [AutorController::class, 'getAutor']);
@@ -25,3 +24,5 @@ Route::get('getAcervosByCategoria/{id}', [CategoriaController::class, 'getAcervo
 
 Route::post('createCategoria', [CategoriaController::class, 'createCategoria']);
 Route::get('deleteCategoria/{id}', [CategoriaController::class, 'deleteCategoria']);
+
+Route::get('getCapa/{capa}', [AcervoController::class, 'getCapa']);

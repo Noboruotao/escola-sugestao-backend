@@ -68,6 +68,9 @@ class Emprestimo extends Model
             ->when($pendente, function ($query) {
                 return $query->whereNull('data_devolucao');
             })
+            ->when(!auth()->user()->hasRole('Bibliotecário'), function ($query) {
+                return $query->where('leitor_id', auth()->user()->id);
+            })
             ->get();
 
         if ($pendente) {

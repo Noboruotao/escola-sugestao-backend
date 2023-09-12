@@ -25,7 +25,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        error_log('login');
         try {
             $credencials = $request->only('email', 'senha');
 
@@ -46,7 +45,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        error_log('logout');
         $logout = auth()->logout();
         return response()->json(['success' => true, 'token' => $logout, 'message' => 'LOGGED'], 200);
     }
@@ -54,8 +52,6 @@ class AuthController extends Controller
 
     public function check(Request $request)
     {
-        error_log('check');
-
         try {
             $user = JWTAuth::parseToken()->authenticate();
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {

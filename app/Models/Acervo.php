@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class Acervo extends Model
@@ -107,7 +108,7 @@ class Acervo extends Model
     }
 
 
-    public static function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn, $sortOrder, $search = null)
+    public static function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn = 'id', $sortOrder = 'asc', $search = null)
     {
         $query = self::with(['autor:id,nome'])
             ->offset($page * $limit)
