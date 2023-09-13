@@ -111,10 +111,12 @@ class Acervo extends Model
     public static function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn = 'id', $sortOrder = 'asc', $search = null)
     {
         $query = self::with(['autor:id,nome'])
-            ->offset($page * $limit)
-            ->limit($limit)
             ->when($search, function ($query, $search) {
-                return $query->where('titulo', 'like', '%' . $search . '%');
+                return $query->where(function ($query) use ($search) {
+                    $query->where('titulo', 'like', '%' . $search . '%')
+                        ->orWhere('resumo', 'like', '%' . $search . '%')
+                        ->orWhere('subtitulo', 'like', '%' . $search . '%');
+                });
             })
             ->orderBy($sortColumn, $sortOrder);
 
@@ -126,8 +128,16 @@ class Acervo extends Model
             $query->whereNull('data_devolucao');
         }]);
 
-        return $query->get();
+        $totalResults = $query->count();
+        $results = $query->skip($page * $limit)->take($limit)->get();
+
+        return [
+            'data' => $results->toArray(),
+            'count' => $totalResults
+        ];
     }
+
+
 
 
 
@@ -166,5 +176,13 @@ class Acervo extends Model
             ->offset($offset)
             ->limit($limit)
             ->get();
+    }
+
+    public static function getAllAcervoLength($search = null)
+    {
+        return self::whereNotIn('situacao_id', [6, 7])
+            ->when($search, function ($query, $search) {
+                return $query->where('titulo', 'like', '%' . $search . '%');
+            })->count();
     }
 }

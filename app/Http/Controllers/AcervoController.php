@@ -19,10 +19,15 @@ class AcervoController extends Controller
         $sortOrder = $request->input('sortOrder');
         $search = $request->query('search', null);
 
-        return response()->json([
+        $resp = Acervo::getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search);
+
+        $responseData = [
             'success' => true,
-            'data' => Acervo::getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search)
-        ], 200);
+            'data' => $resp['data'],
+            'count' => $resp['count']
+        ];
+
+        return response()->json($responseData, 200);
     }
 
 
@@ -88,5 +93,13 @@ class AcervoController extends Controller
         } catch (\Throwable $th) {
             return response()->make($th->getMessage(), 404);
         }
+    }
+
+
+    public function getAllAcervoLength(Request $request)
+    {
+        $search = $request->query('search', null);
+
+        return response()->json(['success' => true, 'data' => Acervo::getAllAcervoLength($search)]);
     }
 }

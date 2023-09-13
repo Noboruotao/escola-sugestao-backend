@@ -26,3 +26,4 @@ Route::post('createCategoria', [CategoriaController::class, 'createCategoria']);
 Route::get('deleteCategoria/{id}', [CategoriaController::class, 'deleteCategoria']);
 
 Route::get('getCapa/{capa}', [AcervoController::class, 'getCapa']);
+Route::get('getAcervoLength', [AcervoController::class, 'getAllAcervoLength']);
