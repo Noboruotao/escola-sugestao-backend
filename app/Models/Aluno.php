@@ -91,7 +91,8 @@ class Aluno extends Model
     {
         return $this->belongsToMany(Disciplina::class, 'aluno_Disciplina')
             ->using(AlunoDisciplina::class)
-            ->withPivot('situacao_id', 'nota_final');
+            ->withPivot('situacao_id', 'nota_final')
+            ->with('notas');
     }
 
 
@@ -100,6 +101,18 @@ class Aluno extends Model
         return $this->belongsToMany(AreaConhecimento::class, 'aluno_areas_de_conhecimento', 'aluno_id', 'area_codigo', 'id', 'codigo', 'areas')
             ->using(AlunoAreasDeConhecimento::class)
             ->withPivot('valor_notas', 'valor_acervos', 'valor_atividades', 'valor_respondido');
+    }
+
+
+    public function notas(){
+    }
+
+
+    public function getCursosPorSituacao($situacao_id)
+    {
+        return $this->disciplinas->filter(function ($item) use ($situacao_id) {
+            return $item['pivot']['situacao_id'] == $situacao_id;
+        });
     }
 
 

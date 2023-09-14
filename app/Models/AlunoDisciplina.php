@@ -28,4 +28,6 @@ class AlunoDisciplina extends Pivot
     {
         return $this->belongsTo(SituacaoDaDisciplina::class, 'situacao_id');
     }
+
+    
 }

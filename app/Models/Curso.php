@@ -24,4 +24,25 @@ class Curso extends Model
     {
         return $this->morphMany(Parametro::class, 'model');
     }
+
+    public static function getCursos($page, $limit, $search)
+    {
+        $sugeridos_id = [];
+        if (auth()->user()->hasRole('Aluno')) {
+            $sugeridos_id = auth()->user()
+                ->aluno->cursosSugeridos
+                ->pluck('id')
+                ->toArray();
+        }
+
+        return self::orderBy('nome')
+            ->offset($page * $limit)
+            ->limit($limit)
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nome', 'like', '%' . $search . '%')
+                    ->orWhere('descricao', 'like', '%' . $search . '%');
+            })
+            ->whereNotIn('id', $sugeridos_id)
+            ->get();
+    }
 }

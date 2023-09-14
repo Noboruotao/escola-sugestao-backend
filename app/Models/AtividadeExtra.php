@@ -40,4 +40,25 @@ class AtividadeExtra extends Model
     {
         return $this->morphToMany(AreaConhecimento::class, 'model', 'model_has_areas', 'model_id', 'area_codigo');
     }
+
+
+    public static function getAtivExtra($page, $limit, $search)
+    {
+        $sugeridos_id = [];
+        if (auth()->user()->hasRole('Aluno')) {
+            $sugeridos_id = auth()->user()
+                ->aluno->ativExtraSugeridos
+                ->pluck('id')
+                ->toArray();
+        }
+
+        return self::orderBy('nome')
+            ->offset($page * $limit)
+            ->limit($limit)
+            ->whereNotIn('id', $sugeridos_id)
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nome', 'like', '%' . $search . '%');
+            })
+            ->get();
+    }
 }
