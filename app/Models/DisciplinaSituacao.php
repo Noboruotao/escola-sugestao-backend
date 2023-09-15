@@ -12,11 +12,11 @@ class DisciplinaSituacao extends Model
     protected $table = 'situacao_disciplina';
     protected $fillable = ['nome'];
 
-    public const Aprovado = 1;
-    public const Reprovado = 2;
-    public const Matriculado = 3;
-    public const Cancelado = 4;
-    public const EmAndamento = 5;
-    public const Trancado = 6;
-    public const Dispensado = 7;
+    public const APROVADO = 1;
+    public const REPROVADO = 2;
+    public const MATRICULADO = 3;
+    public const CANCELADO = 4;
+    public const EM_ANDAMENTO = 5;
+    public const TRANCADO = 6;
+    public const DISPENSADO = 7;
 }

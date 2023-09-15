@@ -14,6 +14,10 @@ class CursoController extends Controller
         $search = $request->query('search', null);
 
 
-        return response()->json(['success' => true, 'data' => Curso::getCursos($page, $limit, $search)]);
+        return response()->json([
+            'success' => true,
+            'data' => Curso::getCursos($page, $limit, $search),
+            'count' => Curso::count()
+        ]);
     }
 }

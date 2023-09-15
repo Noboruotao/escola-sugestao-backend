@@ -28,11 +28,10 @@ class Curso extends Model
     public static function getCursos($page, $limit, $search)
     {
         $sugeridos_id = [];
+
+
         if (auth()->user()->hasRole('Aluno')) {
-            $sugeridos_id = auth()->user()
-                ->aluno->cursosSugeridos
-                ->pluck('id')
-                ->toArray();
+            $sugeridos_id = auth()->user()->aluno->getCursosSugeridosId();
         }
 
         return self::orderBy('nome')

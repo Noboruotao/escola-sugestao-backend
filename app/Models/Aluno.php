@@ -104,7 +104,8 @@ class Aluno extends Model
     }
 
 
-    public function notas(){
+    public function notas()
+    {
     }
 
 
@@ -113,6 +114,14 @@ class Aluno extends Model
         return $this->disciplinas->filter(function ($item) use ($situacao_id) {
             return $item['pivot']['situacao_id'] == $situacao_id;
         });
+    }
+
+
+    public function getCursosSugeridosId()
+    {
+        return $this->cursosSugeridos
+            ->pluck('id')
+            ->toArray();
     }
 
 
