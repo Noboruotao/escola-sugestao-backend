@@ -188,37 +188,6 @@ class AlunoFactory extends Factory
     }
 
 
-    // private static function createClasses()
-    // {
-    //     echo 'createClasses' . PHP_EOL;
-    //     $professor_ids = Professor::pluck('id');
-    //     $currentYear = Carbon::now()->year;
-
-    //     foreach (Periodo::all() as $periodo) {
-    //         $alunoClasse = [];
-    //         $alunos = $periodo->alunos;
-    //         $ano = $currentYear;
-    //         foreach (Periodo::orderBy('id', 'desc')->where('id', '<=', $periodo->id)->get() as $sub_periodo) {
-    //             $ativo = $sub_periodo->id == $periodo->id ? true : false;
-    //             $disciplinas = $sub_periodo->disciplinas;
-    //             if ($disciplinas->isEmpty()) {
-    //                 $classe = self::makeClasse($professor_ids->random(), null, $ativo, $ano);
-    //                 self::attributeAlunoClasse($alunos, $classe);
-    //             } else {
-    //                 list($turma_a, $turma_b) = $alunos->split(2);
-    //                 foreach ($disciplinas as $disciplina) {
-    //                     $classe_a = self::makeClasse($professor_ids->random(), $disciplina->id, $ativo, $ano);
-    //                     $classe_b = self::makeClasse($professor_ids->random(), $disciplina->id, $ativo, $ano);
-    //                     self::attributeAlunoClasse($turma_a, $classe_a);
-    //                     self::attributeAlunoClasse($turma_b, $classe_b);
-    //                 }
-    //             }
-    //             $ano--;
-    //         }
-    //     }
-    // }
-
-
     private static function createClasses()
     {
         echo 'createClasses' . PHP_EOL;
@@ -342,21 +311,6 @@ class AlunoFactory extends Factory
 
         return $pagamentos;
     }
-
-    // private static function attributePagamentos()
-    // {
-    //     Aluno::orderBy('id')->chunk(200, function ($alunos) {
-    //         $pagamentos = [];
-
-    //         foreach ($alunos as $aluno) {
-    //             $pagamentos = array_merge($pagamentos, self::createPagamentosForAluno($aluno));
-    //         }
-
-    //         Pagamento::insert($pagamentos);
-    //     });
-    // }
-
-
 
     public static function attributeAlunoAtivExtra()
     {

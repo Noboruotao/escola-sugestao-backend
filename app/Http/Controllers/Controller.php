@@ -10,4 +10,16 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+
+
+
+    protected function notPermitted()
+    {
+        return [
+            'success' => false,
+            'data' => [],
+            'message' => 'Usuário não tem permissão para executar este função'
+        ];
+    }
 }

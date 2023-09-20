@@ -41,4 +41,17 @@ class Disciplina extends Model
     {
         return $this->belongsToMany(Acervo::class, 'materiais_sugeridos');
     }
+
+
+    public static function getDisiplinas($page, $pageSize, $search)
+    {
+        $query = self::offset($page * $pageSize)
+            ->with('periodos')
+            ->limit($pageSize)
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nome', 'like', '%' . $search . '%');
+            });
+
+        return ['values' => $query->get(), 'count' => $query->count()];
+    }
 }

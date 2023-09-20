@@ -34,14 +34,19 @@ class Curso extends Model
             $sugeridos_id = auth()->user()->aluno->getCursosSugeridosId();
         }
 
-        return self::orderBy('nome')
-            ->offset($page * $limit)
-            ->limit($limit)
+
+        $query = self::orderBy('nome')
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%')
                     ->orWhere('descricao', 'like', '%' . $search . '%');
             })
-            ->whereNotIn('id', $sugeridos_id)
+            ->whereNotIn('id', $sugeridos_id);
+
+        $count = $query->count();
+        $values = $query
+            ->skip($page * $limit)
+            ->take($limit)
             ->get();
+        return ['values' => $values, 'count' => $count];
     }
 }

@@ -91,8 +91,7 @@ class Aluno extends Model
     {
         return $this->belongsToMany(Disciplina::class, 'aluno_Disciplina')
             ->using(AlunoDisciplina::class)
-            ->withPivot('situacao_id', 'nota_final')
-            ->with('notas');
+            ->withPivot('situacao_id', 'nota_final');
     }
 
 
@@ -101,11 +100,6 @@ class Aluno extends Model
         return $this->belongsToMany(AreaConhecimento::class, 'aluno_areas_de_conhecimento', 'aluno_id', 'area_codigo', 'id', 'codigo', 'areas')
             ->using(AlunoAreasDeConhecimento::class)
             ->withPivot('valor_notas', 'valor_acervos', 'valor_atividades', 'valor_respondido');
-    }
-
-
-    public function notas()
-    {
     }
 
 
@@ -125,6 +119,18 @@ class Aluno extends Model
     }
 
 
+    public function getDisciplinasBySituacao($page, $pageSize, $search, $situacao_id = 5)
+{
+    $query = $this->disciplinas
+        ->where('pivot.situacao_id', $situacao_id);
+
+    $values = $query->slice($page * $pageSize, $pageSize)->values();
+
+    return ['values' => $values, 'count' => $query->count()];
+}
+
+
+
     public function AttributeAlunoAreaByNota($disciplina_id)
     {
         $disciplina = Disciplina::find($disciplina_id);
@@ -133,6 +139,10 @@ class Aluno extends Model
             $disciplinas = $this->disciplinas()
                 ->wherePivotNotNull('nota_final')
                 ->where('nota_final', '<>', null)
+                ->whereIn('situacao_id', [
+                    DisciplinaSituacao::APROVADO,
+                    DisciplinaSituacao::EM_ANDAMENTO
+                ])
                 ->whereHas('areas', function ($query) use ($area) {
                     $query->where('area_codigo', $area->codigo);
                 })
@@ -206,7 +216,10 @@ class Aluno extends Model
         $aluno_area_final = collect([]);
         foreach ($this->areas as $area) {
             $valor_final = self::calculateValorFinal($area);
-            $aluno_area_final->push(['area_codigo' => $area->pivot->area_codigo, 'valor_final' => $valor_final]);
+            $aluno_area_final->push([
+                'area_codigo' => $area->pivot->area_codigo,
+                'valor_final' => $valor_final
+            ]);
         }
         return $aluno_area_final;
     }

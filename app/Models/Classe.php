@@ -27,4 +27,16 @@ class Classe extends Model
     {
         return $this->hasMany(Aula::class);
     }
+
+
+    public function professor()
+    {
+        return $this->belongsTo(Professor::class, 'professor_id');
+    }
+
+
+    public function disciplina()
+    {
+        return $this->belongsTo(Disciplina::class, 'disciplina_id');
+    }
 }

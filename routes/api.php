@@ -55,3 +55,11 @@ Route::group([
 ], function ($router) {
     require __DIR__ . '/apiRoutes/ativExtra.php';
 });
+
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'disciplina'
+], function ($router) {
+    require __DIR__ . '/apiRoutes/disciplina.php';
+});
