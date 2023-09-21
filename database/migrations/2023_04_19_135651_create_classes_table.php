@@ -27,9 +27,15 @@ class CreateClassesTable extends Migration
             $table->integer('ano');
             $table->timestamps();
         });
-        
+
         Schema::table('classes', function (Blueprint $table) {
             $table->foreignId('disciplina_id')->nullable()->change();
+        });
+
+        Schema::table('notas', function (Blueprint $table) {
+            $table->foreignId('classe_id')
+                ->constrained('classes')
+                ->onDelete('cascade');
         });
 
 

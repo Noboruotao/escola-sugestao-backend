@@ -17,7 +17,9 @@ use App\Models\Periodo;
 use App\Models\Nota;
 use App\Models\Professor;
 use App\Models\Bolsa;
+use App\Models\DisciplinaSituacao;
 use App\Models\Pagamento;
+use App\Models\TipoAvaliacao;
 
 class AlunoFactory extends Factory
 {
@@ -29,31 +31,34 @@ class AlunoFactory extends Factory
     public function definition()
     {
         dump('Starting Aluno seeding');
-        self::attributeAlunoDisciplina();
         self::createClasses();
+        // self::attributeAlunoDisciplina();
         self::createAulas();
         self::attributeBolsas();
         self::attributeAlunoAtivExtra();
     }
 
 
-    private static function makeNota($aluno_id, $tipo_id, $disciplina_id, $nota)
+    private static function makeNota($aluno_id, $tipo_id, $disciplina_id, $nota, $classe_id)
     {
         return [
             'aluno_id' => $aluno_id,
             'tipo_avaliacao_id' => $tipo_id,
             'disciplina_id' => $disciplina_id,
             'nota' => $nota,
+            'classe_id' => $classe_id
         ];
     }
 
 
-    private static function makeAlunoDisciplina($aluno_id, $disciplina_id, $situacao_id, $nota_final = null)
+    private static function makeAlunoDisciplina($aluno_id, $disciplina_id, $nota_final = null)
     {
         return [
             'aluno_id' => $aluno_id,
             'disciplina_id' => $disciplina_id,
-            'situacao_id' => $situacao_id,
+            'situacao_id' => ($nota_final >= 5)
+                ? DisciplinaSituacao::APROVADO
+                : DisciplinaSituacao::REPROVADO,
             'nota_final' => $nota_final,
         ];
     }
@@ -78,7 +83,7 @@ class AlunoFactory extends Factory
     }
 
 
-    private static function generateNotasForDisciplina($aluno_id, $disciplina_id, $faker)
+    private static function generateNotasForDisciplina($aluno_id, $disciplina_id, $classe_id, $faker)
     {
         $nota_p1 = self::generateRandomNota(9.00, null, $faker);
         $nota_p2 = self::generateRandomNota(9.00, null, $faker);
@@ -86,23 +91,21 @@ class AlunoFactory extends Factory
 
         if (self::calculateFinalNota($nota_p1, $nota_p2, null) < 5) {
             $nota_sub = self::generateRandomNota(9.00, null, $faker);
-            $nota_final = self::calculateFinalNota($nota_p1, $nota_p2, $nota_sub);
-        } else {
-            $nota_final = self::calculateFinalNota($nota_p1, $nota_p2, null);
         }
 
+        $nota_final = self::calculateFinalNota($nota_p1, $nota_p2, $nota_sub);
+
         $notasArray = [
-            self::makeNota($aluno_id, 1, $disciplina_id, $nota_p1),
-            self::makeNota($aluno_id, 2, $disciplina_id, $nota_p2),
+            self::makeNota($aluno_id, TipoAvaliacao::P1, $disciplina_id, $nota_p1, $classe_id),
+            self::makeNota($aluno_id, TipoAvaliacao::P2, $disciplina_id, $nota_p2, $classe_id),
         ];
 
         if ($nota_sub !== null) {
-            $notasArray[] = self::makeNota($aluno_id, 4, $disciplina_id, $nota_sub);
+            $notasArray[] = self::makeNota($aluno_id, TipoAvaliacao::P_SUB, $disciplina_id, $nota_sub, $classe_id);
         }
 
         return $notasArray;
     }
-
 
 
     private static function generateAlunoDisciplina($aluno, $all_periodos)
@@ -113,18 +116,19 @@ class AlunoFactory extends Factory
         $notas = [];
 
         foreach ($aluno->periodo->disciplinas as $disciplina) {
-            $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id, 5, null);
+            $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id, DisciplinaSituacao::EM_ANDAMENTO, null);
         }
 
         foreach ($all_periodos as $periodo) {
             if ($periodo->id < $aluno->periodo_id) {
                 foreach ($periodo->disciplinas as $disciplina) {
+
                     $notasDisciplina = self::generateNotasForDisciplina($aluno->id, $disciplina->id, $faker);
                     $nota_final = (count($notasDisciplina) == 3) ?
                         self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], $notasDisciplina[2]['nota'])
                         :  self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], null);
 
-                    $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id, ($nota_final >= 5) ? 1 : 2, $nota_final);
+                    $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id,  $nota_final);
                     $notas = array_merge($notas, $notasDisciplina);
                 }
             }
@@ -179,12 +183,38 @@ class AlunoFactory extends Factory
     }
 
 
-
     private static function attributeAlunoClasse($alunos, $classe)
     {
+
+        $faker = \Faker\Factory::create('pt_BR');
+
+        $alunoDisciplina = [];
+        $notas = [];
+
+
         foreach ($alunos as $aluno) {
             $classe->alunos()->attach($aluno, self::makePresenca(75, 51));
+
+            if ($classe->ativo == 1 && $classe->disciplina_id) {
+                $alunoDisciplina[] = self::makeAlunoDisciplina(
+                    $aluno->id,
+                    $classe->disciplina_id,
+                    DisciplinaSituacao::EM_ANDAMENTO,
+                    null
+                );
+            } elseif ($classe->disciplina_id) {
+                $notasDisciplina = self::generateNotasForDisciplina($aluno->id, $classe->disciplina_id, $classe->id, $faker);
+                $nota_final = (count($notasDisciplina) == 3) ?
+                    self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], $notasDisciplina[2]['nota'])
+                    :  self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], null);
+
+                $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $classe->disciplina_id,  $nota_final);
+                $notas = array_merge($notas, $notasDisciplina);
+            }
         }
+        Nota::insert($notas);
+        AlunoDisciplina::insert($alunoDisciplina);
+        self::attributeAlunoArea($aluno);
     }
 
 

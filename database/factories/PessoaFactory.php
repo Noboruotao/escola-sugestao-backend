@@ -18,6 +18,17 @@ use Spatie\Permission\Models\Role;
 
 class PessoaFactory extends Factory
 {
+
+    /*
+        [numero de anos] * [numero de classes] * [numero de alunos]
+    */
+    private const ENSINO_INFANTIL_QNT = 2 * 2 * 1;
+    private const ENSINO_FUNDAMENTAL_QNT = 9 * 2 * 1;
+    private const ENSINO_MEDIO_QNT = 2 * 3 * 1;
+
+    private const PROFESSOR_QNT = 50;
+    private const BIBLIOTECARIO_QNT = 5;
+
     public function definition()
     {
         dump('Starting Pessoa seeding');
@@ -25,9 +36,11 @@ class PessoaFactory extends Factory
         self::attributeEndereco();
     }
 
+
+
+
     public static function createPessoas()
     {
-
         echo 'createPessoas' . PHP_EOL;
         $faker = \Faker\Factory::create('pt_BR');
 
@@ -41,13 +54,13 @@ class PessoaFactory extends Factory
 
         //Bibliotecario
         echo '    Bibliotecario' . PHP_EOL;
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < self::BIBLIOTECARIO_QNT; $i++) {
             self::makePessoa(['Bibliotecário'], 60, 20, $faker);
         }
 
         //Professor
         echo '    Professor' . PHP_EOL;
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < self::PROFESSOR_QNT; $i++) {
             $roles = $faker->boolean(10) ?
                 ['Professor', 'Responsável']
                 : ['Professor'];
@@ -57,17 +70,17 @@ class PessoaFactory extends Factory
 
         //alunos ensino infantil
         echo '    alunos ensino infantil' . PHP_EOL;
-        for ($i = 0; $i < 60; $i++) {
+        for ($i = 0; $i < self::ENSINO_INFANTIL_QNT; $i++) {
             self::makePessoa(['Aluno'], 5, 4, $faker);
         }
         //alunos ensino fundamental
         echo '    alunos ensino fundamental' . PHP_EOL;
-        for ($i = 0; $i < 360; $i++) {
+        for ($i = 0; $i < self::ENSINO_FUNDAMENTAL_QNT; $i++) {
             self::makePessoa(['Aluno'], 15, 5, $faker);
         }
         //alunos ensino medio
         echo '    alunos ensino medio' . PHP_EOL;
-        for ($i = 0; $i < 150; $i++) {
+        for ($i = 0; $i < self::ENSINO_MEDIO_QNT; $i++) {
             self::makePessoa(['Aluno'], 18, 14, $faker);
         }
         self::createAlunos();
@@ -126,9 +139,9 @@ class PessoaFactory extends Factory
     protected function createAlunos()
     {
         $nivelEscolarToNumber = [
-            1 => 30,
-            2 => 40,
-            3 => 50,
+            1 => self::ENSINO_INFANTIL_QNT / 2,
+            2 => self::ENSINO_FUNDAMENTAL_QNT / 9,
+            3 => self::ENSINO_MEDIO_QNT / 3,
         ];
 
         foreach (Periodo::all() as $periodo) {

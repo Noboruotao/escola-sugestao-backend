@@ -22,6 +22,8 @@ use App\Models\Pessoa;
 
 class AcervoFactory extends Factory
 {
+
+    private const ACERVO_QNT = 500;
     /**
      * Define the model's default state.
      *
@@ -29,6 +31,8 @@ class AcervoFactory extends Factory
      */
     public function definition()
     {
+        dump('Starting Acervo seeding');
+
         self::generateEmprestimos();
     }
 
@@ -106,7 +110,7 @@ class AcervoFactory extends Factory
     }
 
 
-    public static function createAcervo($num = 500)
+    public static function createAcervo()
     {
         $autors = Autor::pluck('id');
         $editoras = Editora::pluck('id');
@@ -117,7 +121,7 @@ class AcervoFactory extends Factory
         $nomes = AreaConhecimento::pluck('nome');
         $faker = \Faker\Factory::create('pt_BR');
         $acervos = [];
-        for ($i = 0; $i < $num; $i++) {
+        for ($i = 0; $i < self::ACERVO_QNT; $i++) {
             $acervos[] = self::generateAcervoData(
                 $faker,
                 $nomes,
@@ -167,7 +171,6 @@ class AcervoFactory extends Factory
             $acervo_areas = [];
             foreach ($acervos as $acervo) {
                 foreach (AreaConhecimento::where('nome', $acervo->titulo)->first()->getRelatedAreas() as $area) {
-                    // $acervo->areas()->attach($area);
                     $acervo_areas[] = [
                         'area_codigo' => $area->codigo,
                         'model_id' => $acervo->id,
@@ -206,14 +209,14 @@ class AcervoFactory extends Factory
                 $daysInterval = $interval->days;
 
                 if ($daysInterval > 14) {
-                    $valor_multa = $acervo->tipo->multa * $daysInterval;
+                    $valor_multa = $acervo->tipo->multa * ($daysInterval - 14);
 
                     $multa = Multa::create([
                         'pessoa_id' => $aluno->id,
                         'multa_type' => Emprestimo::class,
                         'multa_id' => $emprestimo->id,
                         'mensagem' => config('mensagens.devolucao_de_acervo_atrasado'),
-                        'dias_atrasados' => $daysInterval,
+                        'dias_atrasados' => ($daysInterval - 14),
                         'valor' => $valor_multa,
                         'pago' => $data_devolucao,
                     ]);
@@ -226,10 +229,12 @@ class AcervoFactory extends Factory
 
     private static function generateEmprestimos()
     {
+        echo 'generateEmprestimos' . PHP_EOL;
+
         $blibliotecarios = Pessoa::role('Bibliotecário')->pluck('id');
         $faker = \Faker\Factory::create('pt_BR');
 
-        Pessoa::role('Aluno')->where('id', '>=', 118)->orderBy('id')->chunk(200, function (Collection $alunos) use ($blibliotecarios, $faker) {
+        Pessoa::role('Aluno')->orderBy('id')->chunk(200, function (Collection $alunos) use ($blibliotecarios, $faker) {
             foreach ($alunos as $aluno) {
                 self::createEmprestimo($aluno, $faker, $blibliotecarios);
             }
