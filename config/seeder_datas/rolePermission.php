@@ -5,7 +5,7 @@ return [
         'permissions' => [
             'acervo.*',
             'aluno.*',
-            'ano.*',
+            'periodo.*',
             'area_de_conhecimento.*',
             'atividade_extracurricular.*',
             'autor.*',
@@ -39,7 +39,7 @@ return [
         'permissions' => [
             'acervo.read',
             'aluno.*',
-            'ano.*',
+            'periodo.*',
             'area_de_conhecimento.*',
             'atividade_extracurricular.*',
             'bolsa.*',
@@ -63,7 +63,7 @@ return [
         'permissions' => [
             'acervo.read',
             'aluno.*',
-            'ano.*',
+            'periodo.*',
             'area_de_conhecimento.*',
             'atividade_extracurricular.*',
             'bolsa.*',
@@ -82,12 +82,38 @@ return [
         ]
     ],
     [
+        'name' => 'Secretaria',
+        'permissions' => [
+            'acervo.read',
+            'aluno.*',
+            'periodo.*',
+            'area_de_conhecimento.*',
+            'atividade_extracurricular.*',
+            'bolsa.*',
+            'classe.*',
+            'curso.*',
+            'disciplina.*',
+            'nivel_escolar.*',
+            'pessoa.*',
+            'professor.*',
+            'situacao_aluno.*',
+            'emprestimo.read',
+            'multa.read',
+            'notas.read',
+            'notas.update',
+            'mensalidade.read',
+            'mensalidade.create',
+            'mensalidade.update',
+            'presenca.read'
+        ]
+    ],
+    [
         'name' => 'Professor',
         'permissions' => [
             'acervo.read',
             'aluno.read',
             'aluno.update',
-            'ano.read',
+            'periodo.read',
             'area_de_conhecimento.read',
             'atividade_extracurricular.create',
             'atividade_extracurricular.read',
@@ -112,7 +138,7 @@ return [
         'permissions' => [
             'acervo.read',
             'aluno.read',
-            'ano.read',
+            'periodo.read',
             'area_de_conhecimento.read',
             'atividade_extracurricular.read',
             'bolsa.read',
@@ -133,7 +159,7 @@ return [
             'acervo.read',
             'aluno.read',
             'aluno.update',
-            'ano.read',
+            'periodo.read',
             'area_de_conhecimento.*',
             'atividade_extracurricular.read',
             'bolsa.read',
@@ -175,7 +201,7 @@ return [
         'permissions' => [
             'acervo.read',
             'aluno.read',
-            'ano.read',
+            'periodo.read',
             'atividade_extracurricular.read',
             'bolsa.read',
             'curso.read',
@@ -193,7 +219,7 @@ return [
         'permissions' => [
             'acervo.read',
             'aluno.read',
-            'ano.read',
+            'periodo.read',
             'atividade_extracurricular.read',
             'bolsa.read',
             'curso.read',

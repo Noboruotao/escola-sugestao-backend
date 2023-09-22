@@ -22,11 +22,35 @@ class Professor extends Model
 
     public function disciplinas($active = true)
     {
-        return $this->classes->where('ativo', $active)->map(function ($class) {
-            return $class->disciplina;
-        });
+        return $this->classes->where('ativo', $active)
+            ->map(function ($classe) {
+                return $classe->disciplina;
+            });
     }
 
+    public function getClassesEnableAtivo($ativo, $page, $pageSize, $search)
+    {
+        $query = $this->classes()
+            ->where('ativo', $ativo);
+
+        if ($search !== '') {
+            $query->whereHas('disciplina', function ($sub_query) use ($search) {
+                $sub_query->where('nome', 'like', "%$search%");
+            });
+        }
+
+        $datas = $query->offset($page * $pageSize)
+            ->limit($pageSize)
+            ->get();
+
+        $qnt = $query->count();
+
+        return [
+            'success' => true,
+            'data' => $datas,
+            'qnt' => $qnt
+        ];
+    }
 
     public function getDisciplinas(
         $page,
@@ -48,8 +72,9 @@ class Professor extends Model
     public function attributeNota($aluno_id, $classe_id, $tipo_avaliacao_id, $nota)
     {
         $aluno = Aluno::find($aluno_id);
-        $classe = Classe::where('id', $classe_id)
-            ->where('professor_id', auth()->user()->id)
+
+        $classe = auth()->user()->professor->classes()
+            ->where('id', $classe_id)
             ->first();
         $tipo_avaliacao = TipoAvaliacao::find($tipo_avaliacao_id);
 
@@ -84,7 +109,6 @@ class Professor extends Model
     }
 
 
-
     public static function makeNotaFinal($aluno_id, $classe_id, $nota_final)
     {
         $aluno = Aluno::find($aluno_id);
@@ -108,10 +132,26 @@ class Professor extends Model
 
         return [
             'success' => true,
-            'aluno' => $aluno,
-            'classse' => $classe,
-            'nota_final' => $nota_final,
-            'disciplina' => $disciplina,
+            'data' => $disciplina,
+        ];
+    }
+
+    public function getAlunosClasse($classe_id)
+    {
+        $classe = $this->classes()->where('id', $classe_id)->first();
+
+        if (!$classe) {
+            return [
+                'success' => false,
+                'message' => 'Casse Não encontrado.'
+            ];
+        }
+
+        $alunos = $classe->alunos;
+
+        return [
+            'success' => true,
+            'data' => $alunos
         ];
     }
 }

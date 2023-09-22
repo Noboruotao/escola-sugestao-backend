@@ -2,7 +2,7 @@
 return [
     'acervo',
     'aluno',
-    'ano',
+    'periodo',
     'area_de_conhecimento',
     'atividade_extracurricular',
     'autor',

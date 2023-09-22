@@ -9,3 +9,7 @@ Route::get('/getAtivExtraSugeridos', [AlunoController::class, 'getAtivExtraSuger
 Route::get('/getDisciplinasEmAndamento', [AlunoController::class, 'getDisciplinasEmAndamento']);
 
 
+Route::get('/getClasseNotas', [AlunoController::class, 'getClasseNotas']);
+
+
+

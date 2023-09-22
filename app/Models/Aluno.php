@@ -133,7 +133,22 @@ class Aluno extends Model
             ->toArray();
     }
 
+    public function getClasseNotas($classe_id)
+    {
+        $classe = $this->classes()
+            ->where('id', $classe_id)
+            ->first();
 
+        if (!$classe) {
+            return ['success' => false, 'message' => 'Classe Não Encontrado'];
+        }
+
+        $notas = Nota::where('aluno_id', $this->id)
+            ->where('classe_id', $classe->id)
+            ->get();
+
+        return ['success' => true, 'data' => $notas];
+    }
 
 
     public function getDisciplinasBySituacao($page, $pageSize, $search, $situacao_id = DisciplinaSituacao::EM_ANDAMENTO)

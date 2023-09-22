@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\http\Controllers\AuthController;
 use App\Http\Controllers\PessoaController;
 
+use App\Http\Controllers\testController;
+
 Route::post('login', [AuthController::class, 'login']);
 
 Route::group([
@@ -70,3 +72,6 @@ Route::group([
 ], function ($router) {
     require __DIR__ . '/apiRoutes/professor.php';
 });
+
+
+Route::get('/getDatasForTest', [testController::class, 'getDatasForTest']);

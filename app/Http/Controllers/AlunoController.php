@@ -55,20 +55,6 @@ class AlunoController extends Controller
     }
 
 
-    public function getDisciplinasEmAndamento()
-    {
-        $user = auth()->user();
-        if (!$user->hasRole('Aluno')) {
-            return response()->json(['success' => false, 'data' => 'Usuário não é Aluno']);
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => $user->aluno->getCursosPorSituacao(DisciplinaSituacao::APROVADO),
-        ]);
-    }
-
-
     private static function isAluno()
     {
         if (!auth()->user()->hasRole('Aluno')) {
@@ -78,6 +64,15 @@ class AlunoController extends Controller
         return ['success' => true];
     }
 
+    public function getClasseNotas(Request $request)
+    {
+        $classe_id = $request->query('classe_id', null);
+        if ($classe_id == null) {
+            return response()->json(['success' => false, 'message' => 'Valor Inválido.']);
+        }
 
-    
+        $resposta = auth()->user()->aluno->getClasseNotas($classe_id);
+
+        return response()->json($resposta);
+    }
 }
