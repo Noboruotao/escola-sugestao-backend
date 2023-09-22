@@ -11,4 +11,12 @@ class AcervoSituacao extends Model
 
     protected $table = 'situacao_acervo';
     protected $fillable = ['situacao'];
+
+    public const DISPONIVEL = 1;
+    public const EMPRESTADO = 2;
+    public const RESERVADO = 3;
+    public const EM_PROCESSAMENTO_TECNICO = 4;
+    public const EM_MANUTENCAO = 5;
+    public const EXTRAVIADO = 6;
+    public const DESCARTADO = 7;
 }

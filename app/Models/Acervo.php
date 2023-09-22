@@ -180,7 +180,12 @@ class Acervo extends Model
 
     public static function getAllAcervoLength($search = null)
     {
-        return self::whereNotIn('situacao_id', [6, 7])
+        return self::whereNotIn('situacao_id', [
+            AcervoSituacao::EM_PROCESSAMENTO_TECNICO,
+            AcervoSituacao::EM_MANUTENCAO,
+            AcervoSituacao::EXTRAVIADO,
+            AcervoSituacao::DESCARTADO
+        ])
             ->when($search, function ($query, $search) {
                 return $query->where('titulo', 'like', '%' . $search . '%');
             })->count();

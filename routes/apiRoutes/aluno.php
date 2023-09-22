@@ -7,3 +7,5 @@ Route::get('/getCursosSugeridos', [AlunoController::class, 'getCursosSugeridos']
 Route::get('/getAtivExtraSugeridos', [AlunoController::class, 'getAtivExtraSugeridos']);
 
 Route::get('/getDisciplinasEmAndamento', [AlunoController::class, 'getDisciplinasEmAndamento']);
+
+

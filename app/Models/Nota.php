@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Nota extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+
 
     protected $fillable = [
         'aluno_id',
         'tipo_avaliacao_id',
         'disciplina_id',
         'nota',
+        'classe_id'
     ];
 
 
@@ -31,6 +34,14 @@ class Nota extends Model
 
     public function disciplina()
     {
-        return $this->hasOne(Disciplina::class);
+        return $this->belongs(Disciplina::class);
+    }
+
+
+    public static function getAlunoNotasWithinDisciplinas($aluno, $disciplinas)
+    {
+        return self::where('aluno_id', $aluno->id)
+            ->whereIn('disciplina_id', $disciplinas->pluck('id')->toArray())
+            ->get();
     }
 }

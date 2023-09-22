@@ -156,7 +156,7 @@ class AlunoFactory extends Factory
     private static function attributeAlunoArea($aluno)
     {
         foreach ($aluno->disciplinas as $disciplina) {
-            $aluno->AttributeAlunoAreaByNota($disciplina->id);
+            $aluno->AttributeAlunoAreaByNota($disciplina);
         }
     }
 

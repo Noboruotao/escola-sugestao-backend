@@ -102,6 +102,21 @@ class Aluno extends Model
             ->withPivot('valor_notas', 'valor_acervos', 'valor_atividades', 'valor_respondido');
     }
 
+    private function getDisciplinasWithArea($area)
+    {
+        return $this->disciplinas()
+            ->whereHas('areas', function ($query) use ($area) {
+                $query->where('area_codigo', $area->codigo);
+            })
+            ->get();
+    }
+
+
+    public function notas()
+    {
+        return $this->hasMany(Nota::class, 'aluno_id', 'id');
+    }
+
 
     public function getCursosPorSituacao($situacao_id)
     {
@@ -119,40 +134,37 @@ class Aluno extends Model
     }
 
 
-    public function getDisciplinasBySituacao($page, $pageSize, $search, $situacao_id = 5)
-{
-    $query = $this->disciplinas
-        ->where('pivot.situacao_id', $situacao_id);
-
-    $values = $query->slice($page * $pageSize, $pageSize)->values();
-
-    return ['values' => $values, 'count' => $query->count()];
-}
 
 
-
-    public function AttributeAlunoAreaByNota($disciplina_id)
+    public function getDisciplinasBySituacao($page, $pageSize, $search, $situacao_id = DisciplinaSituacao::EM_ANDAMENTO)
     {
-        $disciplina = Disciplina::find($disciplina_id);
+        $query = $this->disciplinas
+            ->where('pivot.situacao_id', $situacao_id);
+
+        $values = $query->slice($page * $pageSize, $pageSize)->values();
+
+        return ['values' => $values, 'count' => $query->count()];
+    }
+
+    private function AttributeAreaByNota($notas, $area)
+    {
+        $valor_total = $notas->sum('nota');
+        $valor_final = $valor_total / $notas->count();
+
+        $this->areas()->syncWithoutDetaching([$area->codigo => ['valor_notas' => $valor_final]]);
+    }
+
+
+    public function AttributeAlunoAreaByNota($disciplina)
+    {
 
         foreach ($disciplina->areas as $area) {
-            $disciplinas = $this->disciplinas()
-                ->wherePivotNotNull('nota_final')
-                ->where('nota_final', '<>', null)
-                ->whereIn('situacao_id', [
-                    DisciplinaSituacao::APROVADO,
-                    DisciplinaSituacao::EM_ANDAMENTO
-                ])
-                ->whereHas('areas', function ($query) use ($area) {
-                    $query->where('area_codigo', $area->codigo);
-                })
-                ->get();
+            $disciplinas = $this->getDisciplinasWithArea($area);
 
-            if ($disciplinas->count() > 0) {
-                $valor_total = $disciplinas->sum('pivot.nota_final');
-                $valor_final = $valor_total / $disciplinas->count();
+            $notas = Nota::getAlunoNotasWithinDisciplinas($this, $disciplinas);
 
-                $this->areas()->syncWithoutDetaching([$area->codigo => ['valor_notas' => $valor_final]]);
+            if ($notas->count() > 0) {
+                $this->AttributeAreaByNota($notas, $area);
             }
         }
         $this->sugerir();
@@ -229,7 +241,9 @@ class Aluno extends Model
     {
         $sugere = true;
         foreach ($model->parametros as $parametro) {
-            $aluno_area = $aluno_area_valor_final->where('area_codigo', $parametro->area_codigo)->first();
+            $aluno_area = $aluno_area_valor_final
+                ->where('area_codigo', $parametro->area_codigo)
+                ->first();
 
             if (!$aluno_area) {
                 $sugere = false;

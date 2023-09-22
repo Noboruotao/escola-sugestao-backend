@@ -63,3 +63,10 @@ Route::group([
 ], function ($router) {
     require __DIR__ . '/apiRoutes/disciplina.php';
 });
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'professor'
+], function ($router) {
+    require __DIR__ . '/apiRoutes/professor.php';
+});

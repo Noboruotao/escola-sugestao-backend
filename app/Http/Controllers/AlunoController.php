@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\models\Aluno;
 use App\Models\DisciplinaSituacao;
+use App\Models\Professor;
 
 class AlunoController extends Controller
 {
@@ -76,4 +77,7 @@ class AlunoController extends Controller
 
         return ['success' => true];
     }
+
+
+    
 }

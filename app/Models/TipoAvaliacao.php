@@ -11,6 +11,7 @@ class TipoAvaliacao extends Model
 
     public const P1 = 1;
     public const P2 = 2;
+    public const TRABALHO = 3;
     public const P_SUB = 4;
 
     protected $table = 'tipos_avaliacoes';
