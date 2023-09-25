@@ -13,7 +13,13 @@ class Periodo extends Model
 
     public function disciplinas()
     {
-        return $this->belongsToMany(Disciplina::class, 'disciplina_periodo', 'periodo_id', 'disciplina_id');
+        return $this->hasMany(Disciplina::class);
+        // return $this->belongsToMany(Disciplina::class, 'disciplina_periodo', 'periodo_id', 'disciplina_id');
+    }
+
+    public function nivelEscolar()
+    {
+        return $this->belongsTo(NivelEscolar::class);
     }
 
 

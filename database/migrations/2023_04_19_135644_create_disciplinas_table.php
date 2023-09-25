@@ -20,6 +20,9 @@ class CreateDisciplinasTable extends Migration
                         $table->id();
                         $table->string('nome');
                         $table->integer('carga_horaria');
+                        $table->foreignId('periodo_id')
+                                ->constrained('periodos')
+                                ->onDelete('cascade');
                         $table->timestamps();
                 });
                 \App\Models\Disciplina::insert(config('seeder_datas.disciplinas'));
@@ -78,15 +81,15 @@ class CreateDisciplinasTable extends Migration
                 });
 
 
-                Schema::create('disciplina_periodo', function (Blueprint $table) {
-                        $table->foreignId('periodo_id')
-                                ->constrained('periodos')
-                                ->onDelete('cascade');
-                        $table->foreignId('disciplina_id')
-                                ->constrained('disciplinas')
-                                ->onDelete('cascade');
-                });
-                \Database\Factories\DisciplinaFactory::attributeDisciplinaPeriodo();
+                // Schema::create('disciplina_periodo', function (Blueprint $table) {
+                //         $table->foreignId('periodo_id')
+                //                 ->constrained('periodos')
+                //                 ->onDelete('cascade');
+                //         $table->foreignId('disciplina_id')
+                //                 ->constrained('disciplinas')
+                //                 ->onDelete('cascade');
+                // });
+                // \Database\Factories\DisciplinaFactory::attributeDisciplinaPeriodo();
         }
 
         /**
@@ -100,7 +103,7 @@ class CreateDisciplinasTable extends Migration
                 Schema::dropIfExists('notas');
                 Schema::dropIfExists('aluno_disciplina');
                 Schema::dropIfExists('tipos_avaliacoes');
-                Schema::dropIfExists('disciplina_periodo');
+                // Schema::dropIfExists('disciplina_periodo');
                 Schema::dropIfExists('situacao_disciplina');
                 Schema::dropIfExists('disciplinas');
 

@@ -92,4 +92,15 @@ class DisciplinaController extends Controller
             'message' => 'Situação deletada com sucesso'
         ]);
     }
+
+
+    public function getDisciplina(Request $request, $disciplina_id)
+    {
+        $resposta = Disciplina::getDisciplina($disciplina_id);
+        return response()->json($resposta);
+    }
+
+
+    
+
 }

@@ -31,9 +31,10 @@ class Disciplina extends Model
     }
 
 
-    public function periodos()
+    public function periodo()
     {
-        return $this->belongsToMany(Periodo::class, 'disciplina_periodo', 'disciplina_id', 'periodo_id');
+        return $this->belongsTo(Periodo::class, 'periodo_id');
+        // return $this->belongsTo(Periodo::class, 'disciplina_periodo', 'disciplina_id', 'periodo_id');
     }
 
 
@@ -46,12 +47,23 @@ class Disciplina extends Model
     public static function getDisiplinas($page, $pageSize, $search)
     {
         $query = self::offset($page * $pageSize)
-            ->with('periodos')
+            ->with('periodo')
             ->limit($pageSize)
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%');
             });
 
         return ['values' => $query->get(), 'count' => $query->count()];
+    }
+    public static function getDisciplina($id)
+    {
+        $disciplina = self::where('id', $id)
+            ->with('periodo.nivelEscolar')
+            ->first();
+
+        if (!$disciplina) {
+            return ['success' => false, 'message' => 'Valor Inválido'];
+        }
+        return ['success' => true, 'data' => $disciplina];
     }
 }

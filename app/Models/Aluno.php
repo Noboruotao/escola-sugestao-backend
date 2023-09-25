@@ -91,6 +91,7 @@ class Aluno extends Model
     {
         return $this->belongsToMany(Disciplina::class, 'aluno_Disciplina')
             ->using(AlunoDisciplina::class)
+            ->with('periodo')
             ->withPivot('situacao_id', 'nota_final');
     }
 
@@ -115,6 +116,50 @@ class Aluno extends Model
     public function notas()
     {
         return $this->hasMany(Nota::class, 'aluno_id', 'id');
+    }
+
+
+    public static function getDisciplinaNotas($disciplina_id, $todas = false)
+    {
+        $user = auth()->user();
+        $disciplina = Disciplina::find($disciplina_id);
+
+        $classe = null;
+        if (!$todas) {
+            $classe = $user->aluno->classes
+                ->where('disciplina_id', $disciplina->id)
+                ->last();
+        }
+        $notasQuery = Nota::where('aluno_id', $user->id)
+            ->where('disciplina_id', $disciplina->id);
+
+        if ($classe) {
+            $notasQuery->where('classe_id', $classe->id);
+        }
+
+        $notas = $notasQuery->with('tipo')->get();
+
+        $multipleClasses = $user->aluno->classes
+            ->where('disciplina_id', $disciplina->id)
+            ->count() > 1;
+
+        $activeClassExists = $user->aluno->classes
+            ->where('disciplina_id', $disciplina->id)
+            ->has(['ativo' => 1]);
+
+        $nota_final = ($multipleClasses && $activeClassExists)
+            ? null
+            : $user->aluno->disciplinas
+            ->where('id', $disciplina->id)
+            ->first()
+            ->pivot
+            ->nota_final;
+
+        return [
+            'success' => true,
+            'data' => $notas,
+            'nota_final' => $nota_final,
+        ];
     }
 
 

@@ -28,7 +28,7 @@ class Nota extends Model
 
     public function tipo()
     {
-        return $this->hasOne(TipoAvaliacao::class);
+        return $this->belongsTo(TipoAvaliacao::class, 'tipo_avaliacao_id');
     }
 
 

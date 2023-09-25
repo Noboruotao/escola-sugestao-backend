@@ -26,7 +26,7 @@ class PessoaFactory extends Factory
     private const ENSINO_FUNDAMENTAL_QNT = 9 * 2 * 1;
     private const ENSINO_MEDIO_QNT = 2 * 3 * 1;
 
-    private const PROFESSOR_QNT = 50;
+    private const PROFESSOR_QNT = 20;
     private const BIBLIOTECARIO_QNT = 5;
 
     public function definition()

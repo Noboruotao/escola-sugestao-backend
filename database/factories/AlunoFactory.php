@@ -51,14 +51,12 @@ class AlunoFactory extends Factory
     }
 
 
-    private static function makeAlunoDisciplina($aluno_id, $disciplina_id, $nota_final = null)
+    private static function makeAlunoDisciplina($aluno_id, $disciplina_id, $situacao_id, $nota_final = null)
     {
         return [
             'aluno_id' => $aluno_id,
             'disciplina_id' => $disciplina_id,
-            'situacao_id' => ($nota_final >= 5)
-                ? DisciplinaSituacao::APROVADO
-                : DisciplinaSituacao::REPROVADO,
+            'situacao_id' => $situacao_id,
             'nota_final' => $nota_final,
         ];
     }
@@ -128,7 +126,14 @@ class AlunoFactory extends Factory
                         self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], $notasDisciplina[2]['nota'])
                         :  self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], null);
 
-                    $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $disciplina->id,  $nota_final);
+                    $alunoDisciplina[] = self::makeAlunoDisciplina(
+                        $aluno->id,
+                        $disciplina->id,
+                        ($nota_final >= 5)
+                            ? DisciplinaSituacao::APROVADO
+                            : DisciplinaSituacao::REPROVADO,
+                        $nota_final
+                    );
                     $notas = array_merge($notas, $notasDisciplina);
                 }
             }
@@ -185,16 +190,13 @@ class AlunoFactory extends Factory
 
     private static function attributeAlunoClasse($alunos, $classe)
     {
-
         $faker = \Faker\Factory::create('pt_BR');
 
         $alunoDisciplina = [];
         $notas = [];
 
-
         foreach ($alunos as $aluno) {
             $classe->alunos()->attach($aluno, self::makePresenca(75, 51));
-
             if ($classe->ativo == 1 && $classe->disciplina_id) {
                 $alunoDisciplina[] = self::makeAlunoDisciplina(
                     $aluno->id,
@@ -208,7 +210,14 @@ class AlunoFactory extends Factory
                     self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], $notasDisciplina[2]['nota'])
                     :  self::calculateFinalNota($notasDisciplina[0]['nota'], $notasDisciplina[1]['nota'], null);
 
-                $alunoDisciplina[] = self::makeAlunoDisciplina($aluno->id, $classe->disciplina_id,  $nota_final);
+                $alunoDisciplina[] = self::makeAlunoDisciplina(
+                    $aluno->id,
+                    $classe->disciplina_id,
+                    ($nota_final >= 5)
+                        ? DisciplinaSituacao::APROVADO
+                        : DisciplinaSituacao::REPROVADO,
+                    $nota_final
+                );
                 $notas = array_merge($notas, $notasDisciplina);
             }
         }
@@ -236,7 +245,7 @@ class AlunoFactory extends Factory
         $ano = $currentYear;
 
         foreach ($allPeriodos->where('id', '<=', $periodo->id)->sortByDesc('id') as $subPeriodo) {
-            $ativo = $subPeriodo->id === $periodo->id;
+            $ativo = ($subPeriodo->id === $periodo->id) ? 1 : 0;
             $disciplinas = $subPeriodo->disciplinas;
 
             if ($disciplinas->isEmpty()) {

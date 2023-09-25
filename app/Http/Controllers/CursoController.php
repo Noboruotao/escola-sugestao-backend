@@ -13,7 +13,10 @@ class CursoController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', null);
 
-        $response = Curso::getCursos($page, $limit, $search);
+        $sortColumn = $request->query('sortColumn', 'nome');
+        $order = $request->query('order', 'asc');
+
+        $response = Curso::getCursos($page, $limit, $search, $sortColumn, $order);
 
         return response()->json([
             'success' => true,

@@ -25,7 +25,7 @@ class Curso extends Model
         return $this->morphMany(Parametro::class, 'model');
     }
 
-    public static function getCursos($page, $limit, $search)
+    public static function getCursos($page, $limit, $search, $sortColumn, $order)
     {
         $sugeridos_id = [];
 
@@ -35,7 +35,7 @@ class Curso extends Model
         }
 
 
-        $query = self::orderBy('nome')
+        $query = self::orderBy($sortColumn, $order)
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%')
                     ->orWhere('descricao', 'like', '%' . $search . '%');
