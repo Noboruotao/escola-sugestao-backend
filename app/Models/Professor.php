@@ -19,6 +19,11 @@ class Professor extends Model
         return $this->hasMany(Classe::class, 'professor_id');
     }
 
+    public function pessoa()
+    {
+        return $this->belongsTo(Pessoa::class, 'id');
+    }
+
 
     public function disciplinas($active = true)
     {

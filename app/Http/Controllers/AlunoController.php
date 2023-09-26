@@ -64,24 +64,37 @@ class AlunoController extends Controller
         return ['success' => true];
     }
 
-    public function getClasseNotas(Request $request)
+
+    public function getNotas(Request $request, $id)
     {
         $classe_id = $request->query('classe_id', null);
-        if ($classe_id == null) {
-            return response()->json(['success' => false, 'message' => 'Valor Inválido.']);
-        }
 
-        $resposta = auth()->user()->aluno->getClasseNotas($classe_id);
+        $disciplina_id = $request->query('disciplina_id', null);
+        $todas_notas = $request->query('todas_notas', false);
+
+        $resposta = Aluno::getNotas($id, $classe_id, $disciplina_id, $todas_notas);
 
         return response()->json($resposta);
     }
 
-    public function getDisciplinaNotas(Request $request, $id)
-    {
-        $disciplina_id = $request->query('disciplina_id', null);
-        $todas_notas = $request->query('todas_notas', false);
+    // public function getClasseNotas(Request $request)
+    // {
+    //     $classe_id = $request->query('classe_id', null);
+    //     if ($classe_id == null) {
+    //         return response()->json(['success' => false, 'message' => 'Valor Inválido.']);
+    //     }
 
-        $data = Aluno::getDisciplinaNotas($id, $disciplina_id, $todas_notas);
-        return response()->json($data);
-    }
+    //     $resposta = auth()->user()->aluno->getClasseNotas($classe_id);
+
+    //     return response()->json($resposta);
+    // }
+
+    // public function getDisciplinaNotas(Request $request, $id)
+    // {
+    //     $disciplina_id = $request->query('disciplina_id', null);
+    //     $todas_notas = $request->query('todas_notas', false);
+
+    //     $data = Aluno::getDisciplinaNotas($id, $disciplina_id, $todas_notas);
+    //     return response()->json($data);
+    // }
 }

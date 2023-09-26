@@ -8,6 +8,10 @@ Route::get('/getAtivExtraSugeridos', [AlunoController::class, 'getAtivExtraSuger
 
 Route::get('/getDisciplinasEmAndamento', [AlunoController::class, 'getDisciplinasEmAndamento']);
 
-Route::get('/getDisciplinaNotas/{id}', [AlunoController::class, 'getDisciplinaNotas']);
+Route::get('/getNotas/{id}', [AlunoController::class, 'getNotas']);
 
-Route::get('/getClasseNotas', [AlunoController::class, 'getClasseNotas']);
+
+// Route::get('/getDisciplinaNotas/{id}', [AlunoController::class, 'getDisciplinaNotas']);
+
+
+// Route::get('/getClasseNotas', [AlunoController::class, 'getClasseNotas']);

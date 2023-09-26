@@ -119,18 +119,17 @@ class Aluno extends Model
     }
 
 
-    public static function getDisciplinaNotas($aluno_id, $disciplina_id, $todas = false)
+    public static function getDisciplinaNotas($aluno, $disciplina_id, $todas = false)
     {
-        $user = self::find($aluno_id);
         $disciplina = Disciplina::find($disciplina_id);
 
         $classe = null;
         if (!$todas) {
-            $classe = $user->classes
+            $classe = $aluno->classes
                 ->where('disciplina_id', $disciplina->id)
                 ->last();
         }
-        $notasQuery = Nota::where('aluno_id', $user->id)
+        $notasQuery = Nota::where('aluno_id', $aluno->id)
             ->where('disciplina_id', $disciplina->id);
 
         if ($classe) {
@@ -139,17 +138,17 @@ class Aluno extends Model
 
         $notas = $notasQuery->with('tipo')->get();
 
-        $multipleClasses = $user->classes
+        $multipleClasses = $aluno->classes
             ->where('disciplina_id', $disciplina->id)
             ->count() > 1;
 
-        $activeClassExists = $user->classes
+        $activeClassExists = $aluno->classes
             ->where('disciplina_id', $disciplina->id)
             ->has(['ativo' => 1]);
 
         $nota_final = ($multipleClasses && $activeClassExists)
             ? null
-            : $user->disciplinas
+            : $aluno->disciplinas
             ->where('id', $disciplina->id)
             ->first()
             ->pivot
@@ -178,9 +177,20 @@ class Aluno extends Model
             ->toArray();
     }
 
-    public function getClasseNotas($classe_id)
+
+    public static function getNotas($aluno_id, $classe_id, $disciplina_id, $todas)
     {
-        $classe = $this->classes()
+        $user = self::find($aluno_id);
+        if ($classe_id) {
+            return $user->getClasseNotas($user, $classe_id);
+        } else if ($disciplina_id) {
+            return self::getDisciplinaNotas($user, $disciplina_id, $todas);
+        }
+    }
+
+    public static function getClasseNotas($aluno, $classe_id)
+    {
+        $classe = $aluno->classes()
             ->where('id', $classe_id)
             ->first();
 
@@ -188,11 +198,13 @@ class Aluno extends Model
             return ['success' => false, 'message' => 'Classe Não Encontrado'];
         }
 
-        $notas = Nota::where('aluno_id', $this->id)
+        $notas = Nota::where('aluno_id', $aluno->id)
             ->where('classe_id', $classe->id)
+            ->with('tipo')
             ->get();
 
-        return ['success' => true, 'data' => $notas];
+
+        return ['success' => true, 'data' => $notas, 'nota_final' => null];
     }
 
 

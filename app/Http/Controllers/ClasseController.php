@@ -27,4 +27,13 @@ class ClasseController extends Controller
 
         return response()->json($resposta);
     }
+
+
+    public function getClasseDetail(Request $request, $id)
+    {
+
+        $resposta = Classe::getClasseDetail($id);
+
+        return ['success' => true, 'data' => $resposta];
+    }
 }

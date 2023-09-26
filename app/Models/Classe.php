@@ -34,7 +34,6 @@ class Classe extends Model
         return $this->belongsTo(Professor::class, 'professor_id');
     }
 
-
     public function disciplina()
     {
         return $this->belongsTo(Disciplina::class, 'disciplina_id');
@@ -77,8 +76,15 @@ class Classe extends Model
             return ['success' => false, 'message' => 'Valor Inválido'];
         }
         $alunos = Pessoa::select(['nome', 'id'])
+            ->orderBy('nome')
             ->whereIn('id', $classe->alunos->pluck('id'))
             ->get();
         return ['success' => true, 'data' => $alunos];
+    }
+
+
+    public static function getClasseDetail($classe_id)
+    {
+        return self::with(['disciplina', 'professor.pessoa'])->where('id', $classe_id)->first();
     }
 }

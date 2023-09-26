@@ -11,7 +11,7 @@ class testController extends Controller
     {
         $professor = Pessoa::role('Professor')->inRandomOrder()->first();
 
-        $classe = $professor->professor->classes()->where('ativo', 1)->inRandomOrder()->first();
+        $classe = $professor->professor->classes()->where('ativo', 0)->inRandomOrder()->first();
 
         $aluno = $classe->alunos->first();
 
