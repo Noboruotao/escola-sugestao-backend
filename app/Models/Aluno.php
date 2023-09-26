@@ -119,14 +119,14 @@ class Aluno extends Model
     }
 
 
-    public static function getDisciplinaNotas($disciplina_id, $todas = false)
+    public static function getDisciplinaNotas($aluno_id, $disciplina_id, $todas = false)
     {
-        $user = auth()->user();
+        $user = self::find($aluno_id);
         $disciplina = Disciplina::find($disciplina_id);
 
         $classe = null;
         if (!$todas) {
-            $classe = $user->aluno->classes
+            $classe = $user->classes
                 ->where('disciplina_id', $disciplina->id)
                 ->last();
         }
@@ -139,17 +139,17 @@ class Aluno extends Model
 
         $notas = $notasQuery->with('tipo')->get();
 
-        $multipleClasses = $user->aluno->classes
+        $multipleClasses = $user->classes
             ->where('disciplina_id', $disciplina->id)
             ->count() > 1;
 
-        $activeClassExists = $user->aluno->classes
+        $activeClassExists = $user->classes
             ->where('disciplina_id', $disciplina->id)
             ->has(['ativo' => 1]);
 
         $nota_final = ($multipleClasses && $activeClassExists)
             ? null
-            : $user->aluno->disciplinas
+            : $user->disciplinas
             ->where('id', $disciplina->id)
             ->first()
             ->pivot
@@ -199,10 +199,18 @@ class Aluno extends Model
     public function getDisciplinasBySituacao($page, $pageSize, $search, $situacao_id = DisciplinaSituacao::EM_ANDAMENTO)
     {
         $query = $this->disciplinas
+
             ->where('pivot.situacao_id', $situacao_id);
 
-        $values = $query->slice($page * $pageSize, $pageSize)->values();
+        if ($search) {
+            $query = $query->filter(function ($item) use ($search) {
+                return stripos($item['nome'], $search) !== false;
+            });
+        }
 
+
+
+        $values = $query->slice($page * $pageSize, $pageSize)->values();
         return ['values' => $values, 'count' => $query->count()];
     }
 

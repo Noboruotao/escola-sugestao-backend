@@ -32,7 +32,6 @@ class DisciplinaController extends Controller
 
         $user = auth()->user();
         if ($user->hasRole('Aluno')) {
-
             $situacao = $request->input('situacao');
             $disciplinas = $user->aluno
                 ->getDisciplinasBySituacao(

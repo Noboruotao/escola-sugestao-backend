@@ -10,18 +10,18 @@ class ProfessorController extends Controller
 {
 
 
-    public function getClasses(Request $request)
-    {
-        $ativo = $request->query('ativo', 1);
-        $page = $request->query('page', 0);
-        $pageSize = $request->query('pageSize', 10);
-        $search = $request->query('search', '');
+    // public function getClasses(Request $request)
+    // {
+    //     $ativo = $request->query('ativo', 1);
+    //     $page = $request->query('page', 0);
+    //     $pageSize = $request->query('pageSize', 10);
+    //     $search = $request->query('search', '');
 
-        $resposta = auth()->user()->professor->getClassesEnableAtivo($ativo, $page, $pageSize, $search);
+    //     $resposta = auth()->user()->professor->getClassesEnableAtivo($ativo, $page, $pageSize, $search);
 
 
-        return response()->json($resposta, 200);
-    }
+    //     return response()->json($resposta, 200);
+    // }
 
 
     public function attributeNota(Request $request)

@@ -28,29 +28,29 @@ class Professor extends Model
             });
     }
 
-    public function getClassesEnableAtivo($ativo, $page, $pageSize, $search)
-    {
-        $query = $this->classes()
-            ->where('ativo', $ativo);
+    // public function getClassesEnableAtivo($ativo, $page, $pageSize, $search)
+    // {
+    //     $query = $this->classes()
+    //         ->where('ativo', $ativo);
 
-        if ($search !== '') {
-            $query->whereHas('disciplina', function ($sub_query) use ($search) {
-                $sub_query->where('nome', 'like', "%$search%");
-            });
-        }
+    //     if ($search !== '') {
+    //         $query->whereHas('disciplina', function ($sub_query) use ($search) {
+    //             $sub_query->where('nome', 'like', "%$search%");
+    //         });
+    //     }
 
-        $datas = $query->offset($page * $pageSize)
-            ->limit($pageSize)
-            ->get();
+    //     $datas = $query->offset($page * $pageSize)
+    //         ->limit($pageSize)
+    //         ->get();
 
-        $qnt = $query->count();
+    //     $qnt = $query->count();
 
-        return [
-            'success' => true,
-            'data' => $datas,
-            'qnt' => $qnt
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'data' => $datas,
+    //         'qnt' => $qnt
+    //     ];
+    // }
 
     public function getDisciplinas(
         $page,

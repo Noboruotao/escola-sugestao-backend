@@ -39,4 +39,46 @@ class Classe extends Model
     {
         return $this->belongsTo(Disciplina::class, 'disciplina_id');
     }
+
+
+    public static function getClassesEnableAtivo($ativo, $page, $pageSize, $search)
+    {
+        $user = auth()->user();
+        $query = ($user->hasRole('Aluno'))
+            ? $user->aluno->classes()->where('ativo', $ativo)
+            : $user->professor->classes()->where('ativo', $ativo);
+
+        if ($search !== '') {
+            $query->whereHas('disciplina', function ($sub_query) use ($search) {
+                $sub_query->where('nome', 'like', "%$search%");
+            });
+        }
+
+        $qnt = $query->count();
+
+        $datas = $query->with('disciplina')->offset($page * $pageSize)
+            ->limit($pageSize)
+            ->get();
+
+
+        return [
+            'success' => true,
+            'data' => $datas,
+            'count' => $qnt
+        ];
+    }
+
+
+    public static function getAlunos($id)
+    {
+        $classe = self::find($id);
+
+        if (!$classe) {
+            return ['success' => false, 'message' => 'Valor Inválido'];
+        }
+        $alunos = Pessoa::select(['nome', 'id'])
+            ->whereIn('id', $classe->alunos->pluck('id'))
+            ->get();
+        return ['success' => true, 'data' => $alunos];
+    }
 }

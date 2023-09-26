@@ -73,5 +73,12 @@ Route::group([
     require __DIR__ . '/apiRoutes/professor.php';
 });
 
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'classe'
+], function ($router) {
+    require __DIR__ . '/apiRoutes/classe.php';
+});
+
 
 Route::get('/getDatasForTest', [testController::class, 'getDatasForTest']);

@@ -78,9 +78,10 @@ class AlunoController extends Controller
 
     public function getDisciplinaNotas(Request $request, $id)
     {
+        $disciplina_id = $request->query('disciplina_id', null);
         $todas_notas = $request->query('todas_notas', false);
 
-        $data = Aluno::getDisciplinaNotas($id, $todas_notas);
+        $data = Aluno::getDisciplinaNotas($id, $disciplina_id, $todas_notas);
         return response()->json($data);
     }
 }
