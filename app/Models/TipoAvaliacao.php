@@ -16,4 +16,10 @@ class TipoAvaliacao extends Model
 
     protected $table = 'tipos_avaliacoes';
     protected $fillable = ['nome'];
+
+
+    public static function getTipoAvaliacao()
+    {
+        return self::get();
+    }
 }

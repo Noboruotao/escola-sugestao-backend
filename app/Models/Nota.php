@@ -22,7 +22,7 @@ class Nota extends Model
 
     public function aluno()
     {
-        return $this->hasOne(ALuno::class);
+        return $this->hasOne(Aluno::class);
     }
 
 
@@ -43,5 +43,11 @@ class Nota extends Model
         return self::where('aluno_id', $aluno->id)
             ->whereIn('disciplina_id', $disciplinas->pluck('id')->toArray())
             ->get();
+    }
+
+
+    public function getTipoAvaliacao()
+    {
+        return ['success' => true, 'data' => TipoAvaliacao::getTipos()];
     }
 }

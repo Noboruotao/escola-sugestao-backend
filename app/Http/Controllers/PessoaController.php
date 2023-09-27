@@ -11,7 +11,11 @@ use Illuminate\Support\Facades\Storage;
 
 class PessoaController extends Controller
 {
-
+    public function getPessoa(Request $request, $id)
+    {
+        $data = Pessoa::getPessoa($id);
+        return response()->json($data);
+    }
 
     public function getFoto(Request $request, $id)
     {

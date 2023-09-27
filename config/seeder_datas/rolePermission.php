@@ -124,7 +124,6 @@ return [
             'curso.read',
             'disciplina.read',
             'nivel_escolar.read',
-            'pessoa.read',
             'professor.read',
             'situacao_aluno.read',
             'notas.read',

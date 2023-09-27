@@ -99,4 +99,22 @@ class Pessoa extends Authenticatable implements JWTSubject
     {
         return Pessoa::find($id)->foto;
     }
+
+
+    public static function getPessoa($id)
+    {
+        $pessoa = self::where('id', $id)
+            ->when(!auth()->user()->can('pessoa.read'), function ($query) {
+                return $query->select(['id', 'nome', 'foto', 'data_nascimento']);
+            })
+            ->first();
+        if ($pessoa->hasRole(['Aluno'])) {
+            $pessoa->aluno->situacao->situacao;
+            $pessoa->aluno->periodo->periodo;
+        }
+        if ($pessoa->hasRole(['Professor'])) {
+            $pessoa->professor;
+        }
+        return ['success' => true, 'data' => $pessoa];
+    }
 }
