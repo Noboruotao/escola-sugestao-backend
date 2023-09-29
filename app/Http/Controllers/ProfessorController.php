@@ -26,6 +26,10 @@ class ProfessorController extends Controller
 
     public function attributeNota(Request $request)
     {
+        $permissionResult = $this->checkPermission('nota.create');
+        if ($permissionResult !== null) {
+            return $permissionResult;
+        }
         $aluno_id = $request->input('aluno_id');
         $classe_id = $request->input('classe_id');
         $tipo_avaliacao_id = $request->input('tipo_avaliacao_id');
@@ -39,12 +43,15 @@ class ProfessorController extends Controller
 
     public function makeNotaFinal(Request $request)
     {
-
+        $permissionResult = $this->checkPermission('nota.create');
+        if ($permissionResult !== null) {
+            return $permissionResult;
+        }
         $aluno_id = $request->input('aluno_id');
         $classe_id = $request->input('classe_id');
         $nota_final = $request->input('nota_final');
 
-        $resposta = Professor::makeNotaFinal($aluno_id, $classe_id, $nota_final);
+        return Professor::makeNotaFinal($aluno_id, $classe_id, $nota_final);
 
         return response()->json($resposta);
     }

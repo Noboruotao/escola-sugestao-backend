@@ -130,7 +130,8 @@ class Aluno extends Model
                 ->last();
         }
         $notasQuery = Nota::where('aluno_id', $aluno->id)
-            ->where('disciplina_id', $disciplina->id);
+            ->where('disciplina_id', $disciplina->id)
+            ->orderBy('tipo_avaliacao_id');
 
         if ($classe) {
             $notasQuery->where('classe_id', $classe->id);
@@ -195,16 +196,16 @@ class Aluno extends Model
             ->first();
 
         if (!$classe) {
-            return ['success' => false, 'message' => 'Classe Não Encontrado'];
+            return  response()->json(['success' => false, 'message' => 'Classe Não Encontrado'], 404);
         }
 
         $notas = Nota::where('aluno_id', $aluno->id)
+            ->orderBy('tipo_avaliacao_id')
             ->where('classe_id', $classe->id)
             ->with('tipo')
             ->get();
 
-
-        return ['success' => true, 'data' => $notas, 'nota_final' => null];
+        return response()->json(['success' => true, 'data' => $notas, 'nota_final' => null]);
     }
 
 

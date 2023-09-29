@@ -14,26 +14,19 @@ class ClasseController extends Controller
         $pageSize = $request->query('pageSize', 10);
         $search = $request->query('search', '');
 
-        $resposta = Classe::getClassesEnableAtivo($ativo, $page, $pageSize, $search);
-
-
-        return response()->json($resposta, 200);
+        return $resposta = Classe::getClassesEnableAtivo($ativo, $page, $pageSize, $search);
     }
 
 
     public function getAlunos(Request $request, $id)
     {
-        $resposta = Classe::getAlunos($id);
-
-        return response()->json($resposta);
+        return Classe::getAlunos($id);
     }
 
 
     public function getClasseDetail(Request $request, $id)
     {
-
         $resposta = Classe::getClasseDetail($id);
-
-        return ['success' => true, 'data' => $resposta];
+        return response()->json(['success' => true, 'data' => $resposta]);
     }
 }

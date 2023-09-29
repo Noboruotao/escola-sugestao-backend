@@ -23,6 +23,11 @@ class AutorController extends Controller
 
     public function createAutor(Request $request)
     {
+        $permissionResult = $this->checkPermission('autor.create');
+        if ($permissionResult !== null) {
+            return $permissionResult;
+        }
+
         $data = [];
         $data['nome'] = $request->input('nome');
         $data['nacionalidade_id'] = $request->input('nacionalidade_id');
@@ -35,6 +40,10 @@ class AutorController extends Controller
 
     public function deleteAutor(Request $request, $id)
     {
+        $permissionResult = $this->checkPermission('autor.delete');
+        if ($permissionResult !== null) {
+            return $permissionResult;
+        }
         Autor::deleteAutor($id);
         return response()->json(['success' => true, 'message' => 'Autor deleted']);
     }

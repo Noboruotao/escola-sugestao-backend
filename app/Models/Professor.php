@@ -123,7 +123,7 @@ class Professor extends Model
 
 
         if (!$aluno || !$classe || !$nota_final) {
-            return ['success' => false, 'message' => 'Valor Inválido.'];
+            return response()->json(['success' => false, 'message' => 'Valor Inválido.'], 400);
         }
 
         $disciplina = $aluno->disciplinas()
@@ -134,11 +134,10 @@ class Professor extends Model
         $disciplina->pivot->situacao_id = self::verificarAprovacao($nota_final);
 
         $disciplina->pivot->save();
-
-        return [
+        return response()->json([
             'success' => true,
             'data' => $disciplina,
-        ];
+        ]);
     }
 
     public function getAlunosClasse($classe_id)
@@ -146,17 +145,16 @@ class Professor extends Model
         $classe = $this->classes()->where('id', $classe_id)->first();
 
         if (!$classe) {
-            return [
+            return response()->json([
                 'success' => false,
                 'message' => 'Casse Não encontrado.'
-            ];
+            ], 404);
         }
 
         $alunos = $classe->alunos;
-
-        return [
+        return response()->json([
             'success' => true,
             'data' => $alunos
-        ];
+        ]);
     }
 }

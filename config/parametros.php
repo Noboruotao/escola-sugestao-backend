@@ -1,8 +1,5 @@
 <?php
 
 return [
-
-    'nota_para_aprovacao'=>5,
-
-
+    'nota_para_aprovacao' => 5,
 ];

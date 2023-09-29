@@ -10,9 +10,10 @@ class EmprestimoController extends Controller
 {
     public function createEmprestimo(Request $request)
     {
-        // if (!auth()->user()->hasRole('Bibliotecário')) {
-        //     return response()->json(['success' => false, 'data' => 'Usuário Não è Bibliotecário']);
-        // }
+        $roleResult = $this->checkRole('Bibliotecario');
+        if ($roleResult !== null) {
+            return $roleResult;
+        }
         $bibliotecario_id = $request->input('bibliotecario_id');
         $acervo_id = $request->input('acervo_id');
         $leitor_id = $request->input('leitor_id');
@@ -24,6 +25,10 @@ class EmprestimoController extends Controller
 
     public function makeDevolucao(Request $request)
     {
+        $roleResult = $this->checkRole('Bibliotecario');
+        if ($roleResult !== null) {
+            return $roleResult;
+        }
         $emprestimo_id = $request->input('emprestimo_id');
         return response()->json(['success' => true, 'data' => Emprestimo::makeDevolucao($emprestimo_id)]);
     }
@@ -31,6 +36,10 @@ class EmprestimoController extends Controller
 
     public function listEmprestimos(Request $request)
     {
+        $roleResult = $this->checkRole('Bibliotecario');
+        if ($roleResult !== null) {
+            return $roleResult;
+        }
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
         $pendente = $request->query('pendente', false);
@@ -39,7 +48,4 @@ class EmprestimoController extends Controller
             'data' => Emprestimo::getEmprestimos($page, $limit, $pendente)
         ], 200);
     }
-
-
-    
 }

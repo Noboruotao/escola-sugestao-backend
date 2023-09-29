@@ -62,8 +62,8 @@ class Disciplina extends Model
             ->first();
 
         if (!$disciplina) {
-            return ['success' => false, 'message' => 'Valor Inválido'];
+            return response()->json(['success' => false, 'message' => 'Valor Inválido'], 400);
         }
-        return ['success' => true, 'data' => $disciplina];
+        return response()->json(['success' => true, 'data' => $disciplina]);
     }
 }

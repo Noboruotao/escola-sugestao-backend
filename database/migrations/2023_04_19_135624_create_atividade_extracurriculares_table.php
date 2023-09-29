@@ -29,6 +29,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
             $table->string('nome');
             $table->foreignId('tipo_id')
                 ->constrained('tipos_atividade_extracurricular');
+            $table->text('descricao')->nullable;
             $table->boolean('ativo')
                 ->default(true);
             $table->timestamps();

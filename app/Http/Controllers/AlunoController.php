@@ -12,17 +12,17 @@ class AlunoController extends Controller
 {
     public function getCursosSugeridos(Request $request)
     {
+
+        $roleResult = $this->checkRole('Aluno');
+        if ($roleResult !== null) {
+            return $roleResult;
+        }
+
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
         $search = $request->query('search', null);
 
-        $notAlunoResponse = self::isAluno();
-        if (!$notAlunoResponse['success']) {
-            return response()->json($notAlunoResponse);
-        }
-
         $user = auth()->user();
-
         $cursos = $user->aluno->cursosSugeridos
             ->slice($page * $limit, $limit)
             ->when($search, function ($query) use ($search) {
@@ -37,32 +37,24 @@ class AlunoController extends Controller
             'success' => true,
             'data' => $cursos,
             'count' => $user->aluno->cursosSugeridos->count()
-        ]);
+        ], 200);
     }
 
 
     public function getAtivExtraSugeridos()
     {
-        $user = auth()->user();
-
-        $notAlunoResponse = self::isAluno();
-        if (!$notAlunoResponse['success']) {
-            return response()->json($notAlunoResponse);
+        $roleResult = $this->checkRole('Aluno');
+        if ($roleResult !== null) {
+            return $roleResult;
         }
 
+        $user = auth()->user();
         $ativExtra = $user->aluno->ativExtraSugeridos;
         return response()->json(['success' => true, 'data' => $ativExtra]);
     }
 
 
-    private static function isAluno()
-    {
-        if (!auth()->user()->hasRole('Aluno')) {
-            return ['success' => false, 'data' => 'Usuário não é Aluno'];
-        }
 
-        return ['success' => true];
-    }
 
 
     public function getNotas(Request $request, $id)
@@ -74,7 +66,7 @@ class AlunoController extends Controller
 
         $resposta = Aluno::getNotas($id, $classe_id, $disciplina_id, $todas_notas);
 
-        return response()->json($resposta);
+        return $resposta;
     }
 
     // public function getClasseNotas(Request $request)

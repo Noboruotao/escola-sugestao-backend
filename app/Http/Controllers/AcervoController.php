@@ -40,6 +40,12 @@ class AcervoController extends Controller
 
     public function createAcervo(Request $request)
     {
+
+        $permissionResult = $this->checkPermission('acervo.create');
+        if ($permissionResult !== null) {
+            return $permissionResult;
+        }
+
         $data = [
             'titulo' => $request->input('titulo'),
             'subtitulo' => $request->input('subtitulo'),

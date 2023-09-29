@@ -26,6 +26,10 @@ class DisciplinaController extends Controller
 
     public function getDisciplinasOfUser(Request $request)
     {
+        $roleResult = $this->checkRole(['Aluno', 'Professor']);
+        if ($roleResult !== null) {
+            return $roleResult;
+        }
         $page = $request->query('page', 0);
         $pageSize = $request->query('pageSize', 10);
         $search = $request->query('search', null);
@@ -65,8 +69,9 @@ class DisciplinaController extends Controller
 
     public function createSituacao(Request $request)
     {
-        if (!auth()->user()->can('situacao_aluno.create')) {
-            return response()->json(self::notPermitted());
+        $permissionResult = $this->checkPermission('situacao_aluno.create');
+        if ($permissionResult !== null) {
+            return $permissionResult;
         }
         $nome = $request->input('nome');
         $nova_situacao = DisciplinaSituacao::createSituacao($nome);
@@ -76,15 +81,16 @@ class DisciplinaController extends Controller
 
     public function deleteSituacao(Request $request)
     {
-        if (!auth()->user()->can('situacao_aluno.delete')) {
-            return response()->json(self::notPermitted());
+        $permissionResult = $this->checkPermission('situacao_aluno.delete');
+        if ($permissionResult !== null) {
+            return $permissionResult;
         }
         $id = $request->input('id');
         if (!DisciplinaSituacao::deleteSituacao($id)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Não foi possivel deleter esta permissão'
-            ]);
+            ], 401);
         }
         return response()->json([
             'success' => true,
@@ -95,11 +101,6 @@ class DisciplinaController extends Controller
 
     public function getDisciplina(Request $request, $disciplina_id)
     {
-        $resposta = Disciplina::getDisciplina($disciplina_id);
-        return response()->json($resposta);
+        return Disciplina::getDisciplina($disciplina_id);
     }
-
-
-    
-
 }

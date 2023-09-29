@@ -17,6 +17,10 @@ class CategoriaController extends Controller
 
     public function createCategoria(Request $request)
     {
+        $permissionResult = $this->checkPermission('categoria.create');
+        if ($permissionResult !== null) {
+            return $permissionResult;
+        }
         $data = [
             'categoria' => $request->input('categoria'),
         ];
@@ -26,6 +30,10 @@ class CategoriaController extends Controller
 
     public function deleteCategoria(Request $request, $id)
     {
+        $permissionResult = $this->checkPermission('catedoria.delete');
+        if ($permissionResult !== null) {
+            return $permissionResult;
+        }
         Categoria::deleteCategoria($id);
         return response()->json(['success' => true, 'message' => 'Categoria Deleted']);
     }

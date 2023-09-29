@@ -60,11 +60,11 @@ class Classe extends Model
             ->get();
 
 
-        return [
+        return response()->json([
             'success' => true,
             'data' => $datas,
             'count' => $qnt
-        ];
+        ]);
     }
 
 
@@ -73,13 +73,13 @@ class Classe extends Model
         $classe = self::find($id);
 
         if (!$classe) {
-            return ['success' => false, 'message' => 'Valor Inválido'];
+            return response()->json(['success' => false, 'message' => 'Valor Inválido'], 400);
         }
         $alunos = Pessoa::select(['nome', 'id'])
             ->orderBy('nome')
             ->whereIn('id', $classe->alunos->pluck('id'))
             ->get();
-        return ['success' => true, 'data' => $alunos];
+        return response()->json(['success' => true, 'data' => $alunos]);
     }
 
 

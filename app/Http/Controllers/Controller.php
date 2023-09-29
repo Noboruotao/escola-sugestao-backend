@@ -11,15 +11,37 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-
-
-
-    protected function notPermitted()
+    protected function checkRole($role)
     {
-        return [
-            'success' => false,
-            'data' => [],
-            'message' => 'Usuário não tem permissão para executar este função'
-        ];
+        if (!auth()->user()->hasRole($role)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuário não tem a Nível de Acesso necessário'
+            ], 403);
+        }
+        return null;
     }
+
+
+    protected function checkPermission($role)
+    {
+        if (!auth()->user()->can($role)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuário não tem permissão para executar este função'
+            ], 403);
+        }
+        return null;
+    }
+
+
+    // $permissionResult = $this->checkPermission('acervo.create');
+    // if ($permissionResult !== null) {
+    //     return $permissionResult;
+    // }
+    
+    // $roleResult = $this->checkRole('Aluno');
+    // if ($roleResult !== null) {
+    //     return $roleResult;
+    // }
 }
