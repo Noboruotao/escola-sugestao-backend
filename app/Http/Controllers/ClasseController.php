@@ -13,8 +13,17 @@ class ClasseController extends Controller
         $page = $request->query('page', 0);
         $pageSize = $request->query('pageSize', 10);
         $search = $request->query('search', '');
+        $sortColumn = $request->query('sortColumn', 'ano');
+        $sortOrder = $request->query('sortOrder', 'asc');
 
-        return $resposta = Classe::getClassesEnableAtivo($ativo, $page, $pageSize, $search);
+        return $resposta = Classe::getClassesEnableAtivo(
+            $ativo,
+            $page,
+            $pageSize,
+            $search,
+            $sortColumn,
+            $sortOrder
+        );
     }
 
 

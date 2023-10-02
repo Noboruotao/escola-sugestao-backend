@@ -13,8 +13,10 @@ class DisciplinaController extends Controller
         $page = $request->query('page', 0);
         $pageSize = $request->query('pageSize', 10);
         $search = $request->query('search', null);
+        $sortColumn = $request->query('sortColumn', null);
+        $sortOrder = $request->query('sortOrder', 'asc');
 
-        $disciplinas = Disciplina::getDisiplinas($page, $pageSize, $search);
+        $disciplinas = Disciplina::getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder);
 
         return response()->json([
             'success' => true,
@@ -33,23 +35,30 @@ class DisciplinaController extends Controller
         $page = $request->query('page', 0);
         $pageSize = $request->query('pageSize', 10);
         $search = $request->query('search', null);
+        $situacao = $request->input('situacao');
+
+        $sortColumn = $request->query('sortColumn', null);
+        $sortOrder = $request->query('sortOrder', 'asc');
 
         $user = auth()->user();
         if ($user->hasRole('Aluno')) {
-            $situacao = $request->input('situacao');
             $disciplinas = $user->aluno
                 ->getDisciplinasBySituacao(
                     $page,
                     $pageSize,
                     $search,
-                    $situacao
+                    $situacao,
+                    $sortColumn,
+                    $sortOrder
                 );
         } else if ($user->hasRole('Professor')) {
             $disciplinas = $user->professor->getDisciplinas(
                 $page,
                 $pageSize,
                 $search,
-                true
+                $situacao,
+                $sortColumn,
+                $sortOrder
             );
         }
         return response()->json([

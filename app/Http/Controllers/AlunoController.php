@@ -21,10 +21,11 @@ class AlunoController extends Controller
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
         $search = $request->query('search', null);
+        $sortColumn = $request->query('sortColumn', null);
+        $sortOrder = $request->query('sortOrder', null);
 
         $user = auth()->user();
         $cursos = $user->aluno->cursosSugeridos
-            ->slice($page * $limit, $limit)
             ->when($search, function ($query) use ($search) {
                 return $query->filter(function ($curso) use ($search) {
                     return stripos($curso['nome'], $search) !== false ||
@@ -32,10 +33,14 @@ class AlunoController extends Controller
                 });
             });
 
+        $cursos = $sortOrder == 'asc'
+            ? $cursos->sortBy($sortColumn)
+            : $cursos->sortByDesc($sortColumn);
+
 
         return response()->json([
             'success' => true,
-            'data' => $cursos,
+            'data' => $cursos->slice($page * $limit, $limit)->values(),
             'count' => $user->aluno->cursosSugeridos->count()
         ], 200);
     }

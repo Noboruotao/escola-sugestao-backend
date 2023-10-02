@@ -40,7 +40,7 @@ class Classe extends Model
     }
 
 
-    public static function getClassesEnableAtivo($ativo, $page, $pageSize, $search)
+    public static function getClassesEnableAtivo($ativo, $page, $pageSize, $search, $sortColumn, $sortOrder)
     {
         $user = auth()->user();
         $query = ($user->hasRole('Aluno'))
@@ -55,7 +55,9 @@ class Classe extends Model
 
         $qnt = $query->count();
 
-        $datas = $query->with('disciplina')->offset($page * $pageSize)
+        $datas = $query->with('disciplina')
+            ->orderBy($sortColumn, $sortOrder)
+            ->offset($page * $pageSize)
             ->limit($pageSize)
             ->get();
 

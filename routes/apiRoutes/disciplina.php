@@ -10,4 +10,4 @@ Route::get('getSituacaoDisciplina', [DisciplinaController::class, 'getSituacoesD
 Route::get('getDisciplinaDetail/{id}', [DisciplinaController::class, 'getDisciplina']);
 
 Route::post('createSituacao', [DisciplinaController::class, 'createSituacao']);
-Route::post('deleteSituacao', [DisciplinaController::class, 'deleteSituacao']);
+Route::delete('deleteSituacao', [DisciplinaController::class, 'deleteSituacao']);

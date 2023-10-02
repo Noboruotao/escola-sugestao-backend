@@ -209,8 +209,14 @@ class Aluno extends Model
     }
 
 
-    public function getDisciplinasBySituacao($page, $pageSize, $search, $situacao_id = DisciplinaSituacao::EM_ANDAMENTO)
-    {
+    public function getDisciplinasBySituacao(
+        $page,
+        $pageSize,
+        $search,
+        $situacao_id = DisciplinaSituacao::EM_ANDAMENTO,
+        $sortColumn,
+        $sortOrder
+    ) {
         $query = $this->disciplinas
 
             ->where('pivot.situacao_id', $situacao_id);
@@ -221,10 +227,16 @@ class Aluno extends Model
             });
         }
 
+        $query = ($sortOrder == 'asc')
+            ? $query->sortBy($sortColumn)
+            : $query->sortByDesc($sortColumn);
 
 
-        $values = $query->slice($page * $pageSize, $pageSize)->values();
-        return ['values' => $values, 'count' => $query->count()];
+        $values = $query;
+        return [
+            'values' => $values->slice($page * $pageSize, $pageSize)->values(),
+            'count' => $query->count()
+        ];
     }
 
     private function AttributeAreaByNota($notas, $area)

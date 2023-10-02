@@ -33,42 +33,33 @@ class Professor extends Model
             });
     }
 
-    // public function getClassesEnableAtivo($ativo, $page, $pageSize, $search)
-    // {
-    //     $query = $this->classes()
-    //         ->where('ativo', $ativo);
-
-    //     if ($search !== '') {
-    //         $query->whereHas('disciplina', function ($sub_query) use ($search) {
-    //             $sub_query->where('nome', 'like', "%$search%");
-    //         });
-    //     }
-
-    //     $datas = $query->offset($page * $pageSize)
-    //         ->limit($pageSize)
-    //         ->get();
-
-    //     $qnt = $query->count();
-
-    //     return [
-    //         'success' => true,
-    //         'data' => $datas,
-    //         'qnt' => $qnt
-    //     ];
-    // }
-
     public function getDisciplinas(
         $page,
         $pageSize,
         $search,
-        $active = true
+        $active = 1,
+        $sortColumn,
+        $sortOrder
     ) {
-        $query = $this->classes->where('ativo', $active)->map(function ($class) {
-            return $class->disciplina;
-        });
+        $query = $this->classes
+            ->where('ativo', $active)
+            ->filter(function ($classe) use ($search) {
+                return str_contains($classe->disciplina->nome, $search);
+            })->map(function ($classe) {
+                return $classe->disciplina;
+            });
 
+        $query = ($sortOrder == 'asc')
+            ? $query->sortBy($sortColumn)
+            : $query->sortByDesc($sortColumn);
+
+        $disciplinas = $query;
+
+        foreach ($disciplinas as $disciplina) {
+            $disciplina->periodo;
+        }
         return [
-            'values' => $query->slice($page * $pageSize, $pageSize),
+            'values' => $disciplinas->values(),
             'count' => $query->count()
         ];
     }

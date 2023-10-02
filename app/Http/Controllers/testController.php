@@ -15,10 +15,13 @@ class testController extends Controller
 
         $aluno = $classe->alunos->first();
 
+        $bibliotecario = Pessoa::role('Bibliotecario')->inRandomOrder()->first();
+
         return response()->json([
-            'professor' => $professor,
-            'aluno' => $aluno->pessoa,
+            'professor' => $professor->only(['id', 'nome', 'email']),
+            'aluno' => $aluno->pessoa->only(['id', 'nome', 'email']),
             'classe' => $classe->id,
+            'bibliotecario' => $bibliotecario->only(['id', 'nome', 'email']),
         ]);
     }
 }

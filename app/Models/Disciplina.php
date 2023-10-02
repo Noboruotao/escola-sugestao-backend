@@ -44,14 +44,18 @@ class Disciplina extends Model
     }
 
 
-    public static function getDisiplinas($page, $pageSize, $search)
+    public static function getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder)
     {
         $query = self::offset($page * $pageSize)
             ->with('periodo')
             ->limit($pageSize)
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%');
+            })
+            ->when($sortColumn, function ($query) use ($sortColumn, $sortOrder) {
+                return $query->orderBy($sortColumn, $sortOrder);
             });
+
 
         return ['values' => $query->get(), 'count' => $query->count()];
     }
