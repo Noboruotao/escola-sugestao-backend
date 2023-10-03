@@ -119,6 +119,19 @@ class Aluno extends Model
     }
 
 
+    public function getCursosSugeridos($page, $limit, $search, $sortColumn, $sortOrder)
+    {
+        $user = auth()->user();
+        return $user->aluno->cursosSugeridos
+            ->when($search, function ($query) use ($search) {
+                return $query->filter(function ($curso) use ($search) {
+                    return stripos($curso['nome'], $search) !== false ||
+                        stripos($curso['descricao'], $search) !== false;
+                });
+            });
+    }
+
+
     public static function getDisciplinaNotas($aluno, $disciplina_id, $todas = false)
     {
         $disciplina = Disciplina::find($disciplina_id);
@@ -179,7 +192,7 @@ class Aluno extends Model
     }
 
 
-    public static function getNotas($aluno_id, $classe_id, $disciplina_id, $todas)
+    public function getNotas($aluno_id, $classe_id, $disciplina_id, $todas)
     {
         $user = self::find($aluno_id);
         if ($classe_id) {

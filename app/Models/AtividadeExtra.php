@@ -18,6 +18,13 @@ class AtividadeExtra extends Model
         'ativo'
     ];
 
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
     public function ativExtraSugeridas()
     {
         return $this->morphToMany(Aluno::class, 'sugeridos');
@@ -41,8 +48,13 @@ class AtividadeExtra extends Model
         return $this->morphToMany(AreaConhecimento::class, 'model', 'model_has_areas', 'model_id', 'area_codigo');
     }
 
+    public function tipo()
+    {
+        return $this->belongsTo(AtivExtraTipo::class);
+    }
 
-    public static function getAtivExtra($page, $limit, $search)
+
+    public function getAtivExtra($page, $limit, $search)
     {
         $sugeridos_id = [];
         if (auth()->user()->hasRole('Aluno')) {

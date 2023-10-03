@@ -17,6 +17,11 @@ class AreaConhecimento extends Model
 
     protected $fillable = ['codigo', 'nome'];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
 
     public function alunos()
     {

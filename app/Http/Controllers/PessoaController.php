@@ -11,9 +11,16 @@ use Illuminate\Support\Facades\Storage;
 
 class PessoaController extends Controller
 {
+    public function __construct(Pessoa $pessoa)
+    {
+        $this->middleware('auth:api', ['except' => []]);
+        $this->pessoa = $pessoa;
+    }
+
+
     public function getPessoa(Request $request, $id)
     {
-        $data = Pessoa::getPessoa($id);
+        $data = $this->pessoa->getPessoa($id);
         return response()->json($data);
     }
 
@@ -23,7 +30,7 @@ class PessoaController extends Controller
             return response()->json(['success' => false, 'message' => 'O id é obrigatório'], 400);
         }
         try {
-            $foto = Pessoa::getFotoById($request->id);
+            $foto = $this->pessoa->getFotoById($request->id);
             if (!$foto) {
                 return response()->make('File not found.', 404);
             }

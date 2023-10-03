@@ -18,6 +18,11 @@ class Emprestimo extends Model
         'data_emprestimo',
         'data_devolucao'
     ];
+    
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 
     public function multa()
     {
@@ -42,7 +47,7 @@ class Emprestimo extends Model
         return $this->hasOne(Pessoa::class, 'id', 'leitor_id');
     }
 
-    public static function makeEmprestimo($bibliotecario_id, $acervo_id, $leitor_id)
+    public function makeEmprestimo($bibliotecario_id, $acervo_id, $leitor_id)
     {
         $emprestimo = self::create([
             'acervo_id' => $acervo_id,
@@ -60,7 +65,7 @@ class Emprestimo extends Model
     }
 
 
-    public static function getEmprestimos($page = 0, $limit = null, $pendente = false)
+    public function getEmprestimos($page = 0, $limit = null, $pendente = false)
     {
         $emprestimos = self::orderBy('data_emprestimo', 'desc')
             ->offset($page * $limit)
@@ -83,7 +88,7 @@ class Emprestimo extends Model
     }
 
 
-    public static function makeDevolucao($emprestimo_id)
+    public function makeDevolucao($emprestimo_id)
     {
         $emprestimo = self::find($emprestimo_id);
         $emprestimo->update(['data_devolucao' => Carbon::now()->format('Y-m-d')]);
@@ -95,7 +100,7 @@ class Emprestimo extends Model
     }
 
 
-    private static function valueForsearchMulta($emprestimo)
+    private function valueForsearchMulta($emprestimo)
     {
         return [
             'pessoa_id' => $emprestimo->leitor_id,
@@ -106,7 +111,7 @@ class Emprestimo extends Model
     }
 
 
-    private static function valueForMultaDiasValor($daysInterval, $valorMulta)
+    private function valueForMultaDiasValor($daysInterval, $valorMulta)
     {
         return [
             'dias_atrasados' => $daysInterval,
@@ -115,7 +120,7 @@ class Emprestimo extends Model
     }
 
 
-    public static function makeMulta(Emprestimo $emprestimo)
+    public function makeMulta(Emprestimo $emprestimo)
     {
         $data_devolucao = \Carbon\Carbon::parse($emprestimo->data_devolucao);
         $data_emprestimo = \Carbon\Carbon::parse($emprestimo->data_emprestimo);

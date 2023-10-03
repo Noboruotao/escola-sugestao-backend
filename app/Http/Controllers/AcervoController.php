@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Storage;
 
 class AcervoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['getCapa']]);
+    }
+
+
     public function listAcervos(Request $request)
     {
         $page = $request->query('page', 0);
@@ -97,7 +103,7 @@ class AcervoController extends Controller
                 return response()->make('File not found.', 404);
             }
         } catch (\Throwable $th) {
-            return response()->make($th->getMessage(), 404);
+            return response()->make($th->getMessage('nao encontrado'), 404);
         }
     }
 

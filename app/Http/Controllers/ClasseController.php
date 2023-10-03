@@ -7,6 +7,13 @@ use App\Models\Classe;
 
 class ClasseController extends Controller
 {
+    public function __construct(Classe $classe)
+    {
+        $this->middleware('auth:api', ['except' => []]);
+        $this->classe = $classe;
+    }
+
+
     public function getClasses(Request $request)
     {
         $ativo = $request->query('ativo', 1);
@@ -16,7 +23,7 @@ class ClasseController extends Controller
         $sortColumn = $request->query('sortColumn', 'ano');
         $sortOrder = $request->query('sortOrder', 'asc');
 
-        return $resposta = Classe::getClassesEnableAtivo(
+        return $resposta = $this->classe->getClassesEnableAtivo(
             $ativo,
             $page,
             $pageSize,
@@ -29,13 +36,13 @@ class ClasseController extends Controller
 
     public function getAlunos(Request $request, $id)
     {
-        return Classe::getAlunos($id);
+        return $this->classe->getAlunos($id);
     }
 
 
     public function getClasseDetail(Request $request, $id)
     {
-        $resposta = Classe::getClasseDetail($id);
+        $resposta = $this->classe->getClasseDetail($id);
         return response()->json(['success' => true, 'data' => $resposta]);
     }
 }

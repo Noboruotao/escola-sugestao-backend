@@ -32,6 +32,11 @@ class Acervo extends Model
         'data_aquisicao'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
 
     public function autor()
     {

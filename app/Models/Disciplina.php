@@ -11,6 +11,11 @@ class Disciplina extends Model
 
     protected $fillable = ['nome', 'carga_horaria'];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+    
     public function alunos()
     {
         return $this->belongsToMany(Aluno::class, 'aluno_Disciplina')
@@ -34,7 +39,6 @@ class Disciplina extends Model
     public function periodo()
     {
         return $this->belongsTo(Periodo::class, 'periodo_id');
-        // return $this->belongsTo(Periodo::class, 'disciplina_periodo', 'disciplina_id', 'periodo_id');
     }
 
 
@@ -44,7 +48,7 @@ class Disciplina extends Model
     }
 
 
-    public static function getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder)
+    public function getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder)
     {
         $query = self::offset($page * $pageSize)
             ->with('periodo')
@@ -59,7 +63,7 @@ class Disciplina extends Model
 
         return ['values' => $query->get(), 'count' => $query->count()];
     }
-    public static function getDisciplina($id)
+    public function getDisciplina($id)
     {
         $disciplina = self::where('id', $id)
             ->with('periodo.nivelEscolar')

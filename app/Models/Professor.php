@@ -105,7 +105,7 @@ class Professor extends Model
     }
 
 
-    public static function makeNotaFinal($aluno_id, $classe_id, $nota_final)
+    public  function makeNotaFinal($aluno_id, $classe_id, $nota_final)
     {
         $aluno = Aluno::find($aluno_id);
         $classe = Classe::where('id', $classe_id)

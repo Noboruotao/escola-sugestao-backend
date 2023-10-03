@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\http\Controllers\AuthController;
 use App\Http\Controllers\PessoaController;
+use App\Http\Controllers\AcervoController;
 
 use App\Http\Controllers\testController;
 
@@ -13,7 +14,7 @@ Route::get('/getDatasForTest', [testController::class, 'getDatasForTest']);
 
 Route::post('login', [AuthController::class, 'login']);
 
-Route::middleware('auth:api')->group(function () {
+
     Route::group([
         'middleware' => 'api',
     ], function ($router) {
@@ -83,4 +84,3 @@ Route::middleware('auth:api')->group(function () {
     ], function ($router) {
         require __DIR__ . '/apiRoutes/classe.php';
     });
-});

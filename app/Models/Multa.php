@@ -19,6 +19,12 @@ class Multa extends Model
         'pago'
     ];
 
+    
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
 
     public function emprestimos(){
         return $this->morphOne(Emprestimo::class, 'multas');

@@ -33,6 +33,9 @@ class Pessoa extends Authenticatable implements JWTSubject
 
     protected $hidden = [
         'senha',
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 
     public function enderecos()
@@ -101,10 +104,11 @@ class Pessoa extends Authenticatable implements JWTSubject
     }
 
 
-    public static function getPessoa($id)
+    public function getPessoa($id)
     {
+        $user = auth()->user();
         $pessoa = self::where('id', $id)
-            ->when(!auth()->user()->can('pessoa.read'), function ($query) {
+            ->when((!$user->can('pessoa.read') && $user->id != $id), function ($query) {
                 return $query->select(['id', 'nome', 'foto', 'data_nascimento']);
             })
             ->first();

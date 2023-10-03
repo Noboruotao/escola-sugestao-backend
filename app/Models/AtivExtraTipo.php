@@ -10,4 +10,5 @@ class AtivExtraTipo extends Model
     use HasFactory;
     protected $table = 'tipos_atividade_extracurricular';
     protected $fillable = ['nome'];
+
 }

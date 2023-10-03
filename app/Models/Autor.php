@@ -30,7 +30,7 @@ class Autor extends Model
     }
 
 
-    public static function getAutors($offset, $limit)
+    public function getAutors($offset, $limit)
     {
         return Autor::offset($offset * $limit)
             ->limit($limit)
@@ -39,21 +39,21 @@ class Autor extends Model
     }
 
 
-    public static function getAutorById($id)
+    public function getAutorById($id)
     {
         return Autor::with('acervos')
             ->find($id);
     }
 
 
-    public static function createAutor($data)
+    public function createAutor($data)
     {
         $autor = Autor::create($data);
         return $autor;
     }
 
 
-    public static function deleteAutor($id)
+    public function deleteAutor($id)
     {
         return Autor::find($id)->delete();
     }

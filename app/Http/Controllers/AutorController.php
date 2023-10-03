@@ -7,17 +7,24 @@ use App\Models\Autor;
 
 class AutorController extends Controller
 {
+    public function __construct(Autor $autor)
+    {
+        $this->middleware('auth:api', ['except' => []]);
+        $this->autor = $autor;
+    }
+
+
     public function getAutors(Request $request)
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => Autor::getAutors($page, $limit)]);
+        return response()->json(['success' => true, 'data' => $this->autor->getAutors($page, $limit)]);
     }
 
 
     public function getAutor(Request $request, $id)
     {
-        return response()->json(['success' => true, 'data' => Autor::getAutorById($id)]);
+        return response()->json(['success' => true, 'data' => $this->autor->getAutorById($id)]);
     }
 
 
@@ -34,7 +41,7 @@ class AutorController extends Controller
         $data['ano_nascimento'] = $request->input('ano_nascimento');
         $data['ano_falecimento'] = $request->input('ano_falecimento');
 
-        return response()->json(['success' => true, 'data' => Autor::createAutor($data)]);
+        return response()->json(['success' => true, 'data' => $this->autor->createAutor($data)]);
     }
 
 
@@ -44,7 +51,7 @@ class AutorController extends Controller
         if ($permissionResult !== null) {
             return $permissionResult;
         }
-        Autor::deleteAutor($id);
+        $this->autor->deleteAutor($id);
         return response()->json(['success' => true, 'message' => 'Autor deleted']);
     }
 }

@@ -8,25 +8,16 @@ use App\Models\Professor;
 
 class ProfessorController extends Controller
 {
-
-
-    // public function getClasses(Request $request)
-    // {
-    //     $ativo = $request->query('ativo', 1);
-    //     $page = $request->query('page', 0);
-    //     $pageSize = $request->query('pageSize', 10);
-    //     $search = $request->query('search', '');
-
-    //     $resposta = auth()->user()->professor->getClassesEnableAtivo($ativo, $page, $pageSize, $search);
-
-
-    //     return response()->json($resposta, 200);
-    // }
+    public function __construct(Professor $professor)
+    {
+        $this->middleware('auth:api', ['except' => []]);
+        $this->professor = $professor;
+    }
 
 
     public function attributeNota(Request $request)
     {
-        $permissionResult = $this->checkPermission('nota.create');
+        $permissionResult = $this->checkPermission('notas.create');
         if ($permissionResult !== null) {
             return $permissionResult;
         }
@@ -35,7 +26,7 @@ class ProfessorController extends Controller
         $tipo_avaliacao_id = $request->input('tipo_avaliacao_id');
         $nota = $request->input('nota');
 
-        $resposta = Professor::attributeNota($aluno_id, $classe_id, $tipo_avaliacao_id, $nota);
+        $resposta = $this->professor->attributeNota($aluno_id, $classe_id, $tipo_avaliacao_id, $nota);
 
         return response()->json($resposta);
     }
@@ -43,7 +34,7 @@ class ProfessorController extends Controller
 
     public function makeNotaFinal(Request $request)
     {
-        $permissionResult = $this->checkPermission('nota.create');
+        $permissionResult = $this->checkPermission('notas.create');
         if ($permissionResult !== null) {
             return $permissionResult;
         }
@@ -51,7 +42,7 @@ class ProfessorController extends Controller
         $classe_id = $request->input('classe_id');
         $nota_final = $request->input('nota_final');
 
-        return Professor::makeNotaFinal($aluno_id, $classe_id, $nota_final);
+        return $this->professor->makeNotaFinal($aluno_id, $classe_id, $nota_final);
 
         return response()->json($resposta);
     }

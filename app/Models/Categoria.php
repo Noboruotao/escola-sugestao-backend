@@ -20,7 +20,7 @@ class Categoria extends Model
     }
 
 
-    public static function getCategorias($offset = 0, $limit = null)
+    public function getCategorias($offset = 0, $limit = null)
     {
         return Categoria::orderBy('categoria')
             ->offset($offset)
@@ -29,13 +29,13 @@ class Categoria extends Model
     }
 
 
-    public static function createCategoria($data)
+    public function createCategoria($data)
     {
         return Categoria::create($data);
     }
 
 
-    public static function getAcervosByCategoria($id, $offset, $limit)
+    public function getAcervosByCategoria($id, $offset, $limit)
     {
 
         return Acervo::where('categoria_id', $id)
@@ -45,7 +45,7 @@ class Categoria extends Model
     }
 
 
-    public static function deleteCategoria($id)
+    public function deleteCategoria($id)
     {
         return Categoria::find($id)->delete();
     }

@@ -13,6 +13,11 @@ class Curso extends Model
         'nome',
         'descricao'
     ];
+    
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 
     public function pessoasSugeridas()
     {
@@ -25,7 +30,7 @@ class Curso extends Model
         return $this->morphMany(Parametro::class, 'model');
     }
 
-    public static function getCursos($page, $limit, $search, $sortColumn, $order)
+    public function getCursos($page, $limit, $search, $sortColumn, $order)
     {
         $sugeridos_id = [];
 

@@ -12,6 +12,11 @@ class AcervoSituacao extends Model
     protected $table = 'situacao_acervo';
     protected $fillable = ['situacao'];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
     public const DISPONIVEL = 1;
     public const EMPRESTADO = 2;
     public const RESERVADO = 3;

@@ -10,5 +10,11 @@ class AcervoEstado extends Model
     use HasFactory;
 
     protected $table = 'estado_acervo';
+    
     protected $fillable = ['estado'];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
 }

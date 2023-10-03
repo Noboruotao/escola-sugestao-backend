@@ -7,11 +7,18 @@ use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
 {
+    public function __construct(Categoria $categoria)
+    {
+        $this->middleware('auth:api', ['except' => []]);
+        $this->categoria = $categoria;
+    }
+
+
     public function getCategorias(Request $request)
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => Categoria::getCategorias($page, $limit)]);
+        return response()->json(['success' => true, 'data' => $this->categoria->getCategorias($page, $limit)]);
     }
 
 
@@ -24,7 +31,7 @@ class CategoriaController extends Controller
         $data = [
             'categoria' => $request->input('categoria'),
         ];
-        return response()->json(['success' => true, 'data' => Categoria::createCategoria($data)]);
+        return response()->json(['success' => true, 'data' => $this->categoria->createCategoria($data)]);
     }
 
 
@@ -34,7 +41,7 @@ class CategoriaController extends Controller
         if ($permissionResult !== null) {
             return $permissionResult;
         }
-        Categoria::deleteCategoria($id);
+        $this->categoria->deleteCategoria($id);
         return response()->json(['success' => true, 'message' => 'Categoria Deleted']);
     }
 
@@ -43,6 +50,6 @@ class CategoriaController extends Controller
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => Categoria::getAcervosByCategoria($id, $page, $limit)]);
+        return response()->json(['success' => true, 'data' => $this->categoria->getAcervosByCategoria($id, $page, $limit)]);
     }
 }

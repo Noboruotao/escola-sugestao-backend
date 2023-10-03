@@ -10,9 +10,15 @@ use App\Models\Professor;
 
 class AlunoController extends Controller
 {
+    public function __construct(Aluno $aluno)
+    {
+        $this->middleware('auth:api', ['except' => []]);
+        $this->aluno = $aluno;
+    }
+
+
     public function getCursosSugeridos(Request $request)
     {
-
         $roleResult = $this->checkRole('Aluno');
         if ($roleResult !== null) {
             return $roleResult;
@@ -24,14 +30,7 @@ class AlunoController extends Controller
         $sortColumn = $request->query('sortColumn', null);
         $sortOrder = $request->query('sortOrder', null);
 
-        $user = auth()->user();
-        $cursos = $user->aluno->cursosSugeridos
-            ->when($search, function ($query) use ($search) {
-                return $query->filter(function ($curso) use ($search) {
-                    return stripos($curso['nome'], $search) !== false ||
-                        stripos($curso['descricao'], $search) !== false;
-                });
-            });
+        $cursos = $this->aluno->getCursosSugeridos($page, $limit, $search, $sortColumn, $sortOrder);
 
         $cursos = $sortOrder == 'asc'
             ? $cursos->sortBy($sortColumn)
@@ -41,7 +40,7 @@ class AlunoController extends Controller
         return response()->json([
             'success' => true,
             'data' => $cursos->slice($page * $limit, $limit)->values(),
-            'count' => $user->aluno->cursosSugeridos->count()
+            'count' => auth()->user()->aluno->cursosSugeridos->count()
         ], 200);
     }
 
@@ -65,33 +64,9 @@ class AlunoController extends Controller
     public function getNotas(Request $request, $id)
     {
         $classe_id = $request->query('classe_id', null);
-
         $disciplina_id = $request->query('disciplina_id', null);
         $todas_notas = $request->query('todas_notas', false);
 
-        $resposta = Aluno::getNotas($id, $classe_id, $disciplina_id, $todas_notas);
-
-        return $resposta;
+        return $this->aluno->getNotas($id, $classe_id, $disciplina_id, $todas_notas);
     }
-
-    // public function getClasseNotas(Request $request)
-    // {
-    //     $classe_id = $request->query('classe_id', null);
-    //     if ($classe_id == null) {
-    //         return response()->json(['success' => false, 'message' => 'Valor Inválido.']);
-    //     }
-
-    //     $resposta = auth()->user()->aluno->getClasseNotas($classe_id);
-
-    //     return response()->json($resposta);
-    // }
-
-    // public function getDisciplinaNotas(Request $request, $id)
-    // {
-    //     $disciplina_id = $request->query('disciplina_id', null);
-    //     $todas_notas = $request->query('todas_notas', false);
-
-    //     $data = Aluno::getDisciplinaNotas($id, $disciplina_id, $todas_notas);
-    //     return response()->json($data);
-    // }
 }

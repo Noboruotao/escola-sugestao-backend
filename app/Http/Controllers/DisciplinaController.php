@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class DisciplinaController extends Controller
 {
+    public function __construct(Disciplina $disciplina, DisciplinaSituacao $disciplina_situacao)
+    {
+        $this->middleware('auth:api', ['except' => []]);
+        $this->disciplina = $disciplina;
+        $this->disciplina_situacao = $disciplina_situacao;
+    }
+
+
     public function getDisciplinas(Request $request)
     {
         $page = $request->query('page', 0);
@@ -16,7 +24,7 @@ class DisciplinaController extends Controller
         $sortColumn = $request->query('sortColumn', null);
         $sortOrder = $request->query('sortOrder', 'asc');
 
-        $disciplinas = Disciplina::getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder);
+        $disciplinas = $this->disciplina->getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder);
 
         return response()->json([
             'success' => true,
@@ -71,7 +79,7 @@ class DisciplinaController extends Controller
 
     public function getSituacoesDisciplina()
     {
-        $situacoes = DisciplinaSituacao::getSituacoesDisciplina();
+        $situacoes =  $this->disciplina_situacao->getSituacoesDisciplina();
         return response()->json(['success' => true, 'data' => $situacoes]);
     }
 
@@ -83,7 +91,7 @@ class DisciplinaController extends Controller
             return $permissionResult;
         }
         $nome = $request->input('nome');
-        $nova_situacao = DisciplinaSituacao::createSituacao($nome);
+        $nova_situacao =  $this->disciplina_situacao->createSituacao($nome);
         return response()->json(['success' => true, 'data' => $nova_situacao]);
     }
 
@@ -95,21 +103,12 @@ class DisciplinaController extends Controller
             return $permissionResult;
         }
         $id = $request->input('id');
-        if (!DisciplinaSituacao::deleteSituacao($id)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Não foi possivel deleter esta permissão'
-            ], 401);
-        }
-        return response()->json([
-            'success' => true,
-            'message' => 'Situação deletada com sucesso'
-        ]);
+        return $this->disciplina_situacao->deleteSituacao($id);
     }
 
 
     public function getDisciplina(Request $request, $disciplina_id)
     {
-        return Disciplina::getDisciplina($disciplina_id);
+        return $this->disciplina->getDisciplina($disciplina_id);
     }
 }

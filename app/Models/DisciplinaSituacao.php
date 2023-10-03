@@ -24,25 +24,31 @@ class DisciplinaSituacao extends Model
     public const DISPENSADO = 7;
 
 
-    public static function getSituacoesDisciplina()
+    public function getSituacoesDisciplina()
     {
         return self::all();
     }
 
 
-    public static function createSituacao($nome)
+    public function createSituacao($nome)
     {
         return self::create(['nome' => $nome]);
     }
 
 
-    public static function deleteSituacao($id)
+    public function deleteSituacao($id)
     {
         $situacao = self::find($id);
         if (!$situacao) {
-            return false;
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi possivel deleter esta permissão'
+            ], 401);
         }
         $situacao->delete();
-        return true;
+        return response()->json([
+            'success' => true,
+            'message' => 'Situação deletada com sucesso'
+        ]);
     }
 }

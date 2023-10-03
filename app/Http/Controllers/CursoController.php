@@ -7,6 +7,13 @@ use App\Models\Curso;
 
 class CursoController extends Controller
 {
+    public function __construct(Curso $curso)
+    {
+        $this->middleware('auth:api', ['except' => []]);
+        $this->curso = $curso;
+    }
+
+
     public function getCursos(Request $request)
     {
         $page = $request->query('page', 0);
@@ -16,7 +23,7 @@ class CursoController extends Controller
         $sortColumn = $request->query('sortColumn', 'nome');
         $order = $request->query('order', 'asc');
 
-        $response = Curso::getCursos($page, $limit, $search, $sortColumn, $order);
+        $response = $this->curso->getCursos($page, $limit, $search, $sortColumn, $order);
 
         return response()->json([
             'success' => true,

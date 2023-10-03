@@ -14,6 +14,11 @@ class Classe extends Model
         'disciplina_id',
         'ativo'
     ];
+    
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 
 
     public function alunos()
@@ -40,7 +45,7 @@ class Classe extends Model
     }
 
 
-    public static function getClassesEnableAtivo($ativo, $page, $pageSize, $search, $sortColumn, $sortOrder)
+    public function getClassesEnableAtivo($ativo, $page, $pageSize, $search, $sortColumn, $sortOrder)
     {
         $user = auth()->user();
         $query = ($user->hasRole('Aluno'))
@@ -70,22 +75,28 @@ class Classe extends Model
     }
 
 
-    public static function getAlunos($id)
+    public function getAlunos($id)
     {
         $classe = self::find($id);
-
         if (!$classe) {
             return response()->json(['success' => false, 'message' => 'Valor Inválido'], 400);
         }
+
         $alunos = Pessoa::select(['nome', 'id'])
             ->orderBy('nome')
             ->whereIn('id', $classe->alunos->pluck('id'))
             ->get();
+
+        foreach ($alunos as $aluno) {
+            $aluno->presenca = $aluno->aluno->classes()->where('id', $id)->get()['0']->pivot->presenca;
+            $aluno->faltas = $aluno->aluno->classes()->where('id', $id)->get()['0']->pivot->faltas;
+        }
+
         return response()->json(['success' => true, 'data' => $alunos]);
     }
 
 
-    public static function getClasseDetail($classe_id)
+    public function getClasseDetail($classe_id)
     {
         return self::with(['disciplina', 'professor.pessoa'])->where('id', $classe_id)->first();
     }
