@@ -33,7 +33,13 @@ class AtividadeExtra extends Model
 
     public function alunos()
     {
-        return $this->belongsToMany(Aluno::class, 'aluno_ativExtra', 'aluno_id', 'ativExtra_id');
+        return $this->belongsToMany(
+            Aluno::class,
+            'aluno_ativExtra',
+            'ativExtra_id',
+            'aluno_id'
+        )
+            ->with('pessoa');
     }
 
 
@@ -54,23 +60,42 @@ class AtividadeExtra extends Model
     }
 
 
-    public function getAtivExtra($page, $limit, $search)
+    public function getAtivExtras($page, $limit, $search, $sortColumn = 'nome', $order = 'asc', $tipo)
     {
-        $sugeridos_id = [];
-        if (auth()->user()->hasRole('Aluno')) {
-            $sugeridos_id = auth()->user()
-                ->aluno->ativExtraSugeridos
-                ->pluck('id')
-                ->toArray();
-        }
-
-        return self::orderBy('nome')
-            ->offset($page * $limit)
-            ->limit($limit)
-            ->whereNotIn('id', $sugeridos_id)
+        $query = self::orderBy($sortColumn, $order == '' ? 'asc' : $order)
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%');
             })
-            ->get();
+            ->when($tipo != '', function ($query) use ($tipo) {
+                return $query->where('tipo_id', $tipo);
+            })
+            ->with('tipo');
+
+        return [
+            'count' => $query->count(),
+            'data' => $query->offset($page * $limit)
+                ->limit($limit)->get(),
+        ];
+    }
+
+
+    public function getAtivExtraDetail($id)
+    {
+        $info =
+            self::where('id', $id)
+            ->with('tipo')
+            ->when(!auth()->user()->hasRole('Aluno'), function ($query) {
+                return $query->with('alunos');
+            })
+            ->first();
+
+
+        if ($info == null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Atividade Extracurricular Não Encontrado'
+            ], 404);
+        }
+        return response()->json(['success' => true, 'data' => $info]);
     }
 }

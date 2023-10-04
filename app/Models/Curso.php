@@ -13,7 +13,7 @@ class Curso extends Model
         'nome',
         'descricao'
     ];
-    
+
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -32,20 +32,11 @@ class Curso extends Model
 
     public function getCursos($page, $limit, $search, $sortColumn, $order)
     {
-        $sugeridos_id = [];
-
-
-        if (auth()->user()->hasRole('Aluno')) {
-            $sugeridos_id = auth()->user()->aluno->getCursosSugeridosId();
-        }
-
-
         $query = self::orderBy($sortColumn, $order)
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%')
                     ->orWhere('descricao', 'like', '%' . $search . '%');
-            })
-            ->whereNotIn('id', $sugeridos_id);
+            });
 
         $count = $query->count();
         $values = $query

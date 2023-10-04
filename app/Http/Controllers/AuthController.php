@@ -32,13 +32,13 @@ class AuthController extends Controller
 
             if (!$pessoa || !Hash::check($credencials['senha'], $pessoa->senha)) {
 
-                return response()->json(['success' => false, 'erro' => 'Usuário ou Senha inválidos!', 'message' => 'NOT FOUND'], 200);
+                return response()->json(['success' => false, 'erro' => 'Usuário ou Senha inválidos!', 'message' => 'NOT FOUND'], 401);
             }
             $token = auth()->login($pessoa);
 
             return response()->json(['success' => true, 'token' => $token, 'message' => 'LOGGED'], 200);
         } catch (JWTException $e) {
-            return response()->json(['success' => false, 'erro' => $th, 'message' => 'FAILED'], 500);
+            return response()->json(['success' => false, 'erro' => $th, 'message' => 'FAILED'], 401);
         }
     }
 
@@ -48,7 +48,6 @@ class AuthController extends Controller
         $logout = auth()->logout();
         return response()->json(['success' => true, 'token' => $logout, 'message' => 'LOGGED'], 200);
     }
-
 
     public function check(Request $request)
     {
@@ -81,7 +80,10 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'success' => true, 'data' => $userDatas, 'roles' => $roles, 'permissions' => array_keys($permissions)
+            'success' => true,
+            'data' => $userDatas,
+            'roles' => $roles,
+            'permissions' => array_keys($permissions)
         ], 200);
     }
 }

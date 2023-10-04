@@ -45,20 +45,33 @@ class AlunoController extends Controller
     }
 
 
-    public function getAtivExtraSugeridos()
+    public function getAtivExtraSugeridos(Request $request)
     {
         $roleResult = $this->checkRole('Aluno');
         if ($roleResult !== null) {
             return $roleResult;
         }
 
-        $user = auth()->user();
-        $ativExtra = $user->aluno->ativExtraSugeridos;
-        return response()->json(['success' => true, 'data' => $ativExtra]);
+        $page = $request->query('page', 0);
+        $limit = $request->query('limit', 10);
+        $search = $request->query('search', null);
+        $sortColumn = $request->query('sortColumn', null);
+        $sortOrder = $request->query('sortOrder', null);
+        $tipo = $request->query('tipo', '');
+
+        $ativExtra = $this->aluno->getAtivExtraSugerido($page, $limit, $search, $sortColumn, $sortOrder, $tipo);
+
+        $ativExtra = $sortOrder == 'asc'
+            ? $ativExtra->sortBy($sortColumn)
+            : $ativExtra->sortByDesc($sortColumn);
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $ativExtra->slice($page * $limit, $limit)->values(),
+            'count' => $ativExtra->count()
+        ], 200);
     }
-
-
-
 
 
     public function getNotas(Request $request, $id)

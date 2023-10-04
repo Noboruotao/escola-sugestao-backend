@@ -71,7 +71,13 @@ class Aluno extends Model
 
     public function ativExtraSugeridos()
     {
-        return $this->morphedByMany(AtividadeExtra::class, 'sugerido', 'sugeridos', 'aluno_id', 'sugerido_id');
+        return $this->morphedByMany(
+            AtividadeExtra::class,
+            'sugerido',
+            'sugeridos',
+            'aluno_id',
+            'sugerido_id'
+        )->with('tipo');
     }
 
 
@@ -127,6 +133,21 @@ class Aluno extends Model
                 return $query->filter(function ($curso) use ($search) {
                     return stripos($curso['nome'], $search) !== false ||
                         stripos($curso['descricao'], $search) !== false;
+                });
+            });
+    }
+
+    public function getAtivExtraSugerido($page, $limit, $search, $sortColumn, $sortOrder, $tipo)
+    {
+        $user = auth()->user();
+        return $user->aluno->ativExtraSugeridos
+            ->when($tipo != '', function ($query) use ($tipo) {
+                return $query->where('tipo_id', $tipo);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->filter(function ($ativ) use ($search) {
+                    return stripos($ativ['nome'], $search) !== false ||
+                        stripos($ativ['descricao'], $search) !== false;
                 });
             });
     }

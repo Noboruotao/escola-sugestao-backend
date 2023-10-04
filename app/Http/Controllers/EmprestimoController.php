@@ -7,17 +7,16 @@ use App\Models\Emprestimo;
 
 class EmprestimoController extends Controller
 {
-    public function __construct(Acervo $acervo, Emprestimo $emprestimo)
+    public function __construct(Emprestimo $emprestimo)
     {
         $this->middleware('auth:api', ['except' => []]);
-        $this->acervo = $acervo;
         $this->emprestimo = $emprestimo;
     }
 
 
     public function createEmprestimo(Request $request)
     {
-        $roleResult = $this->checkRole('Bibliotecario');
+        $roleResult = $this->checkRole('Bibliotecário');
         if ($roleResult !== null) {
             return $roleResult;
         }
@@ -32,7 +31,7 @@ class EmprestimoController extends Controller
 
     public function makeDevolucao(Request $request)
     {
-        $roleResult = $this->checkRole('Bibliotecario');
+        $roleResult = $this->checkRole('Bibliotecário');
         if ($roleResult !== null) {
             return $roleResult;
         }
@@ -43,7 +42,7 @@ class EmprestimoController extends Controller
 
     public function listEmprestimos(Request $request)
     {
-        $roleResult = $this->checkRole('Bibliotecario');
+        $roleResult = $this->checkRole('Bibliotecário');
         if ($roleResult !== null) {
             return $roleResult;
         }

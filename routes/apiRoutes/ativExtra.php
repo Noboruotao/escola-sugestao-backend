@@ -2,4 +2,6 @@
 
 use App\Http\Controllers\AtividadeExtracurricularController;
 
-Route::get('getAtivExtra', [AtividadeExtracurricularController::class, 'getAtivExtras']);
+Route::get('getAtivExtraTipo', [AtividadeExtracurricularController::class, 'getAtivExtraTipo']);
+Route::get('getAtivExtras', [AtividadeExtracurricularController::class, 'getAtivExtras']);
+Route::get('getAtivExtraDetail/{id}', [AtividadeExtracurricularController::class, 'getAtivExtraDetail']);
