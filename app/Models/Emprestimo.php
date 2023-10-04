@@ -18,7 +18,7 @@ class Emprestimo extends Model
         'data_emprestimo',
         'data_devolucao'
     ];
-    
+
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -142,5 +142,12 @@ class Emprestimo extends Model
                 $multaData
             );
         }
+    }
+
+    public function getUserEmprestimos()
+    {
+        return self::where('leitor_id', auth()->user()->id)
+            ->whereNull('data_devolucao')
+            ->get();
     }
 }

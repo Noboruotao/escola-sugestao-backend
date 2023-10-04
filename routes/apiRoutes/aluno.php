@@ -11,7 +11,3 @@ Route::get('/getDisciplinasEmAndamento', [AlunoController::class, 'getDisciplina
 Route::get('/getNotas/{id}', [AlunoController::class, 'getNotas']);
 
 
-// Route::get('/getDisciplinaNotas/{id}', [AlunoController::class, 'getDisciplinaNotas']);
-
-
-// Route::get('/getClasseNotas', [AlunoController::class, 'getClasseNotas']);

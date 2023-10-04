@@ -15,7 +15,7 @@ class Disciplina extends Model
         'created_at',
         'updated_at',
     ];
-    
+
     public function alunos()
     {
         return $this->belongsToMany(Aluno::class, 'aluno_Disciplina')
@@ -50,9 +50,8 @@ class Disciplina extends Model
 
     public function getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder)
     {
-        $query = self::offset($page * $pageSize)
-            ->with('periodo')
-            ->limit($pageSize)
+        $query = self::with('periodo')
+
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%');
             })
@@ -61,7 +60,12 @@ class Disciplina extends Model
             });
 
 
-        return ['values' => $query->get(), 'count' => $query->count()];
+        return [
+            'count' => $query->count(),
+            'values' => $query->offset($page * $pageSize)
+                ->limit($pageSize)
+                ->get()
+        ];
     }
     public function getDisciplina($id)
     {

@@ -98,7 +98,7 @@ class Acervo extends Model
     }
 
 
-    public static function getAcervo($acervo_id)
+    public function getAcervo($acervo_id)
     {
         return self::with([
             'autor:id,nome',
@@ -113,9 +113,10 @@ class Acervo extends Model
     }
 
 
-    public static function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn = 'id', $sortOrder = 'asc', $search = null)
+    public function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn = 'id', $sortOrder = 'asc', $search = null)
     {
-        $query = self::with(['autor:id,nome'])
+        $query = self::select(['id', 'titulo', 'subtitulo', 'resumo','capa', 'autor_id'])
+            ->with(['autor:id,nome'])
             ->when($search, function ($query, $search) {
                 return $query->where(function ($query) use ($search) {
                     $query->where('titulo', 'like', '%' . $search . '%')
@@ -146,7 +147,7 @@ class Acervo extends Model
 
 
 
-    public static function createCapa($acervo, $file)
+    public function createCapa($acervo, $file)
     {
         try {
             $path = $file->store('capas', 'local');
@@ -166,7 +167,7 @@ class Acervo extends Model
     }
 
 
-    public static function createAcervo($data)
+    public function createAcervo($data)
     {
         return self::create($data);
     }
@@ -175,7 +176,7 @@ class Acervo extends Model
 
 
 
-    public static function getAcervosBySituacao($situacao_id, $offset, $limit)
+    public function getAcervosBySituacao($situacao_id, $offset, $limit)
     {
         return self::where('situacao_id', $situacao_id)
             ->offset($offset)
@@ -183,7 +184,7 @@ class Acervo extends Model
             ->get();
     }
 
-    public static function getAllAcervoLength($search = null)
+    public function getAllAcervoLength($search = null)
     {
         return self::whereNotIn('situacao_id', [
             AcervoSituacao::EM_PROCESSAMENTO_TECNICO,

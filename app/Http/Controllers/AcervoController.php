@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\Storage;
 
 class AcervoController extends Controller
 {
-    public function __construct()
+    public function __construct(Acervo $acervo)
     {
-        $this->middleware('auth:api', ['except' => ['getCapa']]);
+        $this->middleware('auth:api', ['except' => ['getCapa', 'listAcervos']]);
+        $this->acervo = $acervo;
     }
 
 
@@ -25,7 +26,7 @@ class AcervoController extends Controller
         $sortOrder = $request->input('sortOrder');
         $search = $request->query('search', null);
 
-        $resp = Acervo::getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search);
+        $resp = $this->acervo->getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search);
 
         $responseData = [
             'success' => true,
@@ -40,7 +41,7 @@ class AcervoController extends Controller
     public function getAcervo(Request $request)
     {
         $acervo_id = $request->acervo_id;
-        return response()->json(['success' => true, 'data' => Acervo::getAcervo($acervo_id)], 200);
+        return response()->json(['success' => true, 'data' => $this->acervo->getAcervo($acervo_id)], 200);
     }
 
 
@@ -69,9 +70,9 @@ class AcervoController extends Controller
             'edicao' => $request->input('edicao'),
             'data_aquisicao' => $request->input('data_aquisicao'),
         ];
-        $acervo = Acervo::createAcervo($data);
+        $acervo = $this->acervo->createAcervo($data);
 
-        $capa = $request->hasFile('capa') ? Acervo::createCapa($acervo, $request->file('capa')) : '';
+        $capa = $request->hasFile('capa') ? $this->acervo->createCapa($acervo, $request->file('capa')) : '';
         $acervo->capa = $capa;
         $acervo->save();
 
@@ -83,7 +84,7 @@ class AcervoController extends Controller
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => Acervo::getAcervosBySituacao($id, $page, $limit)]);
+        return response()->json(['success' => true, 'data' => $this->acervo->getAcervosBySituacao($id, $page, $limit)]);
     }
 
 
@@ -112,6 +113,6 @@ class AcervoController extends Controller
     {
         $search = $request->query('search', null);
 
-        return response()->json(['success' => true, 'data' => Acervo::getAllAcervoLength($search)]);
+        return response()->json(['success' => true, 'data' => $this->acervo->getAllAcervoLength($search)]);
     }
 }

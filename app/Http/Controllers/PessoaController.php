@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pessoa;
+use App\Models\Emprestimo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -11,10 +12,11 @@ use Illuminate\Support\Facades\Storage;
 
 class PessoaController extends Controller
 {
-    public function __construct(Pessoa $pessoa)
+    public function __construct(Pessoa $pessoa, Emprestimo $emprestimo)
     {
         $this->middleware('auth:api', ['except' => []]);
         $this->pessoa = $pessoa;
+        $this->emprestimo = $emprestimo;
     }
 
 
@@ -48,5 +50,15 @@ class PessoaController extends Controller
         } catch (\Throwable $th) {
             return response()->make($th->getMessage(), 404);
         }
+    }
+
+    public function getAcervosEmprestados()
+    {
+        $emprestimo = $this->emprestimo->getUserEmprestimos();
+
+        return response()->json([
+            'success' => true,
+            'data' => $emprestimo,
+        ]);
     }
 }

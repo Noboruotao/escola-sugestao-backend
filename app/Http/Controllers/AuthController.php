@@ -18,7 +18,6 @@ class AuthController extends Controller
 {
     public function __construct(Pessoa $pessoa)
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
         $this->pessoa = $pessoa;
     }
 
