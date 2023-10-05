@@ -14,7 +14,7 @@ class Classe extends Model
         'disciplina_id',
         'ativo'
     ];
-    
+
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -79,7 +79,10 @@ class Classe extends Model
     {
         $classe = self::find($id);
         if (!$classe) {
-            return response()->json(['success' => false, 'message' => 'Valor Inválido'], 400);
+            return response()->json([
+                'success' => false,
+                'message' => 'Valor Inválido'
+            ], 404);
         }
 
         $alunos = Pessoa::select(['nome', 'id'])
@@ -98,6 +101,26 @@ class Classe extends Model
 
     public function getClasseDetail($classe_id)
     {
-        return self::with(['disciplina', 'professor.pessoa'])->where('id', $classe_id)->first();
+        $info = self::with([
+            'disciplina',
+            'professor.pessoa'
+        ])
+            ->where('id', $classe_id)
+            // ->where('professor_id', auth()->user()->id)
+            ->first();
+
+        return $info ? response()->json(
+            [
+                'success' => true,
+                'data' => $info
+            ],
+            200
+        ) : response()->json(
+            [
+                'success' => false,
+                'message' => 'Classe Não Encontrado'
+            ],
+            404
+        );
     }
 }

@@ -42,7 +42,6 @@ class ClasseController extends Controller
 
     public function getClasseDetail(Request $request, $id)
     {
-        $resposta = $this->classe->getClasseDetail($id);
-        return response()->json(['success' => true, 'data' => $resposta]);
+        return $this->classe->getClasseDetail($id);
     }
 }

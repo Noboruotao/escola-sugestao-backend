@@ -26,7 +26,7 @@ class Emprestimo extends Model
 
     public function multa()
     {
-        return $this->morphOne(Multa::class, 'multas');
+        return $this->morphOne(Multa::class, 'multa');
     }
 
 
@@ -47,8 +47,9 @@ class Emprestimo extends Model
         return $this->hasOne(Pessoa::class, 'id', 'leitor_id');
     }
 
-    public function makeEmprestimo($bibliotecario_id, $acervo_id, $leitor_id)
+    public function makeEmprestimo($acervo_id, $leitor_id)
     {
+        $bibliotecario_id = auth()->user()->id;
         $emprestimo = self::create([
             'acervo_id' => $acervo_id,
             'bibliotecario_id' => $bibliotecario_id,
@@ -56,7 +57,7 @@ class Emprestimo extends Model
             'data_emprestimo' => Carbon::now()->format('Y-m-d'),
         ]);
 
-        Acervo::find($acervo_id)->update(['situacao_id' => 2]);
+        Acervo::find($acervo_id)->update(['situacao_id' => AcervoSituacao::EMPRESTADO]);
 
         if ($aluno = Aluno::find($leitor_id)) {
             $aluno->AttributeAlunoAreaByAcervo(Acervo::find($acervo_id));
@@ -67,24 +68,46 @@ class Emprestimo extends Model
 
     public function getEmprestimos($page = 0, $limit = null, $pendente = false)
     {
-        $emprestimos = self::orderBy('data_emprestimo', 'desc')
+        $query = self::select([
+            'id',
+            'data_emprestimo',
+            'leitor_id',
+            'acervo_id'
+        ])
+
+            ->orderBy('data_emprestimo', 'desc')
+            ->when($pendente, function ($query) {
+                return $query
+                    ->whereNull('data_devolucao');
+            });
+        $count = $query->count();
+
+        if ($count == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nenhum Empréstimo Encontrado'
+            ], 404);
+        }
+
+        $emprestimos = $query
             ->offset($page * $limit)
             ->limit($limit)
-            ->when($pendente, function ($query) {
-                return $query->whereNull('data_devolucao');
-            })
-            ->when(!auth()->user()->hasRole('Bibliotecário'), function ($query) {
-                return $query->where('leitor_id', auth()->user()->id);
-            })
             ->get();
 
         if ($pendente) {
             foreach ($emprestimos as $emprestimo) {
                 self::makeMulta($emprestimo);
             }
+            $emprestimos->load('multa:multa_id,mensagem,valor');
         }
+        $emprestimos->load('leitor:id,nome');
+        $emprestimos->load('acervo:id,titulo');
 
-        return $emprestimos;
+        return response()->json([
+            'success' => true,
+            'data' => $emprestimos,
+            'count' => $count
+        ], 200);
     }
 
 
@@ -92,7 +115,7 @@ class Emprestimo extends Model
     {
         $emprestimo = self::find($emprestimo_id);
         $emprestimo->update(['data_devolucao' => Carbon::now()->format('Y-m-d')]);
-        $emprestimo->acervo->update(['situacao_id' => 1]);
+        $emprestimo->acervo->update(['situacao_id' => AcervoSituacao::DISPONIVEL]);
 
         self::makeMulta($emprestimo);
 
@@ -122,15 +145,15 @@ class Emprestimo extends Model
 
     public function makeMulta(Emprestimo $emprestimo)
     {
-        $data_devolucao = \Carbon\Carbon::parse($emprestimo->data_devolucao);
-        $data_emprestimo = \Carbon\Carbon::parse($emprestimo->data_emprestimo);
+        $data_devolucao = Carbon::parse($emprestimo->data_devolucao);
+        $data_emprestimo = Carbon::parse($emprestimo->data_emprestimo);
 
         $daysInterval = $data_devolucao
             ? $data_devolucao->diffInDays($data_emprestimo)
             : now()->diffInDays($data_emprestimo);
 
-        if ($daysInterval > 14) {
-            $valorMulta = min($emprestimo->acervo->tipo->multa * $daysInterval, 100);
+        if ($daysInterval > config('parametros.dias_de_emprestimo_de_acervo')) {
+            $valorMulta = min($emprestimo->acervo->tipo->multa * $daysInterval, config('parametros.valor_maximo_da_multa_de_atraso_de_acervo'));
 
             $multaData = array_merge(
                 self::valueForsearchMulta($emprestimo),
