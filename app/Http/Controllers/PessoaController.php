@@ -61,4 +61,11 @@ class PessoaController extends Controller
             'data' => $emprestimo,
         ]);
     }
+
+    public function getPessoaListWithCpf(Request $request)
+    {
+        $search = $request->query('search', '');
+
+        return $this->pessoa->getPessoaListFilteredWithCpf($search);
+    }
 }

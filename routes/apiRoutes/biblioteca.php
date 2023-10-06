@@ -14,6 +14,8 @@ Route::get('getAcervo/{acervo_id}', [AcervoController::class, 'getAcervo']);
 Route::post('makeDevolucao', [EmprestimoController::class, 'makeDevolucao']);
 Route::get('listEmprestimos', [EmprestimoController::class, 'listEmprestimos']);
 
+Route::get('getEmprestimoDetail/{id}', [EmprestimoController::class, 'getEmprestimoDetail']);
+
 Route::get('listAutors', [AutorController::class, 'getAutors']);
 Route::get('getAutor/{id}', [AutorController::class, 'getAutor']);
 Route::post('createAutor', [AutorController::class, 'createAutor']);

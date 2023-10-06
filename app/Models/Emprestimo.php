@@ -66,20 +66,33 @@ class Emprestimo extends Model
     }
 
 
-    public function getEmprestimos($page = 0, $limit = null, $pendente = false)
-    {
+    public function getEmprestimos(
+        $page = 0,
+        $limit = null,
+        $search,
+        $pendente = false
+    ) {
         $query = self::select([
             'id',
             'data_emprestimo',
             'leitor_id',
             'acervo_id'
         ])
-
-            ->orderBy('data_emprestimo', 'desc')
+            ->orderByDesc('data_emprestimo')
             ->when($pendente, function ($query) {
-                return $query
-                    ->whereNull('data_devolucao');
+                return $query->whereNull('data_devolucao');
+            })
+            ->when(!$pendente, function ($query) {
+                return $query->whereNotNull('data_devolucao');
+            })
+            ->where(function ($query) use ($search) {
+                $query->whereHas('acervo', function ($sub_query) use ($search) {
+                    $sub_query->where('titulo', 'like', "%$search%");
+                })->orWhereHas('leitor', function ($sub_query) use ($search) {
+                    $sub_query->where('nome', 'like', "%$search%");
+                });
             });
+
         $count = $query->count();
 
         if ($count == 0) {
@@ -110,6 +123,16 @@ class Emprestimo extends Model
         ], 200);
     }
 
+
+    public function getEmprestimoDetal($id)
+    {
+        $emprestimo = self::where('id', $id)->with('acervo:id,titulo')->with('leitor:id,nome')->with('bibliotecario:id,nome')->with('multa:multa_id,mensagem,valor')->first();
+
+        if ($emprestimo->exists()) {
+            return response()->json(['succes' => true, 'data' => $emprestimo]);
+        }
+        return response()->json(['success' => false, 'message' => 'Emprestimo Não Encontrado.'], 404);
+    }
 
     public function makeDevolucao($emprestimo_id)
     {

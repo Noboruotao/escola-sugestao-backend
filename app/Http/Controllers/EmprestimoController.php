@@ -49,6 +49,13 @@ class EmprestimoController extends Controller
         $limit = $request->query('limit', 10);
         $pendente = $request->query('pendente', false);
         $pendente = $pendente == 'true' ? true : false;
-        return  $this->emprestimo->getEmprestimos($page, $limit, $pendente);
+        $search = $request->query('search', '');
+        return  $this->emprestimo->getEmprestimos($page, $limit, $search, $pendente);
+    }
+
+
+    public function getEmprestimoDetail(Request $request, $id)
+    {
+        return $this->emprestimo->getEmprestimoDetal($id);
     }
 }

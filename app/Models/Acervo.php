@@ -115,7 +115,7 @@ class Acervo extends Model
 
     public function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn = 'id', $sortOrder = 'asc', $search = null)
     {
-        $query = self::select(['id', 'titulo', 'subtitulo', 'resumo','capa', 'autor_id'])
+        $query = self::select(['id', 'titulo', 'subtitulo', 'resumo', 'capa', 'autor_id'])
             ->with(['autor:id,nome'])
             ->when($search, function ($query, $search) {
                 return $query->where(function ($query) use ($search) {
@@ -127,7 +127,12 @@ class Acervo extends Model
             ->orderBy($sortColumn, $sortOrder);
 
         if ($disponivel) {
-            $query->whereNotIn('situacao_id', [6, 7]);
+            $query->whereNotIn('situacao_id', [
+                AcervoSituacao::EM_PROCESSAMENTO_TECNICO,
+                AcervoSituacao::EM_MANUTENCAO,
+                AcervoSituacao::EXTRAVIADO,
+                AcervoSituacao::DESCARTADO
+            ]);
         }
 
         $query->with(['emprestimos' => function ($query) {
