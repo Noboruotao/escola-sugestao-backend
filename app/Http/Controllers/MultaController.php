@@ -27,4 +27,14 @@ class MultaController extends Controller
     {
         return $this->multa->getMulta($id);
     }
+
+
+    public function pagarMulta(Request $request, $id)
+    {
+        $roleResult = $this->checkPermission('multa.update');
+        if ($roleResult !== null) {
+            return $roleResult;
+        }
+        return $this->multa->pagarMulta($id);
+    }
 }

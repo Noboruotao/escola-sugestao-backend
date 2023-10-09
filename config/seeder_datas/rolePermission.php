@@ -338,7 +338,9 @@ return [
             'mensalidade.read',
             'mensalidade.create',
             'mensalidade.update',
-            'presenca.read'
+            'presenca.read',
+            'multa.update',
+
         ]
     ],
     [

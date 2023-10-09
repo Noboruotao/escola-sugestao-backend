@@ -108,4 +108,29 @@ class Multa extends Model
             'data' => $multa
         ], 200);
     }
+
+
+    public function pagarMulta($id)
+    {
+        $multa = self::find($id);
+        if (!$multa) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Multa Não Encontrada.'
+            ], 404);
+        }
+        if ($multa->pago != null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Multa Já Paga.'
+            ], 400);
+        }
+
+        $multa->update(['pago' => now()]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $multa,
+        ], 200);
+    }
 }

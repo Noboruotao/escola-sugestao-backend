@@ -13,6 +13,12 @@ class Controller extends BaseController
 
     protected function checkRole($role)
     {
+        if (!auth()->user()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuário Não Autenticado.'
+            ]);
+        }
         if (!auth()->user()->hasRole($role)) {
             return response()->json([
                 'success' => false,
@@ -25,6 +31,12 @@ class Controller extends BaseController
 
     protected function checkPermission($role)
     {
+        if (!auth()->user()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuário Não Autenticado.'
+            ]);
+        }
         if (!auth()->user()->can($role)) {
             return response()->json([
                 'success' => false,
@@ -33,15 +45,4 @@ class Controller extends BaseController
         }
         return null;
     }
-
-
-    // $permissionResult = $this->checkPermission('acervo.create');
-    // if ($permissionResult !== null) {
-    //     return $permissionResult;
-    // }
-    
-    // $roleResult = $this->checkRole('Aluno');
-    // if ($roleResult !== null) {
-    //     return $roleResult;
-    // }
 }

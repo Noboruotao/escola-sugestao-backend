@@ -126,7 +126,7 @@ class Emprestimo extends Model
 
     public function getEmprestimoDetal($id)
     {
-        $emprestimo = self::where('id', $id)->with('acervo:id,titulo')->with('leitor:id,nome')->with('bibliotecario:id,nome')->with('multa:multa_id,mensagem,valor')->first();
+        $emprestimo = self::where('id', $id)->with('acervo:id,titulo')->with('leitor:id,nome')->with('bibliotecario:id,nome')->with('multa:id,multa_id,mensagem,valor')->first();
 
         if ($emprestimo->exists()) {
             return response()->json(['succes' => true, 'data' => $emprestimo]);
