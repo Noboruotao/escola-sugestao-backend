@@ -83,3 +83,10 @@ Route::group([
 ], function ($router) {
     require __DIR__ . '/apiRoutes/classe.php';
 });
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'secretaria'
+], function ($router) {
+    require __DIR__ . '/apiRoutes/secretaria.php';
+});

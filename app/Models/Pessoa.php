@@ -129,6 +129,7 @@ class Pessoa extends Authenticatable implements JWTSubject
             ->orderBy('nome')
             ->where('nome', 'like', "%$search%")
             ->orWhere('cpf', 'like', "%$search%")
+            ->limit(50)
             ->get();
 
         if ($pessoasWithCpf->count() != 0) {

@@ -140,7 +140,10 @@ class Acervo extends Model
         }]);
 
         $totalResults = $query->count();
-        $results = $query->skip($page * $limit)->take($limit)->get();
+        $results = $query
+            ->skip($page * $limit)
+            ->take($limit)
+            ->get();
 
         return [
             'data' => $results->toArray(),
