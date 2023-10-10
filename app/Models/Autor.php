@@ -30,12 +30,21 @@ class Autor extends Model
     }
 
 
-    public function getAutors($offset, $limit)
+    public function getAutors($offset, $limit, $search)
     {
-        return Autor::offset($offset * $limit)
-            ->limit($limit)
+        $autors = self::where('nome', 'like', '%' . $search . '%')
+            ->when($limit, function ($query) use ($limit, $offset) {
+                return $query
+                    ->offset($offset * $limit)
+                    ->limit($limit);
+            })
             ->with('nacionalidade')
             ->get();
+        return response()->json([
+            'success' => true,
+            'data' => $autors,
+            'count' => self::count()
+        ]);
     }
 
 

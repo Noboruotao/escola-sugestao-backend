@@ -113,10 +113,14 @@ class Acervo extends Model
     }
 
 
-    public function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn = 'id', $sortOrder = 'asc', $search = null)
+    public function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn, $sortOrder, $search = null)
     {
-        $query = self::select(['id', 'titulo', 'subtitulo', 'resumo', 'capa', 'autor_id'])
+        $query = self::select(['id', 'titulo', 'subtitulo', 'resumo', 'capa', 'autor_id', 'situacao_id'])
             ->with(['autor:id,nome'])
+            ->with('situacao')
+            // ->with(['emprestimos' => function ($query) {
+            //     $query->whereNull('data_devolucao');
+            // }])
             ->when($search, function ($query, $search) {
                 return $query->where(function ($query) use ($search) {
                     $query->where('titulo', 'like', '%' . $search . '%')
@@ -135,20 +139,18 @@ class Acervo extends Model
             ]);
         }
 
-        $query->with(['emprestimos' => function ($query) {
-            $query->whereNull('data_devolucao');
-        }]);
-
         $totalResults = $query->count();
         $results = $query
             ->skip($page * $limit)
             ->take($limit)
             ->get();
 
-        return [
-            'data' => $results->toArray(),
+
+        return response()->json([
+            'success' => true,
+            'data' => $results,
             'count' => $totalResults
-        ];
+        ], 200);
     }
 
 

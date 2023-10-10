@@ -17,8 +17,9 @@ class CategoriaController extends Controller
     public function getCategorias(Request $request)
     {
         $page = $request->query('page', 0);
-        $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => $this->categoria->getCategorias($page, $limit)]);
+        $limit = $request->query('limit', null);
+        $search = $request->query('search', '');
+        return $this->categoria->getCategorias($page, $limit, $search);
     }
 
 

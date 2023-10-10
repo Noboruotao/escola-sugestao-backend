@@ -22,19 +22,11 @@ class AcervoController extends Controller
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        $sortColumn = $request->input('sortColumn');
-        $sortOrder = $request->input('sortOrder');
+        $sortColumn = $request->query('sortColumn', 'id');
+        $sortOrder = $request->query('sortOrder', 'asc');
         $search = $request->query('search', null);
 
-        $resp = $this->acervo->getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search);
-
-        $responseData = [
-            'success' => true,
-            'data' => $resp['data'],
-            'count' => $resp['count']
-        ];
-
-        return response()->json($responseData, 200);
+        return $this->acervo->getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search);
     }
 
 

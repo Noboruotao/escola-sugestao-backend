@@ -3,7 +3,12 @@
 use App\Http\Controllers\AcervoController;
 use App\Http\Controllers\AutorController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\EditoraController;
 use App\Http\Controllers\EmprestimoController;
+use App\Http\Controllers\EstadoAcervoController;
+use App\Http\Controllers\IdiomaController;
+use App\Http\Controllers\SituacaoAcervoController;
+use App\Http\Controllers\TipoAcervoController;
 
 Route::get('listAcervos', [AcervoController::class, 'listAcervos']);
 Route::post('createEmprestimo', [EmprestimoController::class, 'createEmprestimo']);
@@ -29,4 +34,14 @@ Route::delete('deleteCategoria/{id}', [CategoriaController::class, 'deleteCatego
 
 Route::get('getCapa/{capa}', [AcervoController::class, 'getCapa']);
 
-Route::get('getAcervoLength', [AcervoController::class, 'getAllAcervoLength']);
+Route::get('listEditora', [EditoraController::class, 'listEditora']);
+
+
+Route::get('listIdiomas', [IdiomaController::class, 'listIdiomas']);
+
+
+Route::get('listAcervoTipo', [TipoAcervoController::class, 'listAcervoTipo']);
+
+Route::get('listSituacao', [SituacaoAcervoController::class, 'listSituacao']);
+
+Route::get('listEstado', [EstadoAcervoController::class, 'listEstado']);

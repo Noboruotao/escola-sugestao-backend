@@ -27,4 +27,22 @@ class Editora extends Model
     {
         return $this->hasMany(Acervo::class, 'editora_id');
     }
+
+    function listEditoras($page, $limit, $search)
+    {
+        $editoras = self::select(['id', 'nome'])
+            ->where('nome', 'like', '%' . $search . '%')
+            ->offset($page * $limit)
+            ->limit($limit)
+            ->get();
+
+        return response()->json(
+
+            [
+                'success' => true,
+                'data' => $editoras,
+                'count' => self::count()
+            ]
+        );
+    }
 }

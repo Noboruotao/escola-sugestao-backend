@@ -20,12 +20,21 @@ class Categoria extends Model
     }
 
 
-    public function getCategorias($offset = 0, $limit = null)
+    public function getCategorias($offset, $limit, $search)
     {
-        return Categoria::orderBy('categoria')
-            ->offset($offset)
-            ->limit($limit)
+        $categorias = self::orderBy('categoria')
+            ->when($limit, function ($query) use ($limit, $offset) {
+                return $query->offset($offset * $limit)
+                    ->limit($limit);
+            })
+            ->where('categoria', 'like', '%' . $search . '%')
             ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $categorias,
+            'count' => self::count()
+        ]);
     }
 
 

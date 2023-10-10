@@ -11,5 +11,21 @@ class Idioma extends Model
 
     protected $fillable = ['idioma'];
 
-    
+
+    function listIdiomas($page, $limit, $search)
+    {
+        $idiomas = self::where('idioma', 'like', '%' . $search . '%')
+            ->when($limit, function ($query) use ($limit, $page) {
+                return $query
+                    ->offset($page * $limit)
+                    ->limit($limit);
+            })
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $idiomas,
+            'count' => self::count()
+        ]);
+    }
 }

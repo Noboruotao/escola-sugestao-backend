@@ -18,7 +18,9 @@ class AutorController extends Controller
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => $this->autor->getAutors($page, $limit)]);
+        $search = $request->query('search', '');
+        
+        return  $this->autor->getAutors($page, $limit, $search);
     }
 
 

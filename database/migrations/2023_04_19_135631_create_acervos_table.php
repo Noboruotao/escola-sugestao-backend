@@ -118,12 +118,15 @@ class CreateAcervosTable extends Migration
                                 ->onDelete('cascade');
                         $table->string('IBNS', 21)
                                 ->nullable();
-                        $table->string('ano_publicacao', 4);
+                        $table->string('ano_publicacao', 4)
+                                ->nullable();
                         $table->string('capa')
                                 ->nullable()
                                 ->default(null);
-                        $table->string('edicao');
-                        $table->date('data_aquisicao');
+                        $table->string('edicao')
+                                ->nullable();
+                        $table->date('data_aquisicao')->nullable();
+
                         $table->timestamps();
                 });
 

@@ -52,6 +52,9 @@ class Multa extends Model
         ])
             ->orderByDesc("created_at")
             ->with('pessoa:id,nome')
+            ->when(auth()->user()->hasRole(['Aluno', 'Professor']), function ($query) {
+                return $query->where('pessoa_id', auth()->user()->id);
+            })
             ->when($pago, function ($query) {
                 return $query->whereNotNull('pago');
             })
@@ -93,6 +96,9 @@ class Multa extends Model
     {
 
         $multa = self::with('pessoa:id,nome,email,telefone_1,telefone_2,foto')
+            ->when(auth()->user()->hasRole(['Aluno', 'Professor']), function ($query) {
+                return $query->where('pessoa_id', auth()->user()->id);
+            })
             ->find($id);
 
         if (!$multa) {
