@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Acervo;
 
 class Categoria extends Model
@@ -22,13 +23,18 @@ class Categoria extends Model
 
     public function getCategorias($offset, $limit, $search)
     {
-        $categorias = self::orderBy('categoria')
-            ->when($limit, function ($query) use ($limit, $offset) {
-                return $query->offset($offset * $limit)
-                    ->limit($limit);
-            })
-            ->where('categoria', 'like', '%' . $search . '%')
-            ->get();
+        if (Cache::get('acervoCategoria') && !$limit) {
+            $categorias = Cache::get('acervoCategoria');
+        } else {
+            $categorias = self::orderBy('categoria')
+                ->when($limit, function ($query) use ($limit, $offset) {
+                    return $query->offset($offset * $limit)
+                        ->limit($limit);
+                })
+                ->where('categoria', 'like', '%' . $search . '%')
+                ->get();
+            Cache::put('acervoCategoria', $categorias, now()->addMinutes(30));
+        }
 
         return response()->json([
             'success' => true,

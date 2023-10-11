@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class AcervoTipo extends Model
 {
@@ -25,13 +26,18 @@ class AcervoTipo extends Model
 
     function listAcervoTipos($page, $limit, $search)
     {
-        $acervoTipos = self::where('tipo', 'like', '%' . $search . '%')
-            ->when($limit, function ($query) use ($page, $limit) {
-                return $query
-                    ->offset($page * $limit)
-                    ->limit($limit);
-            })
-            ->get();
+        if (Cache::get('acervoTipos')) {
+            $acervoTipos = Cache::get('acervoTipos');
+        } else {
+            $acervoTipos = self::where('tipo', 'like', '%' . $search . '%')
+                ->when($limit, function ($query) use ($page, $limit) {
+                    return $query
+                        ->offset($page * $limit)
+                        ->limit($limit);
+                })
+                ->get();
+            Cache::put('acervoTipos', $acervoTipos, now()->addMinutes(30));
+        }
 
         return response()->json([
             'success' => true,
