@@ -21,6 +21,12 @@ class Endereco extends Model
         'complemento'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
     public function pessoas()
     {
         return $this->belongsToMany(Pessoa::class);

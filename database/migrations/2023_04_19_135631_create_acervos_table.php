@@ -44,7 +44,6 @@ class CreateAcervosTable extends Migration
                         $table->string('ano_falecimento', 4)
                                 ->nullable();
                 });
-                \Database\Factories\AcervoFactory::createAutor(50);
 
 
                 schema::create('editoras', function (Blueprint $table) {
@@ -56,7 +55,6 @@ class CreateAcervosTable extends Migration
                         $table->foreignId('endereco_id')
                                 ->constrained('enderecos');
                 });
-                \Database\Factories\AcervoFactory::createEditoras();
 
 
                 Schema::create('situacao_acervo', function (Blueprint $table) {
@@ -94,7 +92,8 @@ class CreateAcervosTable extends Migration
                         $table->string('titulo');
                         $table->string('subtitulo');
                         $table->text('resumo');
-                        $table->string('tradutor');
+                        $table->string('tradutor')
+                                ->nullable();
                         $table->foreignId('autor_id')
                                 ->constrained('autors')
                                 ->onDelete('cascade');
@@ -125,7 +124,8 @@ class CreateAcervosTable extends Migration
                                 ->default(null);
                         $table->string('edicao')
                                 ->nullable();
-                        $table->date('data_aquisicao')->nullable();
+                        $table->date('data_aquisicao')
+                                ->nullable();
 
                         $table->timestamps();
                 });

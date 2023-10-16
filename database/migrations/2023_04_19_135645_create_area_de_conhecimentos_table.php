@@ -27,7 +27,6 @@ class CreateAreaDeConhecimentosTable extends Migration
                         $table->timestamps();
                 });
                 \App\Models\AreaConhecimento::insert(config('seeder_datas.CDU'));
-                Factories\AcervoFactory::createAcervo();
 
 
 
@@ -77,9 +76,7 @@ class CreateAreaDeConhecimentosTable extends Migration
                         $table->string('model_id');
                         $table->string('model_type');
                 });
-                Factories\AcervoFactory::attributeAcervoAreas();
                 Factories\AreaFactory::attributeAreaAtviExtra();
-                
 
                 Factories\AreaFactory::attributeAreaDisciplina();
                 Factories\AreaFactory::generateCursoSugestao();

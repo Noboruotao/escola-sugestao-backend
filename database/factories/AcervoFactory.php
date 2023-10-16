@@ -33,6 +33,10 @@ class AcervoFactory extends Factory
     {
         dump('Starting Acervo seeding');
 
+        self::createAutor(50);
+        self::createEditoras();
+        self::createAcervo();
+        self::attributeAcervoAreas();
         self::generateEmprestimos();
     }
 

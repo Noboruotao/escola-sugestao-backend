@@ -20,7 +20,7 @@ class Editora extends Model
 
     public function endereco()
     {
-        return $this->hasOne(endereco::class);
+        return $this->belongsTo(endereco::class);
     }
 
     public function acervos()
@@ -44,5 +44,21 @@ class Editora extends Model
                 'count' => self::count()
             ]
         );
+    }
+
+    function getEditoraById($id)
+    {
+        $editora = self::with('endereco')->find($id);
+
+        if (!$editora) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Editora Não Encontrada.'
+            ], 404);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $editora
+        ]);
     }
 }

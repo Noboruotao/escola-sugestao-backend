@@ -35,6 +35,7 @@ Route::delete('deleteCategoria/{id}', [CategoriaController::class, 'deleteCatego
 Route::get('getCapa/{capa}', [AcervoController::class, 'getCapa']);
 
 Route::get('listEditora', [EditoraController::class, 'listEditora']);
+Route::get('getEditora/{id}', [EditoraController::class, 'getEditoraById']);
 
 
 Route::get('listIdiomas', [IdiomaController::class, 'listIdiomas']);

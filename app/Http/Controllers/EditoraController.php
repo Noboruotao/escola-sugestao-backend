@@ -19,7 +19,11 @@ class EditoraController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-
         return $this->editora->listEditoras($page, $limit, $search);
+    }
+
+    function getEditoraById(Request $request, $id)
+    {
+        return $this->editora->getEditoraById($id);
     }
 }

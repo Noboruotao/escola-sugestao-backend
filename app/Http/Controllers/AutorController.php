@@ -19,14 +19,15 @@ class AutorController extends Controller
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
-        
+
         return  $this->autor->getAutors($page, $limit, $search);
     }
 
 
     public function getAutor(Request $request, $id)
     {
-        return response()->json(['success' => true, 'data' => $this->autor->getAutorById($id)]);
+        $com_acervos = $request->query('comAcervos', false);
+        return $this->autor->getAutorById($id, $com_acervos);
     }
 
 

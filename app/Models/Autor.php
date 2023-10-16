@@ -48,10 +48,22 @@ class Autor extends Model
     }
 
 
-    public function getAutorById($id)
+    public function getAutorById($id, $com_acervos = false)
     {
-        return Autor::with('acervos')
+
+        $autor = Autor::when($com_acervos, function ($query) {
+            return $query->with('acervos');
+        })
             ->find($id);
+
+        if (!$autor) {
+            return response()->json(['success' => false, 'message' => 'Autor Não Encontrado'], 404);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'data' => $autor
+        ], 200);
     }
 
 
