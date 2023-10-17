@@ -60,15 +60,14 @@ class AcervoController extends Controller
             'IBNS' => $request->input('IBNS'),
             'ano_publicacao' => $request->input('ano_publicacao'),
             'edicao' => $request->input('edicao'),
-            'data_aquisicao' => $request->input('data_aquisicao'),
+            // 'data_aquisicao' => $request->input('data_aquisicao'),
         ];
-        $acervo = $this->acervo->createAcervo($data);
 
-        $capa = $request->hasFile('capa') ? $this->acervo->createCapa($acervo, $request->file('capa')) : '';
-        $acervo->capa = $capa;
-        $acervo->save();
+        $capa = $request->hasFile('capa')
+            ? $request->file('capa')
+            : null;
 
-        return response()->json(['success' => true, 'data' => $acervo]);
+        return $this->acervo->createAcervo($data, $capa);
     }
 
 
@@ -106,5 +105,11 @@ class AcervoController extends Controller
         $search = $request->query('search', null);
 
         return response()->json(['success' => true, 'data' => $this->acervo->getAllAcervoLength($search)]);
+    }
+
+
+    public function getAcervoParametros()
+    {
+        return $this->acervo->getAcervoParametros();
     }
 }

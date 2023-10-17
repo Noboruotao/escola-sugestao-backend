@@ -10,6 +10,18 @@ class AcervoTipo extends Model
 {
     use HasFactory;
 
+
+    public const LIVRO = 1;
+    public const PERIODICOS = 2;
+    public const TESE_DISERTACAO = 3;
+    public const CD_DVD = 4;
+    public const MAPA_ATLAS = 5;
+    public const ARQUIVOS_DIGITAIS = 6;
+    public const ACERVO_INFANTIL = 7;
+    public const ACERVO_REFERENCIA = 8;
+    public const COLECAO_ESPECIAL = 9;
+
+
     protected $table = 'tipo_acervo';
     protected $fillable = ['tipo', 'multa'];
 

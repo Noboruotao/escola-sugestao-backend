@@ -18,7 +18,7 @@ class AcervoEstado extends Model
         'updated_at'
     ];
 
-    function listEstado($page, $limit, $search)
+    function listEstado($page = 0, $limit = null, $search = '')
     {
 
         $estados = self::where('estado', 'like', '%' . $search . '%')

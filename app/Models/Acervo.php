@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class Acervo extends Model
 {
@@ -154,12 +155,36 @@ class Acervo extends Model
     }
 
 
+    function getAcervoParametros()
+    {
+
+        if (Cache::get('acervoParametros')) {
+            return Cache::get('acervoParametros');
+        }
+
+        $response = response()->json([
+            'success' => true,
+            'estados' => AcervoEstado::get(),
+            'categorias' => Categoria::get(),
+            'tipos' => acervoTipo::get(),
+            'situacoes' => AcervoSituacao::get(),
+            'idiomas' => Idioma::get(),
+
+        ]);
+
+        Cache::put('acervoParametros', $response);
+        return $response;
+    }
 
 
-
-    public function createCapa($acervo, $file)
+    public static function createCapa($acervo, $file)
     {
         try {
+
+            if (!$file) {
+                return config('seeder_datas.acervoCapa.' . $acervo->tipo_id);
+            }
+
             $path = $file->store('capas', 'local');
 
             $filename = pathinfo($path, PATHINFO_FILENAME);
@@ -177,13 +202,48 @@ class Acervo extends Model
     }
 
 
-    public function createAcervo($data)
+    public function createAcervo($data, $capa)
     {
-        return self::create($data);
+        try {
+            $acervo = new Acervo();
+
+            $acervo->titulo  = $data['titulo'];
+            $acervo->subtitulo  = $data['subtitulo'];
+            $acervo->resumo  = $data['resumo'];
+            $acervo->tradutor = $data['tradutor'];
+            $acervo->autor_id  = $data['autor_id'];
+            $acervo->idioma_id  = $data['idioma_id'];
+            $acervo->editora_id  = $data['editora_id'];
+            $acervo->categoria_id = $data['categoria_id'];
+            $acervo->tipo_id = $data['tipo_id'];
+            $acervo->estado_id = $data['estado_id'];
+            $acervo->situacao_id  = $data['situacao_id'];
+            $acervo->IBNS = $data['IBNS'];
+            $acervo->ano_publicacao = $data['ano_publicacao'];
+            $acervo->edicao = $data['edicao'];
+            $acervo->data_aquisicao = now()->format('Y-m-d');
+            
+            
+            $acervo->capa = self::createCapa($acervo, $capa);
+            // dd($acervo);
+
+            $acervo->save();
+
+            return response()->json([
+                'success' => true,
+                'data' => $acervo
+            ]);
+        } catch (\Throwable $th) {
+            // throw $th;
+            error_log("Error: " . $th->getMessage());
+
+            // Print the error message as a response
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao Cadastrar Acervo: ' . $th->getMessage()
+            ], 400);
+        }
     }
-
-
-
 
 
     public function getAcervosBySituacao($situacao_id, $offset, $limit)
@@ -194,16 +254,16 @@ class Acervo extends Model
             ->get();
     }
 
-    public function getAllAcervoLength($search = null)
-    {
-        return self::whereNotIn('situacao_id', [
-            AcervoSituacao::EM_PROCESSAMENTO_TECNICO,
-            AcervoSituacao::EM_MANUTENCAO,
-            AcervoSituacao::EXTRAVIADO,
-            AcervoSituacao::DESCARTADO
-        ])
-            ->when($search, function ($query, $search) {
-                return $query->where('titulo', 'like', '%' . $search . '%');
-            })->count();
-    }
+    // public function getAllAcervoLength($search = null)
+    // {
+    //     return self::whereNotIn('situacao_id', [
+    //         AcervoSituacao::EM_PROCESSAMENTO_TECNICO,
+    //         AcervoSituacao::EM_MANUTENCAO,
+    //         AcervoSituacao::EXTRAVIADO,
+    //         AcervoSituacao::DESCARTADO
+    //     ])
+    //         ->when($search, function ($query, $search) {
+    //             return $query->where('titulo', 'like', '%' . $search . '%');
+    //         })->count();
+    // }
 }

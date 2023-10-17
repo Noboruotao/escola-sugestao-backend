@@ -12,6 +12,7 @@ use App\Http\Controllers\TipoAcervoController;
 
 Route::get('listAcervos', [AcervoController::class, 'listAcervos']);
 Route::post('createEmprestimo', [EmprestimoController::class, 'createEmprestimo']);
+Route::get('getAcervoParametros', [AcervoController::class, 'getAcervoParametros']);
 
 Route::post('createAcervo', [AcervoController::class, 'createAcervo']);
 Route::get('getAcervo/{acervo_id}', [AcervoController::class, 'getAcervo']);
