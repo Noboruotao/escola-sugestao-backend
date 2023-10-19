@@ -124,9 +124,14 @@ class Emprestimo extends Model
     }
 
 
-    public function getEmprestimoDetal($id)
+    public function getEmprestimoDetail($id)
     {
-        $emprestimo = self::where('id', $id)->with('acervo:id,titulo')->with('leitor:id,nome')->with('bibliotecario:id,nome')->with('multa:id,multa_id,mensagem,valor')->first();
+        $emprestimo = self::where('id', $id)
+            ->with('acervo:id,titulo')
+            ->with('leitor:id,nome')
+            ->with('bibliotecario:id,nome')
+            ->with('multa:id,multa_id,mensagem,valor')
+            ->first();
 
         if ($emprestimo->exists()) {
             return response()->json(['succes' => true, 'data' => $emprestimo]);
@@ -192,8 +197,39 @@ class Emprestimo extends Model
 
     public function getUserEmprestimos()
     {
-        return self::where('leitor_id', auth()->user()->id)
+        $emprestimos = self::where('leitor_id', auth()->user()->id)
+            ->with('acervo:id,titulo')
+            ->orderBy('data_emprestimo')
             ->whereNull('data_devolucao')
             ->get();
+
+        foreach ($emprestimos as $emprestimo) {
+            $data_devolucao = Carbon::parse($emprestimo->data_emprestimo)
+                ->addDays(config('parametros.dias_de_emprestimo_de_acervo'));
+            $emprestimo->data_devolucao = $data_devolucao->format('d/m/Y');
+
+            $emprestimo->color = ($data_devolucao->isBefore(Carbon::now())) ? 'red' : 'green';
+            // $emprestimo->color = 'red';
+        }
+
+        if ($emprestimos->count() == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Emprestimo Não Encontrado'
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $emprestimos
+        ]);
+    }
+
+    public function checkEmprestimosAtrasadosQnt()
+    {
+        $user = auth()->user();
+        return self::where('leitor_id', $user->id)
+            ->whereNull('data_devolucao')
+            ->whereDate('data_emprestimo', '<', Carbon::now()->subDays(14))
+            ->count();
     }
 }

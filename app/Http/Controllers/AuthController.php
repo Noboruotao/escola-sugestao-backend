@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Emprestimo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -16,9 +17,10 @@ use Spatie\Permission\Models\Permission;
 
 class AuthController extends Controller
 {
-    public function __construct(Pessoa $pessoa)
+    public function __construct(Pessoa $pessoa, Emprestimo $emprestimo)
     {
         $this->pessoa = $pessoa;
+        $this->emprestimo = $emprestimo;
     }
 
 
@@ -47,6 +49,12 @@ class AuthController extends Controller
         $logout = auth()->logout();
         return response()->json(['success' => true, 'token' => $logout, 'message' => 'LOGGED'], 200);
     }
+
+
+    private function checkNotification()
+    {
+    }
+
 
     public function check(Request $request)
     {
@@ -82,7 +90,8 @@ class AuthController extends Controller
             'success' => true,
             'data' => $userDatas,
             'roles' => $roles,
-            'permissions' => array_keys($permissions)
+            'permissions' => array_keys($permissions),
+            'emprestimos_atrasados' => $this->emprestimo->checkEmprestimosAtrasadosQnt()
         ], 200);
     }
 }

@@ -56,6 +56,11 @@ class EmprestimoController extends Controller
 
     public function getEmprestimoDetail(Request $request, $id)
     {
-        return $this->emprestimo->getEmprestimoDetal($id);
+        return $this->emprestimo->getEmprestimoDetail($id);
+    }
+
+    public function getUserEmprestimos()
+    {
+        return $this->emprestimo->getUserEmprestimos();
     }
 }

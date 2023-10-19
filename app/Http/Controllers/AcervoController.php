@@ -26,7 +26,7 @@ class AcervoController extends Controller
         $sortOrder = $request->query('sortOrder', 'asc');
         $search = $request->query('search', null);
 
-        return $this->acervo->getAcervoList($page, $limit, true, $sortColumn, $sortOrder, $search);
+        return $this->acervo->getAcervoList($page, $limit, auth()->user()->hasRole('Bibliotecário') ? false : true, $sortColumn, $sortOrder, $search);
     }
 
 

@@ -19,6 +19,7 @@ Route::get('getAcervo/{acervo_id}', [AcervoController::class, 'getAcervo']);
 
 Route::post('makeDevolucao', [EmprestimoController::class, 'makeDevolucao']);
 Route::get('listEmprestimos', [EmprestimoController::class, 'listEmprestimos']);
+Route::get('getUserEmprestimos', [EmprestimoController::class, 'getUserEmprestimos']);
 
 Route::get('getEmprestimoDetail/{id}', [EmprestimoController::class, 'getEmprestimoDetail']);
 

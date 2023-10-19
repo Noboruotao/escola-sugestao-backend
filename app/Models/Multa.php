@@ -41,6 +41,7 @@ class Multa extends Model
     {
 
         $pago = $pago === 'true';
+        $user = auth()->user();
         $query = self::select([
             'id',
             'mensagem',
@@ -52,8 +53,8 @@ class Multa extends Model
         ])
             ->orderByDesc("created_at")
             ->with('pessoa:id,nome')
-            ->when(auth()->user()->hasRole(['Aluno', 'Professor']), function ($query) {
-                return $query->where('pessoa_id', auth()->user()->id);
+            ->when($user->hasRole(['Aluno', 'Professor']), function ($query) use ($user)  {
+                return $query->where('pessoa_id',  $user->id);
             })
             ->when($pago, function ($query) {
                 return $query->whereNotNull('pago');
@@ -61,10 +62,10 @@ class Multa extends Model
             ->when(!$pago, function ($query) {
                 return $query->whereNull('pago');
             })
-            ->when(auth()->user()->hasRole('Bibliotecário'), function ($query) {
+            ->when($user->hasRole('Bibliotecário'), function ($query) {
                 return $query->where('multa_type', Emprestimo::class);
             })
-            ->when(auth()->user()->hasRole('Secretaria'), function ($query) {
+            ->when($user->hasRole('Secretaria'), function ($query) {
                 return $query->whereNot('multa_type', Emprestimo::class);
             });
 
@@ -94,10 +95,10 @@ class Multa extends Model
 
     public function getMulta($id)
     {
-
+        $user = auth()->user();
         $multa = self::with('pessoa:id,nome,email,telefone_1,telefone_2,foto')
-            ->when(auth()->user()->hasRole(['Aluno', 'Professor']), function ($query) {
-                return $query->where('pessoa_id', auth()->user()->id);
+            ->when($user->hasRole(['Aluno', 'Professor']), function ($query) use ($user) {
+                return $query->where('pessoa_id', $user->id);
             })
             ->find($id);
 
