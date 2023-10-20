@@ -114,7 +114,11 @@ class AreaConhecimento extends Model
     {
         $aluno = auth()->user()->aluno;
 
-        $areas = $aluno->areas;
+        $areas = $aluno->areas()
+            ->whereHas('pivot', function ($query) {
+                $query->where('valor_respondido', '!=', 0);
+            })
+            ->get();
         if (!$areas->isEmpty()) {
             $syncData = [];
 
