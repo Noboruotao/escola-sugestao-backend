@@ -38,7 +38,8 @@ class AreaConhecimento extends Model
     }
 
 
-    public function disciplinas(){
+    public function disciplinas()
+    {
         return $this->morphedByMany(Acervo::class, 'model', 'model_has_areas', 'area_codigo', 'model_id');
     }
 
@@ -46,6 +47,42 @@ class AreaConhecimento extends Model
     public function acervos()
     {
         return $this->morphedByMany(Acervo::class, 'model', 'model_has_areas', 'area_codigo', 'model_id');
+    }
+
+
+    public function getAreas($degree)
+    {
+        $classes = self::where('codigo', 'like', '_')
+            ->get();
+        if ($degree > 1) {
+            foreach ($classes as $classe) {
+
+                $classe->sub_classes = $this->getSubClasses($classe, $degree);
+            }
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $classes
+        ]);
+    }
+
+    private function getSubClasses($classe, $degree)
+    {
+        $codigo = $classe->codigo;
+        if (strlen($codigo) < $degree) {
+            $sub_classes = self::where('codigo', 'like', $codigo . '_')
+                ->orWhere('codigo', 'like', $codigo . '._')
+                ->get();
+
+
+            foreach ($sub_classes as $sub_classe) {
+                $results =  $this->getSubClasses($sub_classe, $degree);
+                if (strlen($results) > 0) {
+                    $sub_classe->sub_classe = $results;
+                }
+            }
+            return $sub_classes;
+        }
     }
 
 
@@ -70,5 +107,33 @@ class AreaConhecimento extends Model
     public function getRelatedAreas()
     {
         return $this->getDescendantAreas()->push($this)->merge($this->getAncestorAreas())->unique('codigo');
+    }
+
+
+    public function attributeAlunoEscolhas($escolhas)
+    {
+        $aluno = auth()->user()->aluno;
+
+        $areas = $aluno->areas;
+        if (!$areas->isEmpty()) {
+            $syncData = [];
+
+            foreach ($areas as $area) {
+                $syncData[$area->codigo] = ['valor_respondido' => 0];
+            }
+
+            $aluno->areas()->syncWithoutDetaching($syncData);
+        }
+
+        foreach ($escolhas as $escolha) {
+            $area = self::where('codigo', $escolha)
+                ->first();
+            $relacionados = $area->getRelatedAreas();
+            $aluno->attachAreasWithValues($relacionados, 'valor_respondido');
+        }
+
+        return response()->json([
+            'success' => true,
+        ], 200);
     }
 }

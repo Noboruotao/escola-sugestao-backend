@@ -41,7 +41,12 @@ class Nota extends Model
     public static function getAlunoNotasWithinDisciplinas($aluno, $disciplinas)
     {
         return self::where('aluno_id', $aluno->id)
-            ->whereIn('disciplina_id', $disciplinas->pluck('id')->toArray())
+            ->whereIn(
+                'disciplina_id',
+                $disciplinas
+                    ->pluck('id')
+                    ->toArray()
+            )
             ->get();
     }
 

@@ -90,3 +90,10 @@ Route::group([
 ], function ($router) {
     require __DIR__ . '/apiRoutes/secretaria.php';
 });
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'area'
+], function ($router) {
+    require __DIR__ . '/apiRoutes/area.php';
+});

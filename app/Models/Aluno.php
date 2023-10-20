@@ -41,7 +41,12 @@ class Aluno extends Model
 
     public function bolsas()
     {
-        return $this->belongsToMany(Bolsa::class, 'aluno_bolsa', 'aluno_id', 'bolsa_id');
+        return $this->belongsToMany(
+            Bolsa::class,
+            'aluno_bolsa',
+            'aluno_id',
+            'bolsa_id'
+        );
     }
 
 
@@ -53,7 +58,12 @@ class Aluno extends Model
 
     public function responsavel()
     {
-        return $this->belongsToMany(Pessoa::class, 'responsavel', 'aluno_id', 'responsavel_id');
+        return $this->belongsToMany(
+            Pessoa::class,
+            'responsavel',
+            'aluno_id',
+            'responsavel_id'
+        );
     }
 
 
@@ -65,7 +75,13 @@ class Aluno extends Model
 
     public function cursosSugeridos()
     {
-        return $this->morphedByMany(Curso::class, 'sugerido', 'sugeridos', 'aluno_id', 'sugerido_id');
+        return $this->morphedByMany(
+            Curso::class,
+            'sugerido',
+            'sugeridos',
+            'aluno_id',
+            'sugerido_id'
+        );
     }
 
 
@@ -83,7 +99,12 @@ class Aluno extends Model
 
     public function ativExtra()
     {
-        return $this->belongsToMany(AtividadeExtra::class, 'aluno_ativExtra', 'aluno_id', 'ativExtra_id');
+        return $this->belongsToMany(
+            AtividadeExtra::class,
+            'aluno_ativExtra',
+            'aluno_id',
+            'ativExtra_id'
+        );
     }
 
 
@@ -104,9 +125,22 @@ class Aluno extends Model
 
     public function areas()
     {
-        return $this->belongsToMany(AreaConhecimento::class, 'aluno_areas_de_conhecimento', 'aluno_id', 'area_codigo', 'id', 'codigo', 'areas')
+        return $this->belongsToMany(
+            AreaConhecimento::class,
+            'aluno_areas_de_conhecimento',
+            'aluno_id',
+            'area_codigo',
+            'id',
+            'codigo',
+            'areas'
+        )
             ->using(AlunoAreasDeConhecimento::class)
-            ->withPivot('valor_notas', 'valor_acervos', 'valor_atividades', 'valor_respondido');
+            ->withPivot(
+                'valor_notas',
+                'valor_acervos',
+                'valor_atividades',
+                'valor_respondido'
+            );
     }
 
     private function getDisciplinasWithArea($area)
@@ -284,13 +318,13 @@ class Aluno extends Model
 
     public function AttributeAlunoAreaByNota($disciplina)
     {
-
         foreach ($disciplina->areas as $area) {
             $disciplinas = $this->getDisciplinasWithArea($area);
 
             $notas = Nota::getAlunoNotasWithinDisciplinas($this, $disciplinas);
 
             if ($notas->count() > 0) {
+
                 $this->AttributeAreaByNota($notas, $area);
             }
         }
@@ -310,9 +344,25 @@ class Aluno extends Model
             ];
 
             if ($existingPivotData->isEmpty()) {
-                $attachData += $pivotData;
+                $attachData += [
+                    $area->codigo => [
+                        $valorKey => DB::raw($valorKey)
+                    ]
+                ];
             } else {
-                $attachData += [$area->codigo => [$valorKey => DB::raw($valorKey . ' + ' . config("valor_aluno_area.$valorKey"))]];
+                if ($valorKey === 'valor_respondido') {
+                    $attachData += [
+                        $area->codigo => [
+                            $valorKey => config("valor_aluno_area.valor_respondido")
+                        ]
+                    ];
+                } else {
+                    $attachData += [
+                        $area->codigo => [
+                            $valorKey => DB::raw($valorKey . ' + ' . config("valor_aluno_area.$valorKey"))
+                        ]
+                    ];
+                }
             }
         }
         return $attachData;
@@ -329,6 +379,7 @@ class Aluno extends Model
         $this->areas()->syncWithoutDetaching($attachData);
         $this->sugerir();
     }
+
 
     public function AttributeAlunoAreaByAcervo($acervo)
     {
@@ -389,7 +440,8 @@ class Aluno extends Model
     {
         $cursos = Curso::whereNotIn(
             'id',
-            $aluno->cursosSugeridos()->pluck('sugerido_id')
+            $aluno->cursosSugeridos()
+                ->pluck('sugerido_id')
         )->get();
         foreach ($cursos as $curso) {
             $sugere = true;

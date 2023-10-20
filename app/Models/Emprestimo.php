@@ -226,8 +226,7 @@ class Emprestimo extends Model
 
     public function checkEmprestimosAtrasadosQnt()
     {
-        $user = auth()->user();
-        return self::where('leitor_id', $user->id)
+        return self::where('leitor_id', auth()->user()->id)
             ->whereNull('data_devolucao')
             ->whereDate('data_emprestimo', '<', Carbon::now()->subDays(14))
             ->count();
