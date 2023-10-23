@@ -25,7 +25,14 @@ class AtividadeExtracurricularController extends Controller
         $order = $request->query('order', null);
         $tipo = $request->query('tipo', '');
 
-        $ativExtrasList = $this->atividade_extra->getAtivExtras($page, $limit, $search, $sortColumn, $order, $tipo);
+        $ativExtrasList = $this->atividade_extra->getAtivExtras(
+            $page,
+            $limit,
+            $search,
+            $sortColumn,
+            $order,
+            $tipo
+        );
 
         return response()->json([
             'success' => true,

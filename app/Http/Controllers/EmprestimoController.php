@@ -41,10 +41,10 @@ class EmprestimoController extends Controller
 
     public function listEmprestimos(Request $request)
     {
-        $roleResult = $this->checkRole('Bibliotecário');
-        if ($roleResult !== null) {
-            return $roleResult;
-        }
+        // $roleResult = $this->checkRole('Bibliotecário');
+        // if ($roleResult !== null) {
+        //     return $roleResult;
+        // }
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
         $pendente = $request->query('pendente', false);

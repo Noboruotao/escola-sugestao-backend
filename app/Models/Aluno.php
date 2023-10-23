@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -80,8 +81,8 @@ class Aluno extends Model
             'sugerido',
             'sugeridos',
             'aluno_id',
-            'sugerido_id'
-        );
+            'sugerido_id',
+        )->whereNull('sugeridos.desaparecer');
     }
 
 
@@ -92,8 +93,10 @@ class Aluno extends Model
             'sugerido',
             'sugeridos',
             'aluno_id',
-            'sugerido_id'
-        )->with('tipo');
+            'sugerido_id',
+        )
+            ->whereNull('sugeridos.desaparecer')
+            ->with('tipo');
     }
 
 
@@ -244,6 +247,34 @@ class Aluno extends Model
         return $this->cursosSugeridos
             ->pluck('id')
             ->toArray();
+    }
+
+
+    public function disaparecerSugerido($model_id, $model_type)
+    {
+        $aluno = auth()->user()->aluno;
+
+        if ($model_type == Curso::class) {
+            $sugerido = $aluno->cursosSugeridos()->where('sugerido_id', $model_id)->first();
+        } else if ($model_type == AtividadeExtra::class) {
+            $sugerido = $aluno->ativExtraSugeridos()->where('sugerido_id', $model_id)->first();
+        }
+
+        if (!$sugerido) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dado Não Encontrado'
+            ]);
+        }
+
+        $sugerido->pivot->desaparecer = Carbon::now()->format('Y-m-d');
+        $sugerido->pivot->save();
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $sugerido
+        ]);
     }
 
 

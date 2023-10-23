@@ -82,4 +82,12 @@ class AlunoController extends Controller
 
         return $this->aluno->getNotas($id, $classe_id, $disciplina_id, $todas_notas);
     }
+
+    public function disaparecerSugerido(Request $request)
+    {
+        $model_id = $request->query('model_id', null);
+        $model_type = $request->query('model_type', null);
+
+        return $this->aluno->disaparecerSugerido($model_id, $model_type);
+    }
 }
