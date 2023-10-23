@@ -209,7 +209,6 @@ class Emprestimo extends Model
             $emprestimo->data_devolucao = $data_devolucao->format('d/m/Y');
 
             $emprestimo->color = ($data_devolucao->isBefore(Carbon::now())) ? 'red' : 'green';
-            // $emprestimo->color = 'red';
         }
 
         if ($emprestimos->count() == 0) {
