@@ -98,4 +98,32 @@ class AtividadeExtra extends Model
         }
         return response()->json(['success' => true, 'data' => $info]);
     }
+
+
+    public function attributeAtivExtraToAluno($aluno_id, $ativExtra_id)
+    {
+        $aluno = Aluno::find($aluno_id);
+        $ativiExtra = self::find($ativExtra_id);
+
+        if (!$aluno || !$ativiExtra) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aluno ou Atividade Não Encontrada.'
+            ], 404);
+        }
+
+        if ($aluno->attributeAtivExtra($ativiExtra)) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'aluno' => $aluno->pessoa->nome,
+                    'ativExtra' => $ativiExtra->nome
+                ]
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Error.'
+        ], 400);
+    }
 }

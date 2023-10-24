@@ -421,6 +421,7 @@ class Aluno extends Model
     {
         $this->ativExtra()->attach($ativExtra);
         $this->attachAreasWithValues($ativExtra->areas, 'valor_atividades');
+        return true;
     }
 
     private function calculateValorFinal($area)

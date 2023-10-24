@@ -55,11 +55,10 @@ class Classe extends Model
         if ($search !== '') {
             $query->whereHas('disciplina', function ($sub_query) use ($search) {
                 $sub_query->where('nome', 'like', "%$search%");
-            });
+            })->orWhere('ano', 'like', "%$search%");
         }
 
         $qnt = $query->count();
-
         $datas = $query->with('disciplina')
             ->orderBy($sortColumn, $sortOrder)
             ->offset($page * $pageSize)
@@ -91,7 +90,13 @@ class Classe extends Model
             ->get();
 
         foreach ($alunos as $aluno) {
-            $aluno->presenca = $aluno->aluno->classes()->where('id', $id)->get()['0']->pivot->presenca;
+            $aluno->presenca = $aluno
+                ->aluno
+                ->classes()
+                ->where('id', $id)
+                ->get()['0']
+                ->pivot
+                ->presenca;
             $aluno->faltas = $aluno->aluno->classes()->where('id', $id)->get()['0']->pivot->faltas;
         }
 

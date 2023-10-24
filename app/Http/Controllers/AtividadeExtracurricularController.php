@@ -54,4 +54,13 @@ class AtividadeExtracurricularController extends Controller
             'data' => $this->ativExtra->get(),
         ], 200);
     }
+
+
+    public function attributeAtivExtraToAluno(Request $request)
+    {
+        $aluno_id = $request->input('aluno_id');
+        $ativExtra_id = $request->input('ativExtra_id');
+
+        return $this->atividade_extra->attributeAtivExtraToAluno($aluno_id, $ativExtra_id);
+    }
 }
