@@ -123,18 +123,19 @@ class Pessoa extends Authenticatable implements JWTSubject
     }
 
 
-    public function getPessoaListFilteredWithCpf($search)
+    public function getPessoaListFilteredWithCpf($search, $roles = ['Aluno'])
     {
         $pessoasWithCpf = self::select(['nome', 'id', 'cpf'])
             ->orderBy('nome')
             ->where('nome', 'like', "%$search%")
             ->orWhere('cpf', 'like', "%$search%")
+            ->role($roles)
             ->limit(50)
             ->get();
 
-        // if ($pessoasWithCpf->count() != 0) {
-        return response()->json(['success' => true, 'data' => $pessoasWithCpf]);
-        // }
-        // return response()->json(['success' => false, 'message' => 'Pessoa Não Encontrada'], 404);
+        if ($pessoasWithCpf->count() != 0) {
+            return response()->json(['success' => true, 'data' => $pessoasWithCpf]);
+        }
+        return response()->json(['success' => false, 'message' => 'Pessoa Não Encontrada'], 404);
     }
 }

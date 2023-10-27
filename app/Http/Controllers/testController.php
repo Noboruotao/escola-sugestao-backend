@@ -17,11 +17,14 @@ class testController extends Controller
 
         $bibliotecario = Pessoa::role('Bibliotecario')->inRandomOrder()->first();
 
+        $secretaria = Pessoa::role('Secretaria')->inRandomOrder()->first();
+
         return response()->json([
             'professor' => $professor->only(['id', 'nome', 'email']),
             'aluno' => $aluno->pessoa->only(['id', 'nome', 'email']),
             'classe' => $classe->id,
             'bibliotecario' => $bibliotecario->only(['id', 'nome', 'email']),
+            'secretaria' => $secretaria->only(['id', 'nome', 'email']),
         ]);
     }
 }

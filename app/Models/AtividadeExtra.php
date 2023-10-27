@@ -96,7 +96,10 @@ class AtividadeExtra extends Model
                 'message' => 'Atividade Extracurricular Não Encontrado'
             ], 404);
         }
-        return response()->json(['success' => true, 'data' => $info]);
+        return response()->json([
+            'success' => true,
+            'data' => $info
+        ]);
     }
 
 
@@ -124,6 +127,48 @@ class AtividadeExtra extends Model
         return response()->json([
             'success' => false,
             'message' => 'Error.'
+        ], 400);
+    }
+
+    public function getAlunos($id)
+    {
+        $ativExtra = self::find($id);
+
+        if (!$ativExtra || $ativExtra->alunos->count() == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sem Alunos Atribuídos.'
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => Pessoa::select(['id', 'nome'])
+                ->whereIn(
+                    'id',
+                    $ativExtra->alunos()
+                        ->pluck('id')
+                        ->toArray()
+                )
+                ->get()
+        ]);
+    }
+
+
+    public function removeAlunoFromAtivExtra($aluno_id, $ativExtra_id)
+    {
+        $ativExtra = self::find($ativExtra_id);
+        if (
+            $ativExtra->alunos()->detach($aluno_id)
+        ) {
+            return response()->json([
+                'success' => true,
+                'data' => $ativExtra->alunos
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Remoção do aluno sem Sucesso. Verifique a Atividade Extracurricular ou Aluno.'
         ], 400);
     }
 }

@@ -63,4 +63,19 @@ class AtividadeExtracurricularController extends Controller
 
         return $this->atividade_extra->attributeAtivExtraToAluno($aluno_id, $ativExtra_id);
     }
+
+    public function getAlunos(Request $request)
+    {
+        $id = $request->query('id', null);
+        return $this->atividade_extra->getAlunos($id);
+    }
+
+
+    public function removeAlunoFromAtivExtra(Request $request)
+    {
+        $aluno_id = $request->input('aluno_id');
+        $ativExtra_id = $request->input('ativExtra_id');
+
+        return $this->atividade_extra->removeAlunoFromAtivExtra($aluno_id, $ativExtra_id);
+    }
 }

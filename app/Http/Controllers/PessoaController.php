@@ -29,7 +29,10 @@ class PessoaController extends Controller
     public function getFoto(Request $request, $id)
     {
         if (!$id) {
-            return response()->json(['success' => false, 'message' => 'O id é obrigatório'], 400);
+            return response()->json([
+                'success' => false,
+                'message' => 'O id é obrigatório'
+            ], 400);
         }
         try {
             $foto = $this->pessoa->getFotoById($request->id);
@@ -65,7 +68,8 @@ class PessoaController extends Controller
     public function getPessoaListWithCpf(Request $request)
     {
         $search = $request->query('search', '');
+        $roles = $request->query('roles');
 
-        return $this->pessoa->getPessoaListFilteredWithCpf($search);
+        return $this->pessoa->getPessoaListFilteredWithCpf($search, $roles);
     }
 }

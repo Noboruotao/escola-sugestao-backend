@@ -62,12 +62,9 @@ class AlunoFactory extends Factory
     }
 
 
-    private static function generateRandomNota($target, $probability = 0.9, $faker)
+    private static function generateRandomNota($target, $probability = 0.8, $faker)
     {
-        $randomValue = $faker->randomFloat(2, 0, 10);
-        if ($faker->randomFloat(2, 0, 1) < $probability) {
-            $randomValue = $target - (10 - $target) * $faker->randomFloat(2, 0, 1);
-        }
+        $randomValue = 10 - (10 - $target) * $faker->randomFloat(2, 0, 1 - $probability);
         return $randomValue;
     }
 
@@ -83,8 +80,8 @@ class AlunoFactory extends Factory
 
     private static function generateNotasForDisciplina($aluno_id, $disciplina_id, $classe_id, $faker)
     {
-        $nota_p1 = self::generateRandomNota(10.00, null, $faker);
-        $nota_p2 = self::generateRandomNota(10.00, null, $faker);
+        $nota_p1 = self::generateRandomNota(3.00, null, $faker);
+        $nota_p2 = self::generateRandomNota(3.00, null, $faker);
         $nota_sub = null;
 
         if (self::calculateFinalNota($nota_p1, $nota_p2, null) < 5) {

@@ -48,6 +48,7 @@ class CreateAtividadeExtracurricularesTable extends Migration
             $table->integer('ativo')
                 ->default(1)
                 ->nullable();
+            $table->timestamps();
         });
     }
 

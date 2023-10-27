@@ -377,7 +377,7 @@ class Aluno extends Model
             if ($existingPivotData->isEmpty()) {
                 $attachData += [
                     $area->codigo => [
-                        $valorKey => DB::raw($valorKey)
+                        $valorKey => DB::raw(config("valor_aluno_area.$valorKey"))
                     ]
                 ];
             } else {

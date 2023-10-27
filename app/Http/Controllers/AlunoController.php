@@ -32,6 +32,14 @@ class AlunoController extends Controller
 
         $cursos = $this->aluno->getCursosSugeridos($page, $limit, $search, $sortColumn, $sortOrder);
 
+        if ($cursos->count() == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi Encontrado nenhuma Curso Sugerida.'
+            ], 401);
+        }
+
+
         $cursos = $sortOrder == 'asc'
             ? $cursos->sortBy($sortColumn)
             : $cursos->sortByDesc($sortColumn);
@@ -60,6 +68,13 @@ class AlunoController extends Controller
         $tipo = $request->query('tipo', '');
 
         $ativExtra = $this->aluno->getAtivExtraSugerido($page, $limit, $search, $sortColumn, $sortOrder, $tipo);
+
+        if ($ativExtra->count() == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi Encontrado nenhuma Atividade Sugerida.'
+            ], 401);
+        }
 
         $ativExtra = $sortOrder == 'asc'
             ? $ativExtra->sortBy($sortColumn)
