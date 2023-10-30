@@ -425,8 +425,8 @@ class Aluno extends Model
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'aluno' => $aluno->pessoa->nome,
-                    'ativExtra' => $ativiExtra->nome
+                    'aluno' => $this->pessoa->nome,
+                    'ativExtra' => $ativExtra->nome
                 ]
             ]);
         }

@@ -67,7 +67,10 @@ class AtividadeExtracurricularController extends Controller
     public function getAlunos(Request $request)
     {
         $id = $request->query('id', null);
-        return $this->atividade_extra->getAlunos($id);
+        $page = $request->query('page', 0);
+        $pageSize = $request->query('pageSize', 10);
+
+        return $this->atividade_extra->getAlunos($id, $page, $pageSize);
     }
 
 

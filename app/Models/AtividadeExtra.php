@@ -114,11 +114,11 @@ class AtividadeExtra extends Model
                 'message' => 'Aluno ou Atividade Não Encontrada.'
             ], 404);
         }
-        
+
         return $aluno->attributeAtivExtra($ativiExtra);
     }
 
-    public function getAlunos($id)
+    public function getAlunos($id, $page, $pageSize)
     {
         $ativExtra = self::find($id);
 
@@ -132,13 +132,17 @@ class AtividadeExtra extends Model
         return response()->json([
             'success' => true,
             'data' => Pessoa::select(['id', 'nome'])
+                ->orderBy('nome')
                 ->whereIn(
                     'id',
                     $ativExtra->alunos()
                         ->pluck('id')
                         ->toArray()
                 )
-                ->get()
+                ->skip($page * $pageSize)
+                ->take($pageSize)
+                ->get(),
+            'count' => $ativExtra->alunos->count()
         ]);
     }
 
