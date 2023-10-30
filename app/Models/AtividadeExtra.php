@@ -114,20 +114,8 @@ class AtividadeExtra extends Model
                 'message' => 'Aluno ou Atividade Não Encontrada.'
             ], 404);
         }
-
-        if ($aluno->attributeAtivExtra($ativiExtra)) {
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'aluno' => $aluno->pessoa->nome,
-                    'ativExtra' => $ativiExtra->nome
-                ]
-            ]);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'Error.'
-        ], 400);
+        
+        return $aluno->attributeAtivExtra($ativiExtra);
     }
 
     public function getAlunos($id)

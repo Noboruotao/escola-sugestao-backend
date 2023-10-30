@@ -68,7 +68,7 @@ class PessoaController extends Controller
     public function getPessoaListWithCpf(Request $request)
     {
         $search = $request->query('search', '');
-        $roles = $request->query('roles');
+        $roles = $request->query('roles', 'Aluno');
 
         return $this->pessoa->getPessoaListFilteredWithCpf($search, $roles);
     }

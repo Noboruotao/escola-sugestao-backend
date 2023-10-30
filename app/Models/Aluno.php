@@ -419,9 +419,21 @@ class Aluno extends Model
 
     public function attributeAtivExtra($ativExtra)
     {
-        $this->ativExtra()->attach($ativExtra);
-        $this->attachAreasWithValues($ativExtra->areas, 'valor_atividades');
-        return true;
+        if ($this->ativExtra->contains($ativExtra) == false) {
+            $this->ativExtra()->attach($ativExtra);
+            $this->attachAreasWithValues($ativExtra->areas, 'valor_atividades');
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'aluno' => $aluno->pessoa->nome,
+                    'ativExtra' => $ativiExtra->nome
+                ]
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Este Aluno já está atribuido.'
+        ], 400);
     }
 
     private function calculateValorFinal($area)

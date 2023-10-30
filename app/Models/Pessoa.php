@@ -134,8 +134,17 @@ class Pessoa extends Authenticatable implements JWTSubject
             ->get();
 
         if ($pessoasWithCpf->count() != 0) {
-            return response()->json(['success' => true, 'data' => $pessoasWithCpf]);
+            return response()->json([
+                'success' => true,
+                'data' => $pessoasWithCpf
+            ]);
         }
-        return response()->json(['success' => false, 'message' => 'Pessoa Não Encontrada'], 404);
+        return response()->json(
+            [
+                'success' => false,
+                'message' => 'Pessoa Não Encontrada'
+            ],
+            404
+        );
     }
 }
