@@ -53,6 +53,9 @@ class Nota extends Model
 
     public function getTipoAvaliacao()
     {
-        return ['success' => true, 'data' => TipoAvaliacao::getTipos()];
+        return [
+            'success' => true,
+            'data' => TipoAvaliacao::getTipos()
+        ];
     }
 }

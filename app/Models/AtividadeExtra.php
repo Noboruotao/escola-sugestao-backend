@@ -39,7 +39,8 @@ class AtividadeExtra extends Model
             'ativExtra_id',
             'aluno_id'
         )
-            ->with('pessoa');
+            ->with('pessoa')
+            ->withPivot('ativo');
     }
 
 
@@ -51,7 +52,13 @@ class AtividadeExtra extends Model
 
     public function areas()
     {
-        return $this->morphToMany(AreaConhecimento::class, 'model', 'model_has_areas', 'model_id', 'area_codigo');
+        return $this->morphToMany(
+            AreaConhecimento::class,
+            'model',
+            'model_has_areas',
+            'model_id',
+            'area_codigo'
+        );
     }
 
     public function tipo()
@@ -60,8 +67,14 @@ class AtividadeExtra extends Model
     }
 
 
-    public function getAtivExtras($page, $limit, $search, $sortColumn = 'nome', $order = 'asc', $tipo)
-    {
+    public function getAtivExtras(
+        $page,
+        $limit,
+        $search,
+        $sortColumn = 'nome',
+        $order = 'asc',
+        $tipo
+    ) {
         $query = self::orderBy($sortColumn, $order == '' ? 'asc' : $order)
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%');
@@ -136,13 +149,14 @@ class AtividadeExtra extends Model
                 ->whereIn(
                     'id',
                     $ativExtra->alunos()
+                        ->where('ativo', 1)
                         ->pluck('id')
                         ->toArray()
                 )
                 ->skip($page * $pageSize)
                 ->take($pageSize)
                 ->get(),
-            'count' => $ativExtra->alunos->count()
+            'count' => $ativExtra->alunos->where('pivot.ativo', 1)->count()
         ]);
     }
 
@@ -150,12 +164,19 @@ class AtividadeExtra extends Model
     public function removeAlunoFromAtivExtra($aluno_id, $ativExtra_id)
     {
         $ativExtra = self::find($ativExtra_id);
-        if (
-            $ativExtra->alunos()->detach($aluno_id)
-        ) {
+
+        $aluno = Aluno::find($aluno_id);
+
+        if ($ativExtra_aluno = $ativExtra->alunos()->where('aluno_id', $aluno->id)->first()) {
+            $ativExtra_aluno->pivot->ativo = 0;
+            $ativExtra_aluno->pivot->save();
+
+
             return response()->json([
                 'success' => true,
-                'data' => $ativExtra->alunos
+                'data' => $ativExtra->alunos->where('pivot.ativo', 1),
+                'count' => $ativExtra->alunos->where('pivot.ativo', 1)->count()
+
             ]);
         }
         return response()->json([

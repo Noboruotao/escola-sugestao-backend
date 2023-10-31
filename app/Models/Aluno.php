@@ -107,7 +107,8 @@ class Aluno extends Model
             'aluno_ativExtra',
             'aluno_id',
             'ativExtra_id'
-        );
+        )
+            ->withPivot('ativo');
     }
 
 
@@ -162,8 +163,13 @@ class Aluno extends Model
     }
 
 
-    public function getCursosSugeridos($page, $limit, $search, $sortColumn, $sortOrder)
-    {
+    public function getCursosSugeridos(
+        $page,
+        $limit,
+        $search,
+        $sortColumn,
+        $sortOrder
+    ) {
         $user = auth()->user();
         return $user->aluno->cursosSugeridos
             ->when($search, function ($query) use ($search) {
@@ -174,8 +180,14 @@ class Aluno extends Model
             });
     }
 
-    public function getAtivExtraSugerido($page, $limit, $search, $sortColumn, $sortOrder, $tipo)
-    {
+    public function getAtivExtraSugerido(
+        $page,
+        $limit,
+        $search,
+        $sortColumn,
+        $sortOrder,
+        $tipo
+    ) {
         $user = auth()->user();
         return $user->aluno->ativExtraSugeridos
             ->when($tipo != '', function ($query) use ($tipo) {
@@ -190,8 +202,11 @@ class Aluno extends Model
     }
 
 
-    public static function getDisciplinaNotas($aluno, $disciplina_id, $todas = false)
-    {
+    public static function getDisciplinaNotas(
+        $aluno,
+        $disciplina_id,
+        $todas = false
+    ) {
         $disciplina = Disciplina::find($disciplina_id);
 
         $classe = null;
@@ -255,9 +270,13 @@ class Aluno extends Model
         $aluno = auth()->user()->aluno;
 
         if ($model_type == Curso::class) {
-            $sugerido = $aluno->cursosSugeridos()->where('sugerido_id', $model_id)->first();
+            $sugerido = $aluno->cursosSugeridos()
+                ->where('sugerido_id', $model_id)
+                ->first();
         } else if ($model_type == AtividadeExtra::class) {
-            $sugerido = $aluno->ativExtraSugeridos()->where('sugerido_id', $model_id)->first();
+            $sugerido = $aluno->ativExtraSugeridos()
+                ->where('sugerido_id', $model_id)
+                ->first();
         }
 
         if (!$sugerido) {
@@ -295,7 +314,10 @@ class Aluno extends Model
             ->first();
 
         if (!$classe) {
-            return  response()->json(['success' => false, 'message' => 'Classe Não Encontrado'], 404);
+            return  response()->json([
+                'success' => false,
+                'message' => 'Classe Não Encontrado'
+            ], 404);
         }
 
         $notas = Nota::where('aluno_id', $aluno->id)
@@ -304,7 +326,11 @@ class Aluno extends Model
             ->with('tipo')
             ->get();
 
-        return response()->json(['success' => true, 'data' => $notas, 'nota_final' => null]);
+        return response()->json([
+            'success' => true,
+            'data' => $notas,
+            'nota_final' => null
+        ]);
     }
 
 
@@ -425,6 +451,28 @@ class Aluno extends Model
             return response()->json([
                 'success' => true,
                 'data' => [
+                    'aluno' => $this->pessoa->nome,
+                    'ativExtra' => $ativExtra->nome
+                ]
+            ]);
+        } else if (
+            $this->ativExtra()
+            ->where(
+                [
+                    ['ativExtra_id', $ativExtra->id],
+                    ['pivot.ativo', 0]
+                ]
+            )
+        ) {
+            $aluno_ativExtra = $this->ativExtra()->where('ativExtra_id', $ativExtra->id)->first();
+            $aluno_ativExtra->pivot->ativo = 1;
+            $aluno_ativExtra->pivot->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'atividade retomada',
+                'data' =>
+                [
                     'aluno' => $this->pessoa->nome,
                     'ativExtra' => $ativExtra->nome
                 ]

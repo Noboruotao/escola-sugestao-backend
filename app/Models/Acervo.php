@@ -83,7 +83,13 @@ class Acervo extends Model
 
     public function areas()
     {
-        return $this->morphToMany(AreaConhecimento::class, 'model', 'model_has_areas', 'model_id', 'area_codigo');
+        return $this->morphToMany(
+            AreaConhecimento::class,
+            'model',
+            'model_has_areas',
+            'model_id',
+            'area_codigo'
+        );
     }
 
 
@@ -114,8 +120,14 @@ class Acervo extends Model
     }
 
 
-    public function getAcervoList($page = 0, $limit = 10, $disponivel = true, $sortColumn, $sortOrder, $search = null)
-    {
+    public function getAcervoList(
+        $page = 0,
+        $limit = 10,
+        $disponivel = true,
+        $sortColumn,
+        $sortOrder,
+        $search = null
+    ) {
         $query = self::select(['id', 'titulo', 'subtitulo', 'resumo', 'capa', 'autor_id', 'situacao_id'])
             ->with(['autor:id,nome'])
             ->with('situacao')
@@ -222,10 +234,8 @@ class Acervo extends Model
             $acervo->ano_publicacao = $data['ano_publicacao'];
             $acervo->edicao = $data['edicao'];
             $acervo->data_aquisicao = now()->format('Y-m-d');
-            
-            
+
             $acervo->capa = self::createCapa($acervo, $capa);
-            // dd($acervo);
 
             $acervo->save();
 
@@ -234,10 +244,6 @@ class Acervo extends Model
                 'data' => $acervo
             ]);
         } catch (\Throwable $th) {
-            // throw $th;
-            error_log("Error: " . $th->getMessage());
-
-            // Print the error message as a response
             return response()->json([
                 'success' => false,
                 'message' => 'Erro ao Cadastrar Acervo: ' . $th->getMessage()
@@ -253,17 +259,4 @@ class Acervo extends Model
             ->limit($limit)
             ->get();
     }
-
-    // public function getAllAcervoLength($search = null)
-    // {
-    //     return self::whereNotIn('situacao_id', [
-    //         AcervoSituacao::EM_PROCESSAMENTO_TECNICO,
-    //         AcervoSituacao::EM_MANUTENCAO,
-    //         AcervoSituacao::EXTRAVIADO,
-    //         AcervoSituacao::DESCARTADO
-    //     ])
-    //         ->when($search, function ($query, $search) {
-    //             return $query->where('titulo', 'like', '%' . $search . '%');
-    //         })->count();
-    // }
 }

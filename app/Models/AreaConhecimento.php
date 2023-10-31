@@ -34,19 +34,36 @@ class AreaConhecimento extends Model
             'id'
         )
             ->using(AlunoAreasDeConhecimento::class)
-            ->withPivot('valor_notas', 'valor_acervos', 'valor_atividades', 'valor_respondido');
+            ->withPivot(
+                'valor_notas',
+                'valor_acervos',
+                'valor_atividades',
+                'valor_respondido'
+            );
     }
 
 
     public function disciplinas()
     {
-        return $this->morphedByMany(Acervo::class, 'model', 'model_has_areas', 'area_codigo', 'model_id');
+        return $this->morphedByMany(
+            Acervo::class,
+            'model',
+            'model_has_areas',
+            'area_codigo',
+            'model_id'
+        );
     }
 
 
     public function acervos()
     {
-        return $this->morphedByMany(Acervo::class, 'model', 'model_has_areas', 'area_codigo', 'model_id');
+        return $this->morphedByMany(
+            Acervo::class,
+            'model',
+            'model_has_areas',
+            'area_codigo',
+            'model_id'
+        );
     }
 
 
@@ -106,7 +123,10 @@ class AreaConhecimento extends Model
 
     public function getRelatedAreas()
     {
-        return $this->getDescendantAreas()->push($this)->merge($this->getAncestorAreas())->unique('codigo');
+        return $this->getDescendantAreas()
+            ->push($this)
+            ->merge($this->getAncestorAreas())
+            ->unique('codigo');
     }
 
 

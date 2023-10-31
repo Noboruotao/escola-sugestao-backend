@@ -57,7 +57,10 @@ class Emprestimo extends Model
             'data_emprestimo' => Carbon::now()->format('Y-m-d'),
         ]);
 
-        Acervo::find($acervo_id)->update(['situacao_id' => AcervoSituacao::EMPRESTADO]);
+        Acervo::find($acervo_id)
+            ->update([
+                'situacao_id' => AcervoSituacao::EMPRESTADO
+            ]);
 
         if ($aluno = Aluno::find($leitor_id)) {
             $aluno->AttributeAlunoAreaByAcervo(Acervo::find($acervo_id));
@@ -137,16 +140,26 @@ class Emprestimo extends Model
             ->first();
 
         if ($emprestimo->exists()) {
-            return response()->json(['succes' => true, 'data' => $emprestimo]);
+            return response()->json([
+                'succes' => true,
+                'data' => $emprestimo
+            ]);
         }
-        return response()->json(['success' => false, 'message' => 'Emprestimo Não Encontrado.'], 404);
+        return response()->json([
+            'success' => false,
+            'message' => 'Emprestimo Não Encontrado.'
+        ], 404);
     }
 
     public function makeDevolucao($emprestimo_id)
     {
         $emprestimo = self::find($emprestimo_id);
-        $emprestimo->update(['data_devolucao' => Carbon::now()->format('Y-m-d')]);
-        $emprestimo->acervo->update(['situacao_id' => AcervoSituacao::DISPONIVEL]);
+        $emprestimo->update([
+            'data_devolucao' => Carbon::now()->format('Y-m-d')
+        ]);
+        $emprestimo->acervo->update([
+            'situacao_id' => AcervoSituacao::DISPONIVEL
+        ]);
 
         self::makeMulta($emprestimo);
 

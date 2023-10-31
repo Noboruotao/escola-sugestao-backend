@@ -76,7 +76,10 @@ class Professor extends Model
 
 
         if (!$aluno || !$classe || !$tipo_avaliacao) {
-            return ['success' => false, 'message' => 'Valor Inválido.'];
+            return [
+                'success' => false,
+                'message' => 'Valor Inválido.'
+            ];
         }
 
         $nova_nota = Nota::create([
@@ -89,7 +92,10 @@ class Professor extends Model
 
         $aluno->AttributeAlunoAreaByNota($classe->disciplina);
 
-        return ['success' => true, 'data' => $nova_nota];
+        return [
+            'success' => true,
+            'data' => $nova_nota
+        ];
     }
 
 
@@ -114,7 +120,10 @@ class Professor extends Model
 
 
         if (!$aluno || !$classe || !$nota_final) {
-            return response()->json(['success' => false, 'message' => 'Valor Inválido.'], 400);
+            return response()->json([
+                'success' => false,
+                'message' => 'Valor Inválido.'
+            ], 400);
         }
 
         $disciplina = $aluno->disciplinas()

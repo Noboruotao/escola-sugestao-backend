@@ -97,7 +97,12 @@ class Classe extends Model
                 ->get()['0']
                 ->pivot
                 ->presenca;
-            $aluno->faltas = $aluno->aluno->classes()->where('id', $id)->get()['0']->pivot->faltas;
+            $aluno->faltas = $aluno->aluno
+                ->classes()
+                ->where('id', $id)
+                ->get()['0']
+                ->pivot
+                ->faltas;
         }
 
         return response()->json(['success' => true, 'data' => $alunos]);
@@ -111,7 +116,6 @@ class Classe extends Model
             'professor.pessoa'
         ])
             ->where('id', $classe_id)
-            // ->where('professor_id', auth()->user()->id)
             ->first();
 
         return $info ? response()->json(

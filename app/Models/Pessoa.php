@@ -62,7 +62,12 @@ class Pessoa extends Authenticatable implements JWTSubject
 
     public function protegidos()
     {
-        return $this->belongsToMany(Aluno::class, 'responsavel', 'responsavel_id', 'aluno_id');
+        return $this->belongsToMany(
+            Aluno::class,
+            'responsavel',
+            'responsavel_id',
+            'aluno_id'
+        );
     }
 
 

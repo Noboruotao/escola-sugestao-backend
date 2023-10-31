@@ -13,11 +13,19 @@ class AlunoAreasDeConhecimento extends Pivot
 
     public function aluno()
     {
-        return $this->belongsTo(Aluno::class, 'aluno_id', 'id');
+        return $this->belongsTo(
+            Aluno::class,
+            'aluno_id',
+            'id'
+        );
     }
 
     public function area()
     {
-        return $this->belongsTo(AreaConhecimento::class, 'area_codigo', 'codigo');
+        return $this->belongsTo(
+            AreaConhecimento::class,
+            'area_codigo',
+            'codigo'
+        );
     }
 }
