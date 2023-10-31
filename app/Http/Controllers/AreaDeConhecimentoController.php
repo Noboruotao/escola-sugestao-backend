@@ -22,14 +22,7 @@ class AreaDeConhecimentoController extends Controller
 
     public function getEscolhas(Request $request)
     {
-
-        $resposta = [
-            'success' => true,
-        ];
-
         $escolhas = $request->input('escolhas');
-
-
 
         return $this->areaConhecimento->attributeAlunoEscolhas($escolhas);
     }

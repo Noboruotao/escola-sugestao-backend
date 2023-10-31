@@ -133,12 +133,17 @@ class AreaConhecimento extends Model
     public function attributeAlunoEscolhas($escolhas)
     {
         $aluno = auth()->user()->aluno;
+        if (!$aluno) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuário Precisa ser Aluno.'
+            ]);
+        }
 
         $areas = $aluno->areas()
-            ->whereHas('pivot', function ($query) {
-                $query->where('valor_respondido', '!=', 0);
-            })
+            ->where('valor_respondido', '!=', 0)
             ->get();
+
         if (!$areas->isEmpty()) {
             $syncData = [];
 
