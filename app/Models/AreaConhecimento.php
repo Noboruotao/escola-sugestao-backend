@@ -110,7 +110,10 @@ class AreaConhecimento extends Model
 
         do {
             $codigo = substr($codigo, 0, -1);
-            $descendants = $descendants->merge(AreaConhecimento::where('codigo', $codigo)->get());
+            $descendants = $descendants->merge(
+                self::where('codigo', $codigo)
+                    ->get()
+            );
         } while ($codigo != '');
 
         return $descendants;
@@ -118,7 +121,10 @@ class AreaConhecimento extends Model
 
     public function getAncestorAreas()
     {
-        return AreaConhecimento::where('codigo', 'like', $this->codigo . '%')->get();
+        return self::where('codigo', 'like', '%/' . $this->codigo)
+            ->orWhere('codigo', 'like', $this->codigo . '/%')
+            ->orWhere('codigo', 'like', $this->codigo . '%')
+            ->get();
     }
 
     public function getRelatedAreas()
