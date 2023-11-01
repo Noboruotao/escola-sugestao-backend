@@ -114,7 +114,12 @@ class Pessoa extends Authenticatable implements JWTSubject
         $user = auth()->user();
         $pessoa = self::where('id', $id)
             ->when((!$user->can('pessoa.read') && $user->id != $id), function ($query) {
-                return $query->select(['id', 'nome', 'foto', 'data_nascimento']);
+                return $query->select([
+                    'id',
+                    'nome',
+                    'foto',
+                    'data_nascimento'
+                ]);
             })
             ->first();
         if ($pessoa->hasRole(['Aluno'])) {
@@ -130,7 +135,11 @@ class Pessoa extends Authenticatable implements JWTSubject
 
     public function getPessoaListFilteredWithCpf($search, $roles = ['Aluno'])
     {
-        $pessoasWithCpf = self::select(['nome', 'id', 'cpf'])
+        $pessoasWithCpf = self::select([
+            'nome',
+            'id',
+            'cpf'
+        ])
             ->orderBy('nome')
             ->where('nome', 'like', "%$search%")
             ->orWhere('cpf', 'like', "%$search%")

@@ -15,7 +15,9 @@ class AreaDeConhecimentoController extends Controller
 
     public function getAreas(Request $request)
     {
-        $degree = $request->query('nivel', 2) == '' ? 2 : $request->query('nivel', 2);
+        $degree = $request->query('nivel', 2) == ''
+            ? 2
+            : $request->query('nivel', 2);
         return $this->areaConhecimento->getAreas($degree);
     }
 

@@ -197,7 +197,11 @@ class Emprestimo extends Model
             : now()->diffInDays($data_emprestimo);
 
         if ($daysInterval > config('parametros.dias_de_emprestimo_de_acervo')) {
-            $valorMulta = min($emprestimo->acervo->tipo->multa * $daysInterval, config('parametros.valor_maximo_da_multa_de_atraso_de_acervo'));
+            $valorMulta = min(
+                $emprestimo->acervo->tipo->multa * $daysInterval,
+                config('parametros.valor_maximo_da_multa_de_atraso_de_acervo')
+            );
+
 
             $multaData = array_merge(
                 self::valueForsearchMulta($emprestimo),
@@ -231,7 +235,7 @@ class Emprestimo extends Model
             return response()->json([
                 'success' => false,
                 'message' => 'Emprestimo Não Encontrado'
-            ]);
+            ], 400);
         }
         return response()->json([
             'success' => true,

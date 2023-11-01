@@ -19,6 +19,10 @@ class SituacaoAcervoController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-        return $this->acervoSituacao->listSituacao($page, $limit, $search);
+        return $this->acervoSituacao->listSituacao(
+            $page,
+            $limit,
+            $search
+        );
     }
 }

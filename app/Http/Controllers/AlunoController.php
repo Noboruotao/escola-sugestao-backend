@@ -30,7 +30,13 @@ class AlunoController extends Controller
         $sortColumn = $request->query('sortColumn', null);
         $sortOrder = $request->query('sortOrder', null);
 
-        $cursos = $this->aluno->getCursosSugeridos($page, $limit, $search, $sortColumn, $sortOrder);
+        $cursos = $this->aluno->getCursosSugeridos(
+            $page,
+            $limit,
+            $search,
+            $sortColumn,
+            $sortOrder
+        );
 
         if ($cursos->count() == 0) {
             return response()->json([
@@ -47,8 +53,15 @@ class AlunoController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $cursos->slice($page * $limit, $limit)->values(),
-            'count' => auth()->user()->aluno->cursosSugeridos->count()
+            'data' => $cursos->slice(
+                $page * $limit,
+                $limit
+            )
+                ->values(),
+            'count' => auth()->user()
+                ->aluno
+                ->cursosSugeridos
+                ->count()
         ], 200);
     }
 
@@ -67,7 +80,14 @@ class AlunoController extends Controller
         $sortOrder = $request->query('sortOrder', null);
         $tipo = $request->query('tipo', '');
 
-        $ativExtra = $this->aluno->getAtivExtraSugerido($page, $limit, $search, $sortColumn, $sortOrder, $tipo);
+        $ativExtra = $this->aluno->getAtivExtraSugerido(
+            $page,
+            $limit,
+            $search,
+            $sortColumn,
+            $sortOrder,
+            $tipo
+        );
 
         if ($ativExtra->count() == 0) {
             return response()->json([
@@ -83,7 +103,11 @@ class AlunoController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $ativExtra->slice($page * $limit, $limit)->values(),
+            'data' => $ativExtra->slice(
+                $page * $limit,
+                $limit
+            )
+                ->values(),
             'count' => $ativExtra->count()
         ], 200);
     }
@@ -95,7 +119,12 @@ class AlunoController extends Controller
         $disciplina_id = $request->query('disciplina_id', null);
         $todas_notas = $request->query('todas_notas', false);
 
-        return $this->aluno->getNotas($id, $classe_id, $disciplina_id, $todas_notas);
+        return $this->aluno->getNotas(
+            $id,
+            $classe_id,
+            $disciplina_id,
+            $todas_notas
+        );
     }
 
     public function disaparecerSugerido(Request $request)

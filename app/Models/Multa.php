@@ -53,7 +53,10 @@ class Multa extends Model
         ])
             ->orderByDesc("created_at")
             ->with('pessoa:id,nome')
-            ->when($user->hasRole(['Aluno', 'Professor']), function ($query) use ($user)  {
+            ->when($user->hasRole([
+                'Aluno',
+                'Professor'
+            ]), function ($query) use ($user) {
                 return $query->where('pessoa_id',  $user->id);
             })
             ->when($pago, function ($query) {
@@ -84,12 +87,16 @@ class Multa extends Model
 
         $responseData = [
             'success' => $count !== 0,
-            'message' => $count !== 0 ? 'Multas encontradas.' : 'Não foram encontradas Multas.',
-            'data' => $count !== 0 ? $multas : null,
+            'message' => $count !== 0
+                ? 'Multas encontradas.'
+                : 'Não foram encontradas Multas.',
+            'data' => $count !== 0
+                ? $multas
+                : [],
             'count' => $count,
         ];
 
-        return response()->json($responseData, $count !== 0 ? 200 : 404);
+        return response()->json($responseData, $count !== 0 ? 200 : 400);
     }
 
 
@@ -97,7 +104,10 @@ class Multa extends Model
     {
         $user = auth()->user();
         $multa = self::with('pessoa:id,nome,email,telefone_1,telefone_2,foto')
-            ->when($user->hasRole(['Aluno', 'Professor']), function ($query) use ($user) {
+            ->when($user->hasRole([
+                'Aluno',
+                'Professor'
+            ]), function ($query) use ($user) {
                 return $query->where('pessoa_id', $user->id);
             })
             ->find($id);
@@ -124,7 +134,7 @@ class Multa extends Model
             return response()->json([
                 'success' => false,
                 'message' => 'Multa Não Encontrada.'
-            ], 404);
+            ], 400);
         }
         if ($multa->pago != null) {
             return response()->json([

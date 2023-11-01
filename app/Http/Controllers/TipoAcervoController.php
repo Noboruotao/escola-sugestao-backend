@@ -19,6 +19,10 @@ class TipoAcervoController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-        return $this->acervoTipo->listAcervoTipos($page, $limit, $search);
+        return $this->acervoTipo->listAcervoTipos(
+            $page,
+            $limit,
+            $search
+        );
     }
 }

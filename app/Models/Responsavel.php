@@ -26,14 +26,21 @@ class Responsavel extends Model
         $aluno = Aluno::find($alunoId);
         $responsavel = Pessoa::find($responsavelId);
 
-        // if (!$aluno || !$responsavel) {
-        //     return response()->json(['error' => 'Aluno or Responsavel not found'], 404);
-        // }
+        if (!$aluno || !$responsavel) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aluno ou Responsavel não Encontrado'
+            ], 404);
+        }
+
         $responsavel = new Responsavel();
         $responsavel->responsavel_id = $responsavelId;
         $responsavel->aluno_id = $alunoId;
         $responsavel->save();
 
-        // return response()->json(['message' => 'Responsavel assigned successfully'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Responsavel Cadastrado com Sucesso'
+        ], 200);
     }
 }

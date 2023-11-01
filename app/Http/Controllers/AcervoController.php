@@ -26,14 +26,24 @@ class AcervoController extends Controller
         $sortOrder = $request->query('sortOrder', 'asc');
         $search = $request->query('search', null);
 
-        return $this->acervo->getAcervoList($page, $limit, auth()->user()->hasRole('Bibliotecário') ? false : true, $sortColumn, $sortOrder, $search);
+        return $this->acervo->getAcervoList(
+            $page,
+            $limit,
+            auth()->user()
+                ->hasRole('Bibliotecário')
+                ? false
+                : true,
+            $sortColumn,
+            $sortOrder,
+            $search
+        );
     }
 
 
     public function getAcervo(Request $request)
     {
         $acervo_id = $request->acervo_id;
-        return response()->json(['success' => true, 'data' => $this->acervo->getAcervo($acervo_id)], 200);
+        return  $this->acervo->getAcervo($acervo_id);
     }
 
 
@@ -75,7 +85,7 @@ class AcervoController extends Controller
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => $this->acervo->getAcervosBySituacao($id, $page, $limit)]);
+        return $this->acervo->getAcervosBySituacao($id, $page, $limit);
     }
 
 
@@ -87,24 +97,23 @@ class AcervoController extends Controller
             $fileContents = Storage::get($filePath);
             $fileType = Storage::mimeType($filePath);
             if ($fileContents) {
-                return response()->make($fileContents, 200, [
-                    'Content-Type' => $fileType,
-                    'Content-Disposition' => 'inline; filename="' . $capa . '"',
-                ]);
+                return response()->make(
+                    $fileContents,
+                    200,
+                    [
+                        'Content-Type' => $fileType,
+                        'Content-Disposition' => 'inline; filename="' . $capa . '"',
+                    ]
+                );
             } else {
                 return response()->make('File not found.', 404);
             }
         } catch (\Throwable $th) {
-            return response()->make($th->getMessage('nao encontrado'), 404);
+            return response()->make(
+                $th->getMessage('nao encontrado'),
+                404
+            );
         }
-    }
-
-
-    public function getAllAcervoLength(Request $request)
-    {
-        $search = $request->query('search', null);
-
-        return response()->json(['success' => true, 'data' => $this->acervo->getAllAcervoLength($search)]);
     }
 
 

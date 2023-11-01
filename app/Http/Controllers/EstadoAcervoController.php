@@ -19,6 +19,10 @@ class EstadoAcervoController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-        return $this->acervoEstado->listEstado($page, $limit, $search);
+        return $this->acervoEstado->listEstado(
+            $page,
+            $limit,
+            $search
+        );
     }
 }

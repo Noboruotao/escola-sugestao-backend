@@ -20,6 +20,10 @@ class IdiomaController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-        return $this->idioma->listIdiomas($page, $limit, $search);
+        return $this->idioma->listIdiomas(
+            $page,
+            $limit,
+            $search
+        );
     }
 }

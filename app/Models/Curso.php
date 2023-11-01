@@ -43,6 +43,9 @@ class Curso extends Model
             ->skip($page * $limit)
             ->take($limit)
             ->get();
-        return ['values' => $values, 'count' => $count];
+        return [
+            'values' => $values,
+            'count' => $count
+        ];
     }
 }

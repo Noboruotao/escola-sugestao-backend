@@ -32,7 +32,11 @@ class CategoriaController extends Controller
         $data = [
             'categoria' => $request->input('categoria'),
         ];
-        return response()->json(['success' => true, 'data' => $this->categoria->createCategoria($data)]);
+        return response()->json([
+            'success' => true,
+            'data' => $this->categoria
+                ->createCategoria($data)
+        ]);
     }
 
 
@@ -43,7 +47,10 @@ class CategoriaController extends Controller
             return $permissionResult;
         }
         $this->categoria->deleteCategoria($id);
-        return response()->json(['success' => true, 'message' => 'Categoria Deleted']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Categoria Deleted'
+        ]);
     }
 
 
@@ -51,6 +58,10 @@ class CategoriaController extends Controller
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return response()->json(['success' => true, 'data' => $this->categoria->getAcervosByCategoria($id, $page, $limit)]);
+        return response()->json([
+            'success' => true,
+            'data' => $this->categoria
+                ->getAcervosByCategoria($id, $page, $limit)
+        ]);
     }
 }

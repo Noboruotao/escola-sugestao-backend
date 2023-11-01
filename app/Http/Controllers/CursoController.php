@@ -23,7 +23,13 @@ class CursoController extends Controller
         $sortColumn = $request->query('sortColumn', 'nome');
         $order = $request->query('order', 'asc');
 
-        $response = $this->curso->getCursos($page, $limit, $search, $sortColumn, $order);
+        $response = $this->curso->getCursos(
+            $page,
+            $limit,
+            $search,
+            $sortColumn,
+            $order
+        );
 
         return response()->json([
             'success' => true,
@@ -36,6 +42,9 @@ class CursoController extends Controller
     public function getCurso(Request $request, $id)
     {
         $curso = Curso::find($id);
-        return response()->json(['success' => true, 'data' => $curso], 200);
+        return response()->json([
+            'success' => true,
+            'data' => $curso
+        ], 200);
     }
 }

@@ -24,7 +24,10 @@ class EmprestimoController extends Controller
         $leitor_id = $request->input('leitor_id');
 
         $emprestimo = $this->emprestimo->makeEmprestimo($acervo_id, $leitor_id);
-        return response()->json(['success' => true, 'data' => $emprestimo]);
+        return response()->json([
+            'success' => true,
+            'data' => $emprestimo
+        ]);
     }
 
 
@@ -35,7 +38,11 @@ class EmprestimoController extends Controller
             return $roleResult;
         }
         $emprestimo_id = $request->input('emprestimo_id');
-        return response()->json(['success' => true, 'data' => $this->emprestimo->makeDevolucao($emprestimo_id)]);
+        return response()->json([
+            'success' => true,
+            'data' => $this->emprestimo
+                ->makeDevolucao($emprestimo_id)
+        ]);
     }
 
 
@@ -50,7 +57,13 @@ class EmprestimoController extends Controller
         $pendente = $request->query('pendente', false);
         $pendente = $pendente == 'true' ? true : false;
         $search = $request->query('search', '');
-        return  $this->emprestimo->getEmprestimos($page, $limit, $search, $pendente);
+        return  $this->emprestimo
+            ->getEmprestimos(
+                $page,
+                $limit,
+                $search,
+                $pendente
+            );
     }
 
 

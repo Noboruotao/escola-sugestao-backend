@@ -20,7 +20,12 @@ class MultaController extends Controller
         $pago = $request->query('pago', false);
         $search = $request->query('search', '');
 
-        return $this->multa->getMultas($pago, $page, $limit, $search);
+        return $this->multa->getMultas(
+            $pago,
+            $page,
+            $limit,
+            $search
+        );
     }
 
     public function getMulta(Request $request, $id)

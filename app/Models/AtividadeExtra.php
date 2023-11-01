@@ -167,7 +167,10 @@ class AtividadeExtra extends Model
 
         $aluno = Aluno::find($aluno_id);
 
-        if ($ativExtra_aluno = $ativExtra->alunos()->where('aluno_id', $aluno->id)->first()) {
+        if ($ativExtra_aluno = $ativExtra->alunos()
+            ->where('aluno_id', $aluno->id)
+            ->first()
+        ) {
             $ativExtra_aluno->pivot->ativo = 0;
             $ativExtra_aluno->pivot->save();
 
@@ -175,7 +178,8 @@ class AtividadeExtra extends Model
             return response()->json([
                 'success' => true,
                 'data' => $ativExtra->alunos->where('pivot.ativo', 1),
-                'count' => $ativExtra->alunos->where('pivot.ativo', 1)->count()
+                'count' => $ativExtra->alunos->where('pivot.ativo', 1)
+                    ->count()
 
             ]);
         }

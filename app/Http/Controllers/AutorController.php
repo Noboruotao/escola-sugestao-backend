@@ -55,6 +55,9 @@ class AutorController extends Controller
             return $permissionResult;
         }
         $this->autor->deleteAutor($id);
-        return response()->json(['success' => true, 'message' => 'Autor deleted']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Autor deleted'
+        ]);
     }
 }

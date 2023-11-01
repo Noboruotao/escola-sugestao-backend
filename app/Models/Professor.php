@@ -65,11 +65,17 @@ class Professor extends Model
     }
 
 
-    public function attributeNota($aluno_id, $classe_id, $tipo_avaliacao_id, $nota)
-    {
+    public function attributeNota(
+        $aluno_id,
+        $classe_id,
+        $tipo_avaliacao_id,
+        $nota
+    ) {
         $aluno = Aluno::find($aluno_id);
 
-        $classe = auth()->user()->professor->classes()
+        $classe = auth()->user()
+            ->professor
+            ->classes()
             ->where('id', $classe_id)
             ->first();
         $tipo_avaliacao = TipoAvaliacao::find($tipo_avaliacao_id);
@@ -142,7 +148,9 @@ class Professor extends Model
 
     public function getAlunosClasse($classe_id)
     {
-        $classe = $this->classes()->where('id', $classe_id)->first();
+        $classe = $this->classes()
+            ->where('id', $classe_id)
+            ->first();
 
         if (!$classe) {
             return response()->json([

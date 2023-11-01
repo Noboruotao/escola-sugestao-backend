@@ -114,7 +114,8 @@ class Aluno extends Model
 
     public function classes()
     {
-        return $this->belongsToMany(Classe::class)->withPivot(['presenca', 'faltas']);;
+        return $this->belongsToMany(Classe::class)
+            ->withPivot(['presenca', 'faltas']);;
     }
 
 
@@ -189,7 +190,8 @@ class Aluno extends Model
         $tipo
     ) {
         $user = auth()->user();
-        return $user->aluno->ativExtraSugeridos
+        return $user->aluno
+            ->ativExtraSugeridos
             ->when($tipo != '', function ($query) use ($tipo) {
                 return $query->where('tipo_id', $tipo);
             })
@@ -359,7 +361,9 @@ class Aluno extends Model
 
         $values = $query;
         return [
-            'values' => $values->slice($page * $pageSize, $pageSize)->values(),
+            'values' => $values
+                ->slice($page * $pageSize, $pageSize)
+                ->values(),
             'count' => $query->count()
         ];
     }
@@ -369,7 +373,12 @@ class Aluno extends Model
         $valor_total = $notas->sum('nota');
         $valor_final = $valor_total / $notas->count();
 
-        $this->areas()->syncWithoutDetaching([$area->codigo => ['valor_notas' => $valor_final]]);
+        $this->areas()
+            ->syncWithoutDetaching([
+                $area->codigo => [
+                    'valor_notas' => $valor_final
+                ]
+            ]);
     }
 
 
@@ -377,7 +386,6 @@ class Aluno extends Model
     {
         foreach ($disciplina->areas as $area) {
             $disciplinas = $this->getDisciplinasWithArea($area);
-
             $notas = Nota::getAlunoNotasWithinDisciplinas($this, $disciplinas);
 
             if ($notas->count() > 0) {
@@ -437,6 +445,35 @@ class Aluno extends Model
         $this->sugerir();
     }
 
+    public function clearEscolhidos()
+    {
+        $areas = $this->areas()
+            ->where('valor_respondido', '!=', 0)
+            ->get();
+
+        if (!$areas->isEmpty()) {
+            $syncData = [];
+
+            foreach ($areas as $area) {
+                $syncData[$area->codigo] = [
+                    'valor_respondido' => 0
+                ];
+            }
+
+            $this->areas()->syncWithoutDetaching($syncData);
+        }
+    }
+
+    public function attribuirEscolhasValor($escolhas)
+    {
+        foreach ($escolhas as $escolha) {
+            $area = AreaConhecimento::where('codigo', $escolha)
+                ->first();
+            $relacionados = $area->getRelatedAreas();
+            $this->attachAreasWithValues($relacionados, 'valor_respondido');
+        }
+    }
+
 
     public function AttributeAlunoAreaByAcervo($acervo)
     {
@@ -464,7 +501,9 @@ class Aluno extends Model
                 ]
             )
         ) {
-            $aluno_ativExtra = $this->ativExtra()->where('ativExtra_id', $ativExtra->id)->first();
+            $aluno_ativExtra = $this->ativExtra()
+                ->where('ativExtra_id', $ativExtra->id)
+                ->first();
             $aluno_ativExtra->pivot->ativo = 1;
             $aluno_ativExtra->pivot->save();
 

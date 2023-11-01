@@ -40,6 +40,7 @@ class Autor extends Model
             })
             ->with('nacionalidade')
             ->get();
+
         return response()->json([
             'success' => true,
             'data' => $autors,
@@ -52,14 +53,20 @@ class Autor extends Model
     {
 
         $autor = Autor::when($com_acervos, function ($query) {
-            return $query->with('acervos');
+            return $query->with(['nacionalidade', 'acervos']);
         })
             ->find($id);
 
         if (!$autor) {
-            return response()->json(['success' => false, 'message' => 'Autor Não Encontrado'], 404);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Autor Não Encontrado'
+                ],
+                400
+            );
         }
-        
+
         return response()->json([
             'success' => true,
             'data' => $autor

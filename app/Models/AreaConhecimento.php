@@ -89,6 +89,7 @@ class AreaConhecimento extends Model
         if (strlen($codigo) < $degree) {
             $sub_classes = self::where('codigo', 'like', $codigo . '_')
                 ->orWhere('codigo', 'like', $codigo . '._')
+                ->orWhere('codigo', 'like', $codigo . '_/%')
                 ->get();
 
 
@@ -136,6 +137,7 @@ class AreaConhecimento extends Model
     }
 
 
+
     public function attributeAlunoEscolhas($escolhas)
     {
         $aluno = auth()->user()->aluno;
@@ -146,26 +148,8 @@ class AreaConhecimento extends Model
             ]);
         }
 
-        $areas = $aluno->areas()
-            ->where('valor_respondido', '!=', 0)
-            ->get();
-
-        if (!$areas->isEmpty()) {
-            $syncData = [];
-
-            foreach ($areas as $area) {
-                $syncData[$area->codigo] = ['valor_respondido' => 0];
-            }
-
-            $aluno->areas()->syncWithoutDetaching($syncData);
-        }
-
-        foreach ($escolhas as $escolha) {
-            $area = self::where('codigo', $escolha)
-                ->first();
-            $relacionados = $area->getRelatedAreas();
-            $aluno->attachAreasWithValues($relacionados, 'valor_respondido');
-        }
+        $aluno->clearEscolhidos();
+        $aluno->attribuirEscolhasValor($escolhas);
 
         return response()->json([
             'success' => true,

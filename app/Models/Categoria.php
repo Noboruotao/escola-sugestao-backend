@@ -33,7 +33,11 @@ class Categoria extends Model
                 })
                 ->where('categoria', 'like', '%' . $search . '%')
                 ->get();
-            Cache::put('acervoCategoria', $categorias, now()->addMinutes(30));
+            Cache::put(
+                'acervoCategoria',
+                $categorias,
+                now()->addMinutes(30)
+            );
         }
 
         return response()->json([

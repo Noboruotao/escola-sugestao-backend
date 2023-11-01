@@ -26,7 +26,12 @@ class ProfessorController extends Controller
         $tipo_avaliacao_id = $request->input('tipo_avaliacao_id');
         $nota = $request->input('nota');
 
-        $resposta = $this->professor->attributeNota($aluno_id, $classe_id, $tipo_avaliacao_id, $nota);
+        $resposta = $this->professor->attributeNota(
+            $aluno_id,
+            $classe_id,
+            $tipo_avaliacao_id,
+            $nota
+        );
 
         return response()->json($resposta);
     }
@@ -42,7 +47,11 @@ class ProfessorController extends Controller
         $classe_id = $request->input('classe_id');
         $nota_final = $request->input('nota_final');
 
-        return $this->professor->makeNotaFinal($aluno_id, $classe_id, $nota_final);
+        return $this->professor->makeNotaFinal(
+            $aluno_id,
+            $classe_id,
+            $nota_final
+        );
 
         return response()->json($resposta);
     }
@@ -53,10 +62,15 @@ class ProfessorController extends Controller
         $classe_id = $request->query('classe_id', null);
 
         if (!$classe_id) {
-            return response()->json(['success' => false, 'message' => 'Valor Inválido']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Valor Inválido'
+            ]);
         }
 
-        $resposta = auth()->user()->professor->getAlunosClasse($classe_id);
+        $resposta = auth()->user()
+            ->professor
+            ->getAlunosClasse($classe_id);
 
         return response()->json($resposta);
     }

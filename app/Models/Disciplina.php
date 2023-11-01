@@ -20,13 +20,22 @@ class Disciplina extends Model
     {
         return $this->belongsToMany(Aluno::class, 'aluno_Disciplina')
             ->using(AlunoDisciplina::class)
-            ->withPivot('situacao_id', 'nota_final');
+            ->withPivot(
+                'situacao_id',
+                'nota_final'
+            );
     }
 
 
     public function areas()
     {
-        return $this->morphToMany(AreaConhecimento::class, 'model', 'model_has_areas', 'model_id', 'area_codigo');
+        return $this->morphToMany(
+            AreaConhecimento::class,
+            'model',
+            'model_has_areas',
+            'model_id',
+            'area_codigo'
+        );
     }
 
 
@@ -48,8 +57,13 @@ class Disciplina extends Model
     }
 
 
-    public function getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder)
-    {
+    public function getDisiplinas(
+        $page,
+        $pageSize,
+        $search,
+        $sortColumn,
+        $sortOrder
+    ) {
         $query = self::with('periodo')
 
             ->when($search, function ($query) use ($search) {

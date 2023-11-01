@@ -24,7 +24,13 @@ class DisciplinaController extends Controller
         $sortColumn = $request->query('sortColumn', null);
         $sortOrder = $request->query('sortOrder', 'asc');
 
-        $disciplinas = $this->disciplina->getDisiplinas($page, $pageSize, $search, $sortColumn, $sortOrder);
+        $disciplinas = $this->disciplina->getDisiplinas(
+            $page,
+            $pageSize,
+            $search,
+            $sortColumn,
+            $sortOrder
+        );
 
         return response()->json([
             'success' => true,
@@ -36,7 +42,10 @@ class DisciplinaController extends Controller
 
     public function getDisciplinasOfUser(Request $request)
     {
-        $roleResult = $this->checkRole(['Aluno', 'Professor']);
+        $roleResult = $this->checkRole([
+            'Aluno',
+            'Professor'
+        ]);
         if ($roleResult !== null) {
             return $roleResult;
         }
@@ -91,8 +100,12 @@ class DisciplinaController extends Controller
             return $permissionResult;
         }
         $nome = $request->input('nome');
-        $nova_situacao =  $this->disciplina_situacao->createSituacao($nome);
-        return response()->json(['success' => true, 'data' => $nova_situacao]);
+        $nova_situacao =  $this->disciplina_situacao
+            ->createSituacao($nome);
+        return response()->json([
+            'success' => true,
+            'data' => $nova_situacao
+        ]);
     }
 
 

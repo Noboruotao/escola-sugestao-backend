@@ -107,7 +107,7 @@ class Acervo extends Model
 
     public function getAcervo($acervo_id)
     {
-        return self::with([
+        $acervo = self::with([
             'autor:id,nome',
             'editora:id,nome',
             'idioma:id,idioma',
@@ -117,6 +117,11 @@ class Acervo extends Model
             'situacao:id,situacao'
         ])
             ->find($acervo_id);
+
+        return response()->json([
+            'success' => true,
+            'data' => $acervo
+        ]);
     }
 
 
@@ -128,7 +133,15 @@ class Acervo extends Model
         $sortOrder,
         $search = null
     ) {
-        $query = self::select(['id', 'titulo', 'subtitulo', 'resumo', 'capa', 'autor_id', 'situacao_id'])
+        $query = self::select([
+            'id',
+            'titulo',
+            'subtitulo',
+            'resumo',
+            'capa',
+            'autor_id',
+            'situacao_id'
+        ])
             ->with(['autor:id,nome'])
             ->with('situacao')
             // ->with(['emprestimos' => function ($query) {
@@ -254,9 +267,13 @@ class Acervo extends Model
 
     public function getAcervosBySituacao($situacao_id, $offset, $limit)
     {
-        return self::where('situacao_id', $situacao_id)
+        $acervos = self::where('situacao_id', $situacao_id)
             ->offset($offset)
             ->limit($limit)
             ->get();
+        return response()->json([
+            'success' => true,
+            'data' => $acervos
+        ]);
     }
 }

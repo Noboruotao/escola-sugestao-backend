@@ -37,7 +37,11 @@ class PessoaController extends Controller
         try {
             $foto = $this->pessoa->getFotoById($request->id);
             if (!$foto) {
-                return response()->make('File not found.', 404);
+                return response()
+                    ->make(
+                        'File not found.',
+                        404
+                    );
             }
             $filePath = 'fotos/' . $foto;
             $fileContents = Storage::get($filePath);
@@ -48,10 +52,17 @@ class PessoaController extends Controller
                     'Content-Disposition' => 'inline; filename="' . $foto . '"',
                 ]);
             } else {
-                return response()->make('File not found.', 404);
+                return response()
+                    ->make(
+                        'File not found.',
+                        404
+                    );
             }
         } catch (\Throwable $th) {
-            return response()->make($th->getMessage(), 404);
+            return response()->make(
+                $th->getMessage(),
+                404
+            );
         }
     }
 
