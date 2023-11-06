@@ -11,4 +11,13 @@ class AtivExtraTipo extends Model
     protected $table = 'tipos_atividade_extracurricular';
     protected $fillable = ['nome'];
 
+
+    public function getAtivExtraTipos()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => self::get(),
+            'count' => self::count(),
+        ]);
+    }
 }

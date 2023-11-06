@@ -24,7 +24,10 @@ class Classe extends Model
     public function alunos()
     {
         return $this->belongsToMany(Aluno::class)
-            ->withPivot(['presenca', 'faltas']);
+            ->withPivot([
+                'presenca',
+                'faltas'
+            ]);
     }
 
 
@@ -36,21 +39,37 @@ class Classe extends Model
 
     public function professor()
     {
-        return $this->belongsTo(Professor::class, 'professor_id');
+        return $this->belongsTo(
+            Professor::class,
+            'professor_id'
+        );
     }
 
     public function disciplina()
     {
-        return $this->belongsTo(Disciplina::class, 'disciplina_id');
+        return $this->belongsTo(
+            Disciplina::class,
+            'disciplina_id'
+        );
     }
 
 
-    public function getClassesEnableAtivo($ativo, $page, $pageSize, $search, $sortColumn, $sortOrder)
-    {
+    public function getClassesEnableAtivo(
+        $ativo,
+        $page,
+        $pageSize,
+        $search,
+        $sortColumn,
+        $sortOrder
+    ) {
         $user = auth()->user();
         $query = ($user->hasRole('Aluno'))
-            ? $user->aluno->classes()->where('ativo', $ativo)
-            : $user->professor->classes()->where('ativo', $ativo);
+            ? $user->aluno
+            ->classes()
+            ->where('ativo', $ativo)
+            : $user->professor
+            ->classes()
+            ->where('ativo', $ativo);
 
         if ($search !== '') {
             $query->whereHas('disciplina', function ($sub_query) use ($search) {
@@ -105,7 +124,10 @@ class Classe extends Model
                 ->faltas;
         }
 
-        return response()->json(['success' => true, 'data' => $alunos]);
+        return response()->json([
+            'success' => true,
+            'data' => $alunos
+        ]);
     }
 
 

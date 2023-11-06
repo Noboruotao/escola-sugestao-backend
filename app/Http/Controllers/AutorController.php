@@ -58,11 +58,8 @@ class AutorController extends Controller
         $data['ano_nascimento'] = $request->input('ano_nascimento');
         $data['ano_falecimento'] = $request->input('ano_falecimento');
 
-        return response()->json([
-            'success' => true,
-            'data' => $this->autor
-                ->createAutor($data)
-        ]);
+        return $this->autor
+            ->createAutor($data);
     }
 
 
@@ -72,10 +69,6 @@ class AutorController extends Controller
         if ($permissionResult !== null) {
             return $permissionResult;
         }
-        $this->autor->deleteAutor($id);
-        return response()->json([
-            'success' => true,
-            'message' => 'Autor deleted'
-        ]);
+        return $this->autor->deleteAutor($id);
     }
 }

@@ -26,8 +26,9 @@ class AlunoDisciplina extends Pivot
 
     public function situacao()
     {
-        return $this->belongsTo(SituacaoDaDisciplina::class, 'situacao_id');
+        return $this->belongsTo(
+            SituacaoDaDisciplina::class,
+            'situacao_id'
+        );
     }
-
-    
 }

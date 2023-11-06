@@ -40,23 +40,35 @@ class Pessoa extends Authenticatable implements JWTSubject
 
     public function enderecos()
     {
-        return $this->belongsToMany(Endereco::class, 'endereco_pessoa');
+        return $this->belongsToMany(
+            Endereco::class,
+            'endereco_pessoa'
+        );
     }
 
     public function aluno()
     {
-        return $this->hasOne(Aluno::class, 'id', 'id');
+        return $this->hasOne(
+            Aluno::class,
+            'id',
+            'id'
+        );
     }
 
     public function professor()
     {
-        return $this->hasOne(Professor::class, 'id', 'id');
+        return $this->hasOne(
+            Professor::class,
+            'id',
+            'id'
+        );
     }
 
 
     public function responsavel()
     {
-        return $this->aluno->responsavel();
+        return $this->aluno
+            ->responsavel();
     }
 
 
@@ -73,13 +85,19 @@ class Pessoa extends Authenticatable implements JWTSubject
 
     public function bibliotecaMulta()
     {
-        return $this->morphedByMany(Emprestimo::class, 'multas');
+        return $this->morphedByMany(
+            Emprestimo::class,
+            'multas'
+        );
     }
 
 
     public function PagamentoMulta()
     {
-        return $this->morphedByMany(Pagamento::class, 'multas');
+        return $this->morphedByMany(
+            Pagamento::class,
+            'multas'
+        );
     }
 
 
@@ -123,18 +141,27 @@ class Pessoa extends Authenticatable implements JWTSubject
             })
             ->first();
         if ($pessoa->hasRole(['Aluno'])) {
-            $pessoa->aluno->situacao->situacao;
-            $pessoa->aluno->periodo->periodo;
+            $pessoa->aluno
+                ->situacao->situacao;
+            $pessoa->aluno
+                ->periodo->periodo;
         }
         if ($pessoa->hasRole(['Professor'])) {
             $pessoa->professor;
         }
-        return ['success' => true, 'data' => $pessoa];
+        return [
+            'success' => true,
+            'data' => $pessoa
+        ];
     }
 
 
-    public function getPessoaListFilteredWithCpf($search, $roles = ['Aluno'])
-    {
+    public function getPessoaListFilteredWithCpf(
+        $search,
+        $roles = [
+            'Aluno'
+        ]
+    ) {
         $pessoasWithCpf = self::select([
             'nome',
             'id',

@@ -25,11 +25,17 @@ class Editora extends Model
 
     public function acervos()
     {
-        return $this->hasMany(Acervo::class, 'editora_id');
+        return $this->hasMany(
+            Acervo::class,
+            'editora_id'
+        );
     }
 
-    function listEditoras($page, $limit, $search)
-    {
+    function listEditoras(
+        $page,
+        $limit,
+        $search
+    ) {
         $editoras = self::select(['id', 'nome'])
             ->where('nome', 'like', '%' . $search . '%')
             ->offset($page * $limit)
@@ -48,7 +54,8 @@ class Editora extends Model
 
     function getEditoraById($id)
     {
-        $editora = self::with('endereco')->find($id);
+        $editora = self::with('endereco')
+            ->find($id);
 
         if (!$editora) {
             return response()->json([

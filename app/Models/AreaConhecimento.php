@@ -15,7 +15,10 @@ class AreaConhecimento extends Model
     protected $primaryKey = 'codigo';
     protected $keyType = 'string';
 
-    protected $fillable = ['codigo', 'nome'];
+    protected $fillable = [
+        'codigo',
+        'nome'
+    ];
 
     protected $hidden = [
         'created_at',
@@ -74,7 +77,10 @@ class AreaConhecimento extends Model
         if ($degree > 1) {
             foreach ($classes as $classe) {
 
-                $classe->sub_classes = $this->getSubClasses($classe, $degree);
+                $classe->sub_classes = $this->getSubClasses(
+                    $classe,
+                    $degree
+                );
             }
         }
         return response()->json([
@@ -83,8 +89,10 @@ class AreaConhecimento extends Model
         ]);
     }
 
-    private function getSubClasses($classe, $degree)
-    {
+    private function getSubClasses(
+        $classe,
+        $degree
+    ) {
         $codigo = $classe->codigo;
         if (strlen($codigo) < $degree) {
             $sub_classes = self::where('codigo', 'like', $codigo . '_')
@@ -94,7 +102,10 @@ class AreaConhecimento extends Model
 
 
             foreach ($sub_classes as $sub_classe) {
-                $results =  $this->getSubClasses($sub_classe, $degree);
+                $results =  $this->getSubClasses(
+                    $sub_classe,
+                    $degree
+                );
                 if (strlen($results) > 0) {
                     $sub_classe->sub_classe = $results;
                 }

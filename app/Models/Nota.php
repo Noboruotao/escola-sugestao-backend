@@ -28,7 +28,10 @@ class Nota extends Model
 
     public function tipo()
     {
-        return $this->belongsTo(TipoAvaliacao::class, 'tipo_avaliacao_id');
+        return $this->belongsTo(
+            TipoAvaliacao::class,
+            'tipo_avaliacao_id'
+        );
     }
 
 
@@ -38,8 +41,10 @@ class Nota extends Model
     }
 
 
-    public static function getAlunoNotasWithinDisciplinas($aluno, $disciplinas)
-    {
+    public static function getAlunoNotasWithinDisciplinas(
+        $aluno,
+        $disciplinas
+    ) {
         return self::where('aluno_id', $aluno->id)
             ->whereIn(
                 'disciplina_id',

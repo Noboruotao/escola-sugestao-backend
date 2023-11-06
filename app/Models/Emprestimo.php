@@ -26,35 +26,54 @@ class Emprestimo extends Model
 
     public function multa()
     {
-        return $this->morphOne(Multa::class, 'multa');
+        return $this->morphOne(
+            Multa::class,
+            'multa'
+        );
     }
 
 
     public function acervo()
     {
-        return $this->hasOne(Acervo::class, 'id', 'acervo_id');
+        return $this->hasOne(
+            Acervo::class,
+            'id',
+            'acervo_id'
+        );
     }
 
 
     public function bibliotecario()
     {
-        return $this->hasOne(Pessoa::class, 'id', 'bibliotecario_id');
+        return $this->hasOne(
+            Pessoa::class,
+            'id',
+            'bibliotecario_id'
+        );
     }
 
 
     public function leitor()
     {
-        return $this->hasOne(Pessoa::class, 'id', 'leitor_id');
+        return $this->hasOne(
+            Pessoa::class,
+            'id',
+            'leitor_id'
+        );
     }
 
-    public function makeEmprestimo($acervo_id, $leitor_id)
-    {
-        $bibliotecario_id = auth()->user()->id;
+    public function makeEmprestimo(
+        $acervo_id,
+        $leitor_id
+    ) {
+        $bibliotecario_id = auth()->user()
+            ->id;
         $emprestimo = self::create([
             'acervo_id' => $acervo_id,
             'bibliotecario_id' => $bibliotecario_id,
             'leitor_id' => $leitor_id,
-            'data_emprestimo' => Carbon::now()->format('Y-m-d'),
+            'data_emprestimo' => Carbon::now()
+                ->format('Y-m-d'),
         ]);
 
         Acervo::find($acervo_id)
@@ -63,9 +82,15 @@ class Emprestimo extends Model
             ]);
 
         if ($aluno = Aluno::find($leitor_id)) {
-            $aluno->AttributeAlunoAreaByAcervo(Acervo::find($acervo_id));
+            $aluno->AttributeAlunoAreaByAcervo(
+                Acervo::find($acervo_id)
+            );
         }
-        return $emprestimo;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Emprestimo Feito com Sucesso.'
+        ]);
     }
 
 
@@ -178,8 +203,10 @@ class Emprestimo extends Model
     }
 
 
-    private function valueForMultaDiasValor($daysInterval, $valorMulta)
-    {
+    private function valueForMultaDiasValor(
+        $daysInterval,
+        $valorMulta
+    ) {
         return [
             'dias_atrasados' => $daysInterval,
             'valor' => $valorMulta,
@@ -205,7 +232,10 @@ class Emprestimo extends Model
 
             $multaData = array_merge(
                 self::valueForsearchMulta($emprestimo),
-                self::valueForMultaDiasValor($daysInterval, $valorMulta)
+                self::valueForMultaDiasValor(
+                    $daysInterval,
+                    $valorMulta
+                )
             );
 
             Multa::updateOrCreate(
@@ -228,7 +258,11 @@ class Emprestimo extends Model
                 ->addDays(config('parametros.dias_de_emprestimo_de_acervo'));
             $emprestimo->data_devolucao = $data_devolucao->format('d/m/Y');
 
-            $emprestimo->color = ($data_devolucao->isBefore(Carbon::now())) ? 'red' : 'green';
+            $emprestimo->color = ($data_devolucao->isBefore(
+                Carbon::now()
+            ))
+                ? 'red'
+                : 'green';
         }
 
         if ($emprestimos->count() == 0) {

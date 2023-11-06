@@ -8,7 +8,7 @@ use App\Models\AtivExtraTipo;
 
 class AtividadeExtracurricularController extends Controller
 {
-    public function __construct(AtividadeExtra $atividade_extra, AtivExtraTipo $ativExtra)
+    public function __construct(AtividadeExtra $atividade_extra, AtivExtraTipo $ativExtra_tipo)
     {
         $this->middleware(
             'auth:api',
@@ -17,7 +17,7 @@ class AtividadeExtracurricularController extends Controller
             ]
         );
         $this->atividade_extra = $atividade_extra;
-        $this->ativExtra = $ativExtra;
+        $this->ativExtra_tipo = $ativExtra_tipo;
     }
 
 
@@ -30,7 +30,7 @@ class AtividadeExtracurricularController extends Controller
         $order = $request->query('order', null);
         $tipo = $request->query('tipo', '');
 
-        $ativExtrasList = $this->atividade_extra
+        return $this->atividade_extra
             ->getAtivExtras(
                 $page,
                 $limit,
@@ -39,12 +39,6 @@ class AtividadeExtracurricularController extends Controller
                 $order,
                 $tipo
             );
-
-        return response()->json([
-            'success' => true,
-            'data' => $ativExtrasList['data'],
-            'count' => $ativExtrasList['count']
-        ]);
     }
 
     public function getAtivExtraDetail(
@@ -58,11 +52,8 @@ class AtividadeExtracurricularController extends Controller
 
     public function getAtivExtraTipo()
     {
-        return response()->json([
-            'success' => true,
-            'data' => $this->ativExtra
-                ->get(),
-        ], 200);
+        return $this->ativExtra_tipo
+            ->getAtivExtraTipos();
     }
 
 

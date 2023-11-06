@@ -28,14 +28,10 @@ class EmprestimoController extends Controller
         $acervo_id = $request->input('acervo_id');
         $leitor_id = $request->input('leitor_id');
 
-        $emprestimo = $this->emprestimo->makeEmprestimo(
+        return $this->emprestimo->makeEmprestimo(
             $acervo_id,
             $leitor_id
         );
-        return response()->json([
-            'success' => true,
-            'data' => $emprestimo
-        ]);
     }
 
 

@@ -16,12 +16,18 @@ class Professor extends Model
 
     public function classes()
     {
-        return $this->hasMany(Classe::class, 'professor_id');
+        return $this->hasMany(
+            Classe::class,
+            'professor_id'
+        );
     }
 
     public function pessoa()
     {
-        return $this->belongsTo(Pessoa::class, 'id');
+        return $this->belongsTo(
+            Pessoa::class,
+            'id'
+        );
     }
 
 
@@ -45,15 +51,17 @@ class Professor extends Model
         if ($this->classes->where('ativo', $active)->count() < 1) {
             return response()->json([
                 'success' => false,
-                // 'data' => $this->classes->where('ativo', $active)->values(),
                 'message' => 'Disciplina Não Encontrado'
-            ],400);
+            ], 400);
         }
 
         $query = $this->classes
             ->where('ativo', $active)
             ->filter(function ($classe) use ($search) {
-                return str_contains($classe->disciplina->nome, $search);
+                return str_contains(
+                    $classe->disciplina->nome,
+                    $search
+                );
             })->map(function ($classe) {
                 return $classe->disciplina;
             });
@@ -62,7 +70,8 @@ class Professor extends Model
             ? $query->sortBy($sortColumn)
             : $query->sortByDesc($sortColumn);
 
-        $disciplinas = $query->skip($page * $pageSize)->take($pageSize);
+        $disciplinas = $query->skip($page * $pageSize)
+            ->take($pageSize);
 
         foreach ($disciplinas as $disciplina) {
             $disciplina->periodo;
@@ -128,8 +137,11 @@ class Professor extends Model
     }
 
 
-    public  function makeNotaFinal($aluno_id, $classe_id, $nota_final)
-    {
+    public  function makeNotaFinal(
+        $aluno_id,
+        $classe_id,
+        $nota_final
+    ) {
         $aluno = Aluno::find($aluno_id);
         $classe = Classe::where('id', $classe_id)
             ->where('professor_id', auth()->user()->id)
@@ -148,7 +160,8 @@ class Professor extends Model
             ->first();
 
         $disciplina->pivot->nota_final = $nota_final;
-        $disciplina->pivot->situacao_id = self::verificarAprovacao($nota_final);
+        $disciplina->pivot
+            ->situacao_id = self::verificarAprovacao($nota_final);
 
         $disciplina->pivot->save();
         return response()->json([

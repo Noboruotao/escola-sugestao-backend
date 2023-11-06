@@ -108,12 +108,14 @@ class AlunoController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $ativExtra->slice(
-                $page * $limit,
-                $limit
-            )
+            'data' => $ativExtra
+                ->slice(
+                    $page * $limit,
+                    $limit
+                )
                 ->values(),
-            'count' => $ativExtra->count()
+            'count' => $ativExtra
+                ->count()
         ], 200);
     }
 

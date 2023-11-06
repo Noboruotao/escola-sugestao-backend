@@ -9,7 +9,10 @@ class Bolsa extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'valor'];
+    protected $fillable = [
+        'nome',
+        'valor'
+    ];
 
     public function alunos()
     {

@@ -24,7 +24,11 @@ class Aluno extends Model
 
     public function pessoa()
     {
-        return $this->belongsTo(Pessoa::class, 'id', 'id');
+        return $this->belongsTo(
+            Pessoa::class,
+            'id',
+            'id'
+        );
     }
 
 
@@ -115,16 +119,25 @@ class Aluno extends Model
     public function classes()
     {
         return $this->belongsToMany(Classe::class)
-            ->withPivot(['presenca', 'faltas']);;
+            ->withPivot([
+                'presenca',
+                'faltas'
+            ]);;
     }
 
 
     public function disciplinas()
     {
-        return $this->belongsToMany(Disciplina::class, 'aluno_Disciplina')
+        return $this->belongsToMany(
+            Disciplina::class,
+            'aluno_Disciplina'
+        )
             ->using(AlunoDisciplina::class)
             ->with('periodo')
-            ->withPivot('situacao_id', 'nota_final');
+            ->withPivot(
+                'situacao_id',
+                'nota_final'
+            );
     }
 
 
@@ -160,7 +173,11 @@ class Aluno extends Model
 
     public function notas()
     {
-        return $this->hasMany(Nota::class, 'aluno_id', 'id');
+        return $this->hasMany(
+            Nota::class,
+            'aluno_id',
+            'id'
+        );
     }
 
 
@@ -174,10 +191,11 @@ class Aluno extends Model
         $user = auth()->user();
         return $user->aluno->cursosSugeridos
             ->when($search, function ($query) use ($search) {
-                return $query->filter(function ($curso) use ($search) {
-                    return stripos($curso['nome'], $search) !== false ||
-                        stripos($curso['descricao'], $search) !== false;
-                });
+                return $query
+                    ->filter(function ($curso) use ($search) {
+                        return stripos($curso['nome'], $search) !== false ||
+                            stripos($curso['descricao'], $search) !== false;
+                    });
             });
     }
 
@@ -225,7 +243,9 @@ class Aluno extends Model
             $notasQuery->where('classe_id', $classe->id);
         }
 
-        $notas = $notasQuery->with('tipo')->get();
+        $notas = $notasQuery
+            ->with('tipo')
+            ->get();
 
         $multipleClasses = $aluno->classes
             ->where('disciplina_id', $disciplina->id)
@@ -253,9 +273,10 @@ class Aluno extends Model
 
     public function getCursosPorSituacao($situacao_id)
     {
-        return $this->disciplinas->filter(function ($item) use ($situacao_id) {
-            return $item['pivot']['situacao_id'] == $situacao_id;
-        });
+        return $this->disciplinas
+            ->filter(function ($item) use ($situacao_id) {
+                return $item['pivot']['situacao_id'] == $situacao_id;
+            });
     }
 
 
@@ -267,9 +288,12 @@ class Aluno extends Model
     }
 
 
-    public function disaparecerSugerido($model_id, $model_type)
-    {
-        $aluno = auth()->user()->aluno;
+    public function disaparecerSugerido(
+        $model_id,
+        $model_type
+    ) {
+        $aluno = auth()->user()
+            ->aluno;
 
         if ($model_type == Curso::class) {
             $sugerido = $aluno->cursosSugeridos()
@@ -349,9 +373,10 @@ class Aluno extends Model
             ->where('pivot.situacao_id', $situacao_id);
 
         if ($search) {
-            $query = $query->filter(function ($item) use ($search) {
-                return stripos($item['nome'], $search) !== false;
-            });
+            $query = $query
+                ->filter(function ($item) use ($search) {
+                    return stripos($item['nome'], $search) !== false;
+                });
         }
 
         $query = ($sortOrder == 'asc')
@@ -364,14 +389,19 @@ class Aluno extends Model
         return response()->json([
             'success' => true,
             'data' => $values
-                ->slice($page * $pageSize, $pageSize)
+                ->slice(
+                    $page * $pageSize,
+                    $pageSize
+                )
                 ->values(),
             'count' => $query->count()
         ]);
     }
 
-    private function AttributeAreaByNota($notas, $area)
-    {
+    private function AttributeAreaByNota(
+        $notas,
+        $area
+    ) {
         $valor_total = $notas->sum('nota');
         $valor_final = $valor_total / $notas->count();
 
@@ -388,19 +418,28 @@ class Aluno extends Model
     {
         foreach ($disciplina->areas as $area) {
             $disciplinas = $this->getDisciplinasWithArea($area);
-            $notas = Nota::getAlunoNotasWithinDisciplinas($this, $disciplinas);
+            $notas = Nota::getAlunoNotasWithinDisciplinas(
+                $this,
+                $disciplinas
+            );
 
             if ($notas->count() > 0) {
 
-                $this->AttributeAreaByNota($notas, $area);
+                $this->AttributeAreaByNota(
+                    $notas,
+                    $area
+                );
             }
         }
         $this->sugerir();
     }
 
 
-    private function makeAttachDataForAreasWithValues($areas, $existingPivotData, $valorKey)
-    {
+    private function makeAttachDataForAreasWithValues(
+        $areas,
+        $existingPivotData,
+        $valorKey
+    ) {
         $attachData = [];
 
         foreach ($areas as $area) {
@@ -436,13 +475,19 @@ class Aluno extends Model
     }
 
 
-    public function attachAreasWithValues($areas, $valorKey)
-    {
+    public function attachAreasWithValues(
+        $areas,
+        $valorKey
+    ) {
         $existingPivotData = $this->areas()
             ->whereIn('area_codigo', $areas->pluck('codigo'))
             ->get();
 
-        $attachData = self::makeAttachDataForAreasWithValues($areas, $existingPivotData, $valorKey);
+        $attachData = self::makeAttachDataForAreasWithValues(
+            $areas,
+            $existingPivotData,
+            $valorKey
+        );
         $this->areas()->syncWithoutDetaching($attachData);
         $this->sugerir();
     }
@@ -472,7 +517,10 @@ class Aluno extends Model
             $area = AreaConhecimento::where('codigo', $escolha)
                 ->first();
             $relacionados = $area->getRelatedAreas();
-            $this->attachAreasWithValues($relacionados, 'valor_respondido');
+            $this->attachAreasWithValues(
+                $relacionados,
+                'valor_respondido'
+            );
         }
     }
 
@@ -484,9 +532,16 @@ class Aluno extends Model
 
     public function attributeAtivExtra($ativExtra)
     {
-        if ($this->ativExtra->contains($ativExtra) == false) {
-            $this->ativExtra()->attach($ativExtra);
-            $this->attachAreasWithValues($ativExtra->areas, 'valor_atividades');
+        if (
+            $this->ativExtra
+            ->contains($ativExtra) == false
+        ) {
+            $this->ativExtra()
+                ->attach($ativExtra);
+            $this->attachAreasWithValues(
+                $ativExtra->areas,
+                'valor_atividades'
+            );
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -507,7 +562,8 @@ class Aluno extends Model
                 ->where('ativExtra_id', $ativExtra->id)
                 ->first();
             $aluno_ativExtra->pivot->ativo = 1;
-            $aluno_ativExtra->pivot->save();
+            $aluno_ativExtra->pivot
+                ->save();
 
             return response()->json([
                 'success' => true,
@@ -548,8 +604,10 @@ class Aluno extends Model
     }
 
 
-    private function checkAlunoAreaWithParametros($model, $aluno_area_valor_final)
-    {
+    private function checkAlunoAreaWithParametros(
+        $model,
+        $aluno_area_valor_final
+    ) {
         $sugere = true;
         foreach ($model->parametros as $parametro) {
             $aluno_area = $aluno_area_valor_final
@@ -569,8 +627,10 @@ class Aluno extends Model
     }
 
 
-    private function sugerirCursos($aluno, $aluno_area_valor_final)
-    {
+    private function sugerirCursos(
+        $aluno,
+        $aluno_area_valor_final
+    ) {
         $cursos = Curso::whereNotIn(
             'id',
             $aluno->cursosSugeridos()
@@ -578,24 +638,35 @@ class Aluno extends Model
         )->get();
         foreach ($cursos as $curso) {
             $sugere = true;
-            $sugere = self::checkAlunoAreaWithParametros($curso, $aluno_area_valor_final);
+            $sugere = self::checkAlunoAreaWithParametros(
+                $curso,
+                $aluno_area_valor_final
+            );
             if ($sugere) {
-                $aluno->cursosSugeridos()->attach($curso);
+                $aluno->cursosSugeridos()
+                    ->attach($curso);
             }
         }
     }
 
-    private function sugerirAtivExtra($aluno, $aluno_area_valor_final)
-    {
+    private function sugerirAtivExtra(
+        $aluno,
+        $aluno_area_valor_final
+    ) {
         $cursos = AtividadeExtra::whereNotIn(
             'id',
-            $aluno->ativExtraSugeridos()->pluck('sugerido_id')
+            $aluno->ativExtraSugeridos()
+                ->pluck('sugerido_id')
         )->get();
         foreach ($cursos as $curso) {
             $sugere = true;
-            $sugere = self::checkAlunoAreaWithParametros($curso, $aluno_area_valor_final);
+            $sugere = self::checkAlunoAreaWithParametros(
+                $curso,
+                $aluno_area_valor_final
+            );
             if ($sugere) {
-                $aluno->ativExtraSugeridos()->attach($curso);
+                $aluno->ativExtraSugeridos()
+                    ->attach($curso);
             }
         }
     }
@@ -604,7 +675,13 @@ class Aluno extends Model
     public function sugerir()
     {
         $aluno_area_valor_final = $this->getAlunoAreaWithValorFinal();
-        self::sugerirCursos($this, $aluno_area_valor_final);
-        self::sugerirAtivExtra($this, $aluno_area_valor_final);
+        self::sugerirCursos(
+            $this,
+            $aluno_area_valor_final
+        );
+        self::sugerirAtivExtra(
+            $this,
+            $aluno_area_valor_final
+        );
     }
 }

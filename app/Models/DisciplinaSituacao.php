@@ -26,13 +26,26 @@ class DisciplinaSituacao extends Model
 
     public function getSituacoesDisciplina()
     {
-        return self::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => self::all()
+        ]);
     }
 
 
     public function createSituacao($nome)
     {
-        return self::create(['nome' => $nome]);
+        if (
+            self::create([
+                'nome' => $nome
+            ])
+        ) {
+            return response()->json([
+                'success' => true,
+                'data' => $nome
+            ]);
+        }
     }
 
 

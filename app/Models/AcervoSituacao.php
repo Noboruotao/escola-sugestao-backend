@@ -30,7 +30,8 @@ class AcervoSituacao extends Model
     {
 
         $situacoes = self::where('situacao', 'like', '%' . $search . '%')
-            ->when($limit, function ($query) use ($limit, $page) {
+            ->when($limit,
+             function ($query) use ($limit, $page) {
                 return $query->offset($page * $limit)
                     ->limit($limit);
             })

@@ -48,7 +48,11 @@ class AcervoTipo extends Model
                         ->limit($limit);
                 })
                 ->get();
-            Cache::put('acervoTipos', $acervoTipos, now()->addMinutes(30));
+            Cache::put(
+                'acervoTipos',
+                $acervoTipos,
+                now()->addMinutes(30)
+            );
         }
 
         return response()->json([

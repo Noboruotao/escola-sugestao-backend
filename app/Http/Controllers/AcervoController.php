@@ -133,6 +133,7 @@ class AcervoController extends Controller
 
     public function getAcervoParametros()
     {
-        return $this->acervo->getAcervoParametros();
+        return $this->acervo
+            ->getAcervoParametros();
     }
 }

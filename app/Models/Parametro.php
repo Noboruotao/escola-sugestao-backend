@@ -13,6 +13,9 @@ class Parametro extends Model
 
     public function area()
     {
-        return $this->belongsTo(AreaDeConhecimento::class, 'area_id');
+        return $this->belongsTo(
+            AreaDeConhecimento::class,
+            'area_id'
+        );
     }
 }

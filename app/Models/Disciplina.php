@@ -9,7 +9,10 @@ class Disciplina extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'carga_horaria'];
+    protected $fillable = [
+        'nome',
+        'carga_horaria'
+    ];
 
     protected $hidden = [
         'created_at',
@@ -18,7 +21,10 @@ class Disciplina extends Model
 
     public function alunos()
     {
-        return $this->belongsToMany(Aluno::class, 'aluno_Disciplina')
+        return $this->belongsToMany(
+            Aluno::class,
+            'aluno_Disciplina'
+        )
             ->using(AlunoDisciplina::class)
             ->withPivot(
                 'situacao_id',
@@ -47,13 +53,19 @@ class Disciplina extends Model
 
     public function periodo()
     {
-        return $this->belongsTo(Periodo::class, 'periodo_id');
+        return $this->belongsTo(
+            Periodo::class,
+            'periodo_id'
+        );
     }
 
 
     public function materialSugeridos()
     {
-        return $this->belongsToMany(Acervo::class, 'materiais_sugeridos');
+        return $this->belongsToMany(
+            Acervo::class,
+            'materiais_sugeridos'
+        );
     }
 
 
@@ -74,13 +86,17 @@ class Disciplina extends Model
             });
 
 
-        return [
-            'count' => $query->count(),
-            'values' => $query->offset($page * $pageSize)
+        return response()->json([
+            'success' => true,
+            'data' => $query
+                ->offset($page * $pageSize)
                 ->limit($pageSize)
-                ->get()
-        ];
+                ->get(),
+            'count' => $query->count(),
+        ]);
     }
+
+    
     public function getDisciplina($id)
     {
         $disciplina = self::where('id', $id)

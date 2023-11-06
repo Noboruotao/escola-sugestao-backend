@@ -53,7 +53,10 @@ class Autor extends Model
     {
 
         $autor = Autor::when($com_acervos, function ($query) {
-            return $query->with(['nacionalidade', 'acervos']);
+            return $query->with([
+                'nacionalidade',
+                'acervos'
+            ]);
         })
             ->find($id);
 
@@ -78,11 +81,19 @@ class Autor extends Model
     {
         $autor = Autor::create($data);
         return $autor;
+        return response()->json([
+            'success' => true,
+            'data' => $aluno,
+        ]);
     }
 
 
     public function deleteAutor($id)
     {
-        return Autor::find($id)->delete();
+        Autor::find($id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Autor deleted'
+        ]);
     }
 }

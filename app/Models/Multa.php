@@ -37,8 +37,12 @@ class Multa extends Model
         return $this->morphTo();
     }
 
-    public function getMultas($pago, $page, $limit, $search)
-    {
+    public function getMultas(
+        $pago,
+        $page,
+        $limit,
+        $search
+    ) {
 
         $pago = $pago === 'true';
         $user = auth()->user();
@@ -96,7 +100,12 @@ class Multa extends Model
             'count' => $count,
         ];
 
-        return response()->json($responseData, $count !== 0 ? 200 : 400);
+        return response()->json(
+            $responseData,
+            $count !== 0
+                ? 200
+                : 400
+        );
     }
 
 

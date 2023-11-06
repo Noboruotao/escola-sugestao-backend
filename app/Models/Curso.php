@@ -21,21 +21,58 @@ class Curso extends Model
 
     public function pessoasSugeridas()
     {
-        return $this->morphToMany(Aluno::class, 'sugeridos');
+        return $this->morphToMany(
+            Aluno::class,
+            'sugeridos'
+        );
     }
 
 
     public function parametros()
     {
-        return $this->morphMany(Parametro::class, 'model');
+        return $this->morphMany(
+            Parametro::class,
+            'model'
+        );
     }
 
-    public function getCursos($page, $limit, $search, $sortColumn, $order)
+
+    public function getCurso($id)
     {
+        $curso = self::find($id);
+        if (!$curso) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Curso Não Encontrado'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $curso
+        ]);
+    }
+
+
+    public function getCursos(
+        $page,
+        $limit,
+        $search,
+        $sortColumn,
+        $order
+    ) {
         $query = self::orderBy($sortColumn, $order)
             ->when($search, function ($query) use ($search) {
-                return $query->where('nome', 'like', '%' . $search . '%')
-                    ->orWhere('descricao', 'like', '%' . $search . '%');
+                return $query->where(
+                    'nome',
+                    'like',
+                    '%' . $search . '%'
+                )
+                    ->orWhere(
+                        'descricao',
+                        'like',
+                        '%' . $search . '%'
+                    );
             });
 
         $count = $query->count();
@@ -43,9 +80,11 @@ class Curso extends Model
             ->skip($page * $limit)
             ->take($limit)
             ->get();
-        return [
-            'values' => $values,
+
+        return response()->json([
+            'success' => true,
+            'data' => $value,
             'count' => $count
-        ];
+        ]);
     }
 }

@@ -17,12 +17,19 @@ class Categoria extends Model
 
     public function acervos()
     {
-        return $this->hasMany(Acervo::class, 'categoria_id', 'id');
+        return $this->hasMany(
+            Acervo::class,
+            'categoria_id',
+            'id'
+        );
     }
 
 
-    public function getCategorias($offset, $limit, $search)
-    {
+    public function getCategorias(
+        $offset,
+        $limit,
+        $search
+    ) {
         if (Cache::get('acervoCategoria') && !$limit) {
             $categorias = Cache::get('acervoCategoria');
         } else {
@@ -50,22 +57,35 @@ class Categoria extends Model
 
     public function createCategoria($data)
     {
-        return Categoria::create($data);
+        $categoria = Categoria::create($data);
+        return response()->json([
+            'success' => true,
+            'data' => $categoria
+        ]);
     }
 
 
     public function getAcervosByCategoria($id, $offset, $limit)
     {
 
-        return Acervo::where('categoria_id', $id)
+        $acervoCategoria = Acervo::where('categoria_id', $id)
             ->offset($offset)
             ->limit($limit)
             ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $acervoCategoria
+        ]);
     }
 
 
     public function deleteCategoria($id)
     {
-        return Categoria::find($id)->delete();
+        Categoria::find($id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Categoria Deleted'
+        ]);
     }
 }

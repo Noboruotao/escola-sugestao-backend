@@ -27,7 +27,10 @@ class AtividadeExtra extends Model
 
     public function ativExtraSugeridas()
     {
-        return $this->morphToMany(Aluno::class, 'sugeridos');
+        return $this->morphToMany(
+            Aluno::class,
+            'sugeridos'
+        );
     }
 
 
@@ -46,7 +49,10 @@ class AtividadeExtra extends Model
 
     public function parametros()
     {
-        return $this->morphMany(Parametro::class, 'model');
+        return $this->morphMany(
+            Parametro::class,
+            'model'
+        );
     }
 
 
@@ -75,7 +81,12 @@ class AtividadeExtra extends Model
         $order = 'asc',
         $tipo
     ) {
-        $query = self::orderBy($sortColumn, $order == '' ? 'asc' : $order)
+        $query = self::orderBy(
+            $sortColumn,
+            $order == ''
+                ? 'asc'
+                : $order
+        )
             ->when($search, function ($query) use ($search) {
                 return $query->where('nome', 'like', '%' . $search . '%');
             })
@@ -84,11 +95,13 @@ class AtividadeExtra extends Model
             })
             ->with('tipo');
 
-        return [
-            'count' => $query->count(),
+        return response()->json([
+            'success' => true,
             'data' => $query->offset($page * $limit)
-                ->limit($limit)->get(),
-        ];
+                ->limit($limit)
+                ->get(),
+            'count' => $query->count(),
+        ]);
     }
 
 
@@ -97,9 +110,12 @@ class AtividadeExtra extends Model
         $info =
             self::where('id', $id)
             ->with('tipo')
-            ->when(!auth()->user()->hasRole('Aluno'), function ($query) {
-                return $query->with('alunos');
-            })
+            ->when(
+                !auth()->user()->hasRole('Aluno'),
+                function ($query) {
+                    return $query->with('alunos');
+                }
+            )
             ->first();
 
 
@@ -116,8 +132,10 @@ class AtividadeExtra extends Model
     }
 
 
-    public function attributeAtivExtraToAluno($aluno_id, $ativExtra_id)
-    {
+    public function attributeAtivExtraToAluno(
+        $aluno_id,
+        $ativExtra_id
+    ) {
         $aluno = Aluno::find($aluno_id);
         $ativiExtra = self::find($ativExtra_id);
 
@@ -131,11 +149,17 @@ class AtividadeExtra extends Model
         return $aluno->attributeAtivExtra($ativiExtra);
     }
 
-    public function getAlunos($id, $page, $pageSize)
-    {
+    public function getAlunos(
+        $id,
+        $page,
+        $pageSize
+    ) {
         $ativExtra = self::find($id);
 
-        if (!$ativExtra || $ativExtra->alunos->count() == 0) {
+        if (
+            !$ativExtra || $ativExtra->alunos
+            ->count() == 0
+        ) {
             return response()->json([
                 'success' => false,
                 'message' => 'Sem Alunos Atribuídos.'
@@ -144,7 +168,10 @@ class AtividadeExtra extends Model
 
         return response()->json([
             'success' => true,
-            'data' => Pessoa::select(['id', 'nome'])
+            'data' => Pessoa::select([
+                'id',
+                'nome'
+            ])
                 ->orderBy('nome')
                 ->whereIn(
                     'id',
@@ -156,13 +183,17 @@ class AtividadeExtra extends Model
                 ->skip($page * $pageSize)
                 ->take($pageSize)
                 ->get(),
-            'count' => $ativExtra->alunos->where('pivot.ativo', 1)->count()
+            'count' => $ativExtra->alunos
+                ->where('pivot.ativo', 1)
+                ->count()
         ]);
     }
 
 
-    public function removeAlunoFromAtivExtra($aluno_id, $ativExtra_id)
-    {
+    public function removeAlunoFromAtivExtra(
+        $aluno_id,
+        $ativExtra_id
+    ) {
         $ativExtra = self::find($ativExtra_id);
 
         $aluno = Aluno::find($aluno_id);

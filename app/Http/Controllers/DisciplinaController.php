@@ -10,7 +10,12 @@ class DisciplinaController extends Controller
 {
     public function __construct(Disciplina $disciplina, DisciplinaSituacao $disciplina_situacao)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->disciplina = $disciplina;
         $this->disciplina_situacao = $disciplina_situacao;
     }
@@ -24,7 +29,7 @@ class DisciplinaController extends Controller
         $sortColumn = $request->query('sortColumn', null);
         $sortOrder = $request->query('sortOrder', 'asc');
 
-        $disciplinas = $this->disciplina
+        return $this->disciplina
             ->getDisiplinas(
                 $page,
                 $pageSize,
@@ -32,12 +37,6 @@ class DisciplinaController extends Controller
                 $sortColumn,
                 $sortOrder
             );
-
-        return response()->json([
-            'success' => true,
-            'data' => $disciplinas['values'],
-            'count' => $disciplinas['count']
-        ]);
     }
 
 
@@ -86,11 +85,7 @@ class DisciplinaController extends Controller
 
     public function getSituacoesDisciplina()
     {
-        $situacoes =  $this->disciplina_situacao->getSituacoesDisciplina();
-        return response()->json([
-            'success' => true,
-            'data' => $situacoes
-        ]);
+        return $this->disciplina_situacao->getSituacoesDisciplina();
     }
 
 
@@ -101,12 +96,8 @@ class DisciplinaController extends Controller
             return $permissionResult;
         }
         $nome = $request->input('nome');
-        $nova_situacao =  $this->disciplina_situacao
+        return  $this->disciplina_situacao
             ->createSituacao($nome);
-        return response()->json([
-            'success' => true,
-            'data' => $nova_situacao
-        ]);
     }
 
 

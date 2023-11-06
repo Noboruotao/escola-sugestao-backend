@@ -10,18 +10,27 @@ class Responsavel extends Model
     use HasFactory;
 
     protected $table = 'responsavel';
-    protected $fillable = ['responsavel_id', 'aluno_id'];
+    protected $fillable = [
+        'responsavel_id',
+        'aluno_id'
+    ];
     public $timestamps = false;
 
 
     public function pessoa()
     {
-        return $this->belongsTo(Pessoa::class, 'responsavel_id', 'id');
+        return $this->belongsTo(
+            Pessoa::class,
+            'responsavel_id',
+            'id'
+        );
     }
 
 
-    public static function attributeAlunoResponsavel($alunoId, $responsavelId)
-    {
+    public static function attributeAlunoResponsavel(
+        $alunoId,
+        $responsavelId
+    ) {
 
         $aluno = Aluno::find($alunoId);
         $responsavel = Pessoa::find($responsavelId);

@@ -9,7 +9,10 @@ class Periodo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nivel_escolar_id', 'periodo'];
+    protected $fillable = [
+        'nivel_escolar_id',
+        'periodo'
+    ];
 
     public function disciplinas()
     {
@@ -24,6 +27,10 @@ class Periodo extends Model
 
     public function alunos()
     {
-        return $this->hasMany(Aluno::class, 'periodo_id', 'id');
+        return $this->hasMany(
+            Aluno::class,
+            'periodo_id',
+            'id'
+        );
     }
 }

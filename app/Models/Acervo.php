@@ -95,13 +95,20 @@ class Acervo extends Model
 
     public function materialSugerido()
     {
-        return $this->belongsToMany(Disciplina::class, 'materiais_sugeridos');
+        return $this->belongsToMany(
+            Disciplina::class,
+            'materiais_sugeridos'
+        );
     }
 
 
     public function emprestimos()
     {
-        return $this->hasMany(Emprestimo::class, 'acervo_id', 'id');
+        return $this->hasMany(
+            Emprestimo::class,
+            'acervo_id',
+            'id'
+        );
     }
 
 
@@ -202,8 +209,10 @@ class Acervo extends Model
     }
 
 
-    public static function createCapa($acervo, $file)
-    {
+    public static function createCapa(
+        $acervo,
+        $file
+    ) {
         try {
 
             if (!$file) {
@@ -212,13 +221,29 @@ class Acervo extends Model
 
             $path = $file->store('capas', 'local');
 
-            $filename = pathinfo($path, PATHINFO_FILENAME);
-            $extension = pathinfo($path, PATHINFO_EXTENSION);
-            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $filename = pathinfo(
+                $path,
+                PATHINFO_FILENAME
+            );
+            $extension = pathinfo(
+                $path,
+                PATHINFO_EXTENSION
+            );
+            $originalFilename = pathinfo(
+                $file->getClientOriginalName(),
+                PATHINFO_FILENAME
+            );
             $uniqueFilename = $originalFilename . '_' . $acervo->id . '_' . now()->format('YmdHis') . '.' . $extension;
 
-            $newPath = str_replace($filename, $uniqueFilename, $path);
-            Storage::move($path, 'capas/' . $uniqueFilename);
+            $newPath = str_replace(
+                $filename,
+                $uniqueFilename,
+                $path
+            );
+            Storage::move(
+                $path,
+                'capas/' . $uniqueFilename
+            );
 
             return $uniqueFilename;
         } catch (\Throwable $th) {
@@ -227,8 +252,10 @@ class Acervo extends Model
     }
 
 
-    public function createAcervo($data, $capa)
-    {
+    public function createAcervo(
+        $data,
+        $capa
+    ) {
         try {
             $acervo = new Acervo();
 
@@ -248,7 +275,10 @@ class Acervo extends Model
             $acervo->edicao = $data['edicao'];
             $acervo->data_aquisicao = now()->format('Y-m-d');
 
-            $acervo->capa = self::createCapa($acervo, $capa);
+            $acervo->capa = self::createCapa(
+                $acervo,
+                $capa
+            );
 
             $acervo->save();
 
@@ -265,8 +295,11 @@ class Acervo extends Model
     }
 
 
-    public function getAcervosBySituacao($situacao_id, $offset, $limit)
-    {
+    public function getAcervosBySituacao(
+        $situacao_id,
+        $offset,
+        $limit
+    ) {
         $acervos = self::where('situacao_id', $situacao_id)
             ->offset($offset)
             ->limit($limit)
