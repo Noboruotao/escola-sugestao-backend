@@ -41,15 +41,22 @@ class AcervoFactory extends Factory
     }
 
 
-    protected static function getBirthYear($faker, $max = 25, $min = 1000)
-    {
+    protected static function getBirthYear(
+        $faker,
+        $max = 25,
+        $min = 1000
+    ) {
         $maxBirthYear = now()->subYears($max)->year;
         return $faker->numberBetween($maxBirthYear - $min, $maxBirthYear);
     }
 
 
-    protected static function getDeathYear($faker, $ano_nascimento, $minLifespan = 20, $maxLifespan = 100)
-    {
+    protected static function getDeathYear(
+        $faker,
+        $ano_nascimento,
+        $minLifespan = 20,
+        $maxLifespan = 100
+    ) {
         $maxDeathYear = $ano_nascimento + $maxLifespan;
 
         if ($maxDeathYear < now()->subYear()->year || $faker->boolean(30)) {
@@ -72,7 +79,12 @@ class AcervoFactory extends Factory
             $faker = \Faker\Factory::create($locales[$nacionalidade]);
 
             $ano_nascimento = self::getBirthYear($faker, 25, 1000);
-            $ano_falecimento = self::getDeathYear($faker, $ano_nascimento, 20, 100);
+            $ano_falecimento = self::getDeathYear(
+                $faker,
+                $ano_nascimento,
+                20,
+                100
+            );
 
             $autors[] = [
                 'nome' => $faker->name,
@@ -94,7 +106,8 @@ class AcervoFactory extends Factory
                 'nome' => $faker->company,
                 'email' => $faker->email,
                 'telefone' => $faker->phoneNumber,
-                'cnpj' => $faker->unique()->numerify('##.###.###/####-##'),
+                'cnpj' => $faker->unique()
+                    ->numerify('##.###.###/####-##'),
                 'endereco_id' => $endereco->id,
             ];
         }
@@ -121,7 +134,9 @@ class AcervoFactory extends Factory
         $categorias = Categoria::pluck('id');
         $tipos = AcervoTipo::pluck('id');
         $estados = AcervoEstado::pluck('id');
-        $situacoes = AcervoSituacao::where('id', '<>', 2)->pluck('id');
+        // $situacoes = AcervoSituacao::where('id', '<>', 2)
+        $situacoes = AcervoSituacao::where('id', 1)
+            ->pluck('id');
         $nomes = AreaConhecimento::pluck('nome');
         $faker = \Faker\Factory::create('pt_BR');
         $acervos = [];
@@ -141,10 +156,21 @@ class AcervoFactory extends Factory
     }
 
 
-    private static function generateAcervoData($faker, $nomes, $autors, $editoras, $categorias, $tipos, $estados, $situacoes)
-    {
+    private static function generateAcervoData(
+        $faker,
+        $nomes,
+        $autors,
+        $editoras,
+        $categorias,
+        $tipos,
+        $estados,
+        $situacoes
+    ) {
         $tipo = $tipos->random();
-        $ibns = ($tipo == 1) ? $faker->unique()->numerify('###-##-#####-##-#') : null;
+        $ibns = ($tipo == 1)
+            ? $faker->unique()
+            ->numerify('###-##-#####-##-#')
+            : null;
 
         return [
             'titulo' => $nomes->random(),
@@ -162,7 +188,8 @@ class AcervoFactory extends Factory
             'ano_publicacao' => self::getBirthYear($faker, 1, 100),
             'capa' => self::getAcervoCapa($tipo),
             'edicao' => $faker->randomDigit() . 'º edição',
-            'data_aquisicao' => $faker->dateTimeBetween('-20 years', 'now')->format('Y-m-d'),
+            'data_aquisicao' => $faker->dateTimeBetween('-20 years', 'now')
+                ->format('Y-m-d'),
         ];
     }
 
@@ -238,10 +265,12 @@ class AcervoFactory extends Factory
         $blibliotecarios = Pessoa::role('Bibliotecário')->pluck('id');
         $faker = \Faker\Factory::create('pt_BR');
 
-        Pessoa::role('Aluno')->orderBy('id')->chunk(200, function (Collection $alunos) use ($blibliotecarios, $faker) {
-            foreach ($alunos as $aluno) {
-                self::createEmprestimo($aluno, $faker, $blibliotecarios);
-            }
-        });
+        Pessoa::role('Aluno')
+            ->orderBy('id')
+            ->chunk(200, function (Collection $alunos) use ($blibliotecarios, $faker) {
+                foreach ($alunos as $aluno) {
+                    self::createEmprestimo($aluno, $faker, $blibliotecarios);
+                }
+            });
     }
 }

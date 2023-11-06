@@ -59,8 +59,12 @@ class PermissionAndRoleFactory extends Factory
         foreach (config('seeder_datas.rolePermission') as $role) {
             foreach ($role['permissions'] as $permission) {
                 $datas[] = [
-                    'permission_id' => $permissions->where('name', $permission)->first()->id,
-                    'role_id' => $roles->where('name', $role['name'])->first()->id,
+                    'permission_id' => $permissions->where('name', $permission)
+                        ->first()
+                        ->id,
+                    'role_id' => $roles->where('name', $role['name'])
+                        ->first()
+                        ->id,
                 ];
             }
         }

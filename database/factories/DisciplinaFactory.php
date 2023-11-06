@@ -55,7 +55,8 @@ class DisciplinaFactory extends Factory
                 $periodoId++;
             }
 
-            $disciplina->periodos()->attach($periodoId);
+            $disciplina->periodos()
+                ->attach($periodoId);
         }
     }
 }

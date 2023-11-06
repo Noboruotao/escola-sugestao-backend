@@ -19,7 +19,11 @@ class CategoriaController extends Controller
         $page = $request->query('page', 0);
         $limit = $request->query('limit', null);
         $search = $request->query('search', '');
-        return $this->categoria->getCategorias($page, $limit, $search);
+        return $this->categoria->getCategorias(
+            $page,
+            $limit,
+            $search
+        );
     }
 
 
@@ -54,14 +58,20 @@ class CategoriaController extends Controller
     }
 
 
-    public function getAcervosByCategoria(Request $request, $id)
-    {
+    public function getAcervosByCategoria(
+        Request $request,
+        $id
+    ) {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
         return response()->json([
             'success' => true,
             'data' => $this->categoria
-                ->getAcervosByCategoria($id, $page, $limit)
+                ->getAcervosByCategoria(
+                    $id,
+                    $page,
+                    $limit
+                )
         ]);
     }
 }

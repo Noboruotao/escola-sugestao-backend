@@ -9,6 +9,12 @@ class MultaController extends Controller
 {
     public function __construct(Multa $multa)
     {
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->multa = $multa;
     }
 
@@ -28,9 +34,12 @@ class MultaController extends Controller
         );
     }
 
-    public function getMulta(Request $request, $id)
-    {
-        return $this->multa->getMulta($id);
+    public function getMulta(
+        Request $request,
+        $id
+    ) {
+        return $this->multa
+            ->getMulta($id);
     }
 
 
@@ -40,6 +49,7 @@ class MultaController extends Controller
         if ($roleResult !== null) {
             return $roleResult;
         }
-        return $this->multa->pagarMulta($id);
+        return $this->multa
+            ->pagarMulta($id);
     }
 }

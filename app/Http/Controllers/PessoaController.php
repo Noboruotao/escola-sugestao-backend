@@ -12,22 +12,35 @@ use Illuminate\Support\Facades\Storage;
 
 class PessoaController extends Controller
 {
-    public function __construct(Pessoa $pessoa, Emprestimo $emprestimo)
-    {
-        $this->middleware('auth:api', ['except' => []]);
+    public function __construct(
+        Pessoa $pessoa,
+        Emprestimo $emprestimo
+    ) {
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->pessoa = $pessoa;
         $this->emprestimo = $emprestimo;
     }
 
 
-    public function getPessoa(Request $request, $id)
-    {
-        $data = $this->pessoa->getPessoa($id);
-        return response()->json($data);
+    public function getPessoa(
+        Request $request,
+        $id
+    ) {
+        $data = $this->pessoa
+            ->getPessoa($id);
+        return response()
+            ->json($data);
     }
 
-    public function getFoto(Request $request, $id)
-    {
+    public function getFoto(
+        Request $request,
+        $id
+    ) {
         if (!$id) {
             return response()->json([
                 'success' => false,
@@ -35,7 +48,8 @@ class PessoaController extends Controller
             ], 400);
         }
         try {
-            $foto = $this->pessoa->getFotoById($request->id);
+            $foto = $this->pessoa
+                ->getFotoById($request->id);
             if (!$foto) {
                 return response()
                     ->make(
@@ -47,10 +61,14 @@ class PessoaController extends Controller
             $fileContents = Storage::get($filePath);
             $fileType = Storage::mimeType($filePath);
             if ($fileContents) {
-                return response()->make($fileContents, 200, [
-                    'Content-Type' => $fileType,
-                    'Content-Disposition' => 'inline; filename="' . $foto . '"',
-                ]);
+                return response()->make(
+                    $fileContents,
+                    200,
+                    [
+                        'Content-Type' => $fileType,
+                        'Content-Disposition' => 'inline; filename="' . $foto . '"',
+                    ]
+                );
             } else {
                 return response()
                     ->make(
@@ -68,7 +86,8 @@ class PessoaController extends Controller
 
     public function getAcervosEmprestados()
     {
-        $emprestimo = $this->emprestimo->getUserEmprestimos();
+        $emprestimo = $this->emprestimo
+            ->getUserEmprestimos();
 
         return response()->json([
             'success' => true,
@@ -81,6 +100,7 @@ class PessoaController extends Controller
         $search = $request->query('search', '');
         $roles = $request->query('roles', 'Aluno');
 
-        return $this->pessoa->getPessoaListFilteredWithCpf($search, $roles);
+        return $this->pessoa
+            ->getPessoaListFilteredWithCpf($search, $roles);
     }
 }

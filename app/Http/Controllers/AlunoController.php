@@ -12,7 +12,12 @@ class AlunoController extends Controller
 {
     public function __construct(Aluno $aluno)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->aluno = $aluno;
     }
 
@@ -132,6 +137,9 @@ class AlunoController extends Controller
         $model_id = $request->query('model_id', null);
         $model_type = $request->query('model_type', null);
 
-        return $this->aluno->disaparecerSugerido($model_id, $model_type);
+        return $this->aluno->disaparecerSugerido(
+            $model_id,
+            $model_type
+        );
     }
 }

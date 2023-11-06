@@ -9,7 +9,12 @@ class ClasseController extends Controller
 {
     public function __construct(Classe $classe)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->classe = $classe;
     }
 
@@ -23,25 +28,32 @@ class ClasseController extends Controller
         $sortColumn = $request->query('sortColumn', 'ano');
         $sortOrder = $request->query('sortOrder', 'asc');
 
-        return $resposta = $this->classe->getClassesEnableAtivo(
-            $ativo,
-            $page,
-            $pageSize,
-            $search,
-            $sortColumn,
-            $sortOrder
-        );
+        return $resposta = $this->classe
+            ->getClassesEnableAtivo(
+                $ativo,
+                $page,
+                $pageSize,
+                $search,
+                $sortColumn,
+                $sortOrder
+            );
     }
 
 
-    public function getAlunos(Request $request, $id)
-    {
-        return $this->classe->getAlunos($id);
+    public function getAlunos(
+        Request $request,
+        $id
+    ) {
+        return $this->classe
+            ->getAlunos($id);
     }
 
 
-    public function getClasseDetail(Request $request, $id)
-    {
-        return $this->classe->getClasseDetail($id);
+    public function getClasseDetail(
+        Request $request,
+        $id
+    ) {
+        return $this->classe
+            ->getClasseDetail($id);
     }
 }

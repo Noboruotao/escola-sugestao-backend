@@ -9,7 +9,12 @@ class AutorController extends Controller
 {
     public function __construct(Autor $autor)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->autor = $autor;
     }
 
@@ -20,14 +25,23 @@ class AutorController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-        return  $this->autor->getAutors($page, $limit, $search);
+        return  $this->autor->getAutors(
+            $page,
+            $limit,
+            $search
+        );
     }
 
 
-    public function getAutor(Request $request, $id)
-    {
+    public function getAutor(
+        Request $request,
+        $id
+    ) {
         $com_acervos = $request->query('comAcervos', false);
-        return $this->autor->getAutorById($id, $com_acervos);
+        return $this->autor->getAutorById(
+            $id,
+            $com_acervos
+        );
     }
 
 
@@ -44,7 +58,11 @@ class AutorController extends Controller
         $data['ano_nascimento'] = $request->input('ano_nascimento');
         $data['ano_falecimento'] = $request->input('ano_falecimento');
 
-        return response()->json(['success' => true, 'data' => $this->autor->createAutor($data)]);
+        return response()->json([
+            'success' => true,
+            'data' => $this->autor
+                ->createAutor($data)
+        ]);
     }
 
 

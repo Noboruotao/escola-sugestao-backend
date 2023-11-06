@@ -10,7 +10,12 @@ class AtividadeExtracurricularController extends Controller
 {
     public function __construct(AtividadeExtra $atividade_extra, AtivExtraTipo $ativExtra)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->atividade_extra = $atividade_extra;
         $this->ativExtra = $ativExtra;
     }
@@ -25,14 +30,15 @@ class AtividadeExtracurricularController extends Controller
         $order = $request->query('order', null);
         $tipo = $request->query('tipo', '');
 
-        $ativExtrasList = $this->atividade_extra->getAtivExtras(
-            $page,
-            $limit,
-            $search,
-            $sortColumn,
-            $order,
-            $tipo
-        );
+        $ativExtrasList = $this->atividade_extra
+            ->getAtivExtras(
+                $page,
+                $limit,
+                $search,
+                $sortColumn,
+                $order,
+                $tipo
+            );
 
         return response()->json([
             'success' => true,
@@ -41,9 +47,12 @@ class AtividadeExtracurricularController extends Controller
         ]);
     }
 
-    public function getAtivExtraDetail(Request $request, $id)
-    {
-        return $this->atividade_extra->getAtivExtraDetail($id);
+    public function getAtivExtraDetail(
+        Request $request,
+        $id
+    ) {
+        return $this->atividade_extra
+            ->getAtivExtraDetail($id);
     }
 
 
@@ -51,7 +60,8 @@ class AtividadeExtracurricularController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => $this->ativExtra->get(),
+            'data' => $this->ativExtra
+                ->get(),
         ], 200);
     }
 
@@ -61,7 +71,11 @@ class AtividadeExtracurricularController extends Controller
         $aluno_id = $request->input('aluno_id');
         $ativExtra_id = $request->input('ativExtra_id');
 
-        return $this->atividade_extra->attributeAtivExtraToAluno($aluno_id, $ativExtra_id);
+        return $this->atividade_extra
+            ->attributeAtivExtraToAluno(
+                $aluno_id,
+                $ativExtra_id
+            );
     }
 
     public function getAlunos(Request $request)
@@ -70,7 +84,11 @@ class AtividadeExtracurricularController extends Controller
         $page = $request->query('page', 0);
         $pageSize = $request->query('pageSize', 10);
 
-        return $this->atividade_extra->getAlunos($id, $page, $pageSize);
+        return $this->atividade_extra->getAlunos(
+            $id,
+            $page,
+            $pageSize
+        );
     }
 
 
@@ -79,6 +97,9 @@ class AtividadeExtracurricularController extends Controller
         $aluno_id = $request->input('aluno_id');
         $ativExtra_id = $request->input('ativExtra_id');
 
-        return $this->atividade_extra->removeAlunoFromAtivExtra($aluno_id, $ativExtra_id);
+        return $this->atividade_extra->removeAlunoFromAtivExtra(
+            $aluno_id,
+            $ativExtra_id
+        );
     }
 }

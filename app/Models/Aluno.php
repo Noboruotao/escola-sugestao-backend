@@ -360,12 +360,14 @@ class Aluno extends Model
 
 
         $values = $query;
-        return [
-            'values' => $values
+
+        return response()->json([
+            'success' => true,
+            'data' => $values
                 ->slice($page * $pageSize, $pageSize)
                 ->values(),
             'count' => $query->count()
-        ];
+        ]);
     }
 
     private function AttributeAreaByNota($notas, $area)

@@ -9,7 +9,12 @@ class SituacaoAcervoController extends Controller
 {
     function __construct(AcervoSituacao $acervoSituacao)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->acervoSituacao = $acervoSituacao;
     }
 
@@ -19,10 +24,11 @@ class SituacaoAcervoController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-        return $this->acervoSituacao->listSituacao(
-            $page,
-            $limit,
-            $search
-        );
+        return $this->acervoSituacao
+            ->listSituacao(
+                $page,
+                $limit,
+                $search
+            );
     }
 }

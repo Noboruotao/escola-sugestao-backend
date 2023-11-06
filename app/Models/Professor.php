@@ -41,6 +41,15 @@ class Professor extends Model
         $sortColumn,
         $sortOrder
     ) {
+
+        if ($this->classes->where('ativo', $active)->count() < 1) {
+            return response()->json([
+                'success' => false,
+                // 'data' => $this->classes->where('ativo', $active)->values(),
+                'message' => 'Disciplina Não Encontrado'
+            ],400);
+        }
+
         $query = $this->classes
             ->where('ativo', $active)
             ->filter(function ($classe) use ($search) {
@@ -53,15 +62,17 @@ class Professor extends Model
             ? $query->sortBy($sortColumn)
             : $query->sortByDesc($sortColumn);
 
-        $disciplinas = $query;
+        $disciplinas = $query->skip($page * $pageSize)->take($pageSize);
 
         foreach ($disciplinas as $disciplina) {
             $disciplina->periodo;
         }
-        return [
-            'values' => $disciplinas->values(),
+
+        return response()->json([
+            'success' => true,
+            'data' => $disciplinas->values(),
             'count' => $query->count()
-        ];
+        ]);
     }
 
 

@@ -9,7 +9,12 @@ class EstadoAcervoController extends Controller
 {
     function __construct(AcervoEstado $acervoEstado)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->acervoEstado = $acervoEstado;
     }
 

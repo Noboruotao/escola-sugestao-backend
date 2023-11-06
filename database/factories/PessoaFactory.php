@@ -47,22 +47,42 @@ class PessoaFactory extends Factory
 
         //Administrador
         echo '    Administrador' . PHP_EOL;
-        self::makePessoa(['Administrador'], 60, 30, $faker);
+        self::makePessoa(
+            ['Administrador'],
+            60,
+            30,
+            $faker
+        );
 
         //Diretor
         echo '    Diretor' . PHP_EOL;
-        self::makePessoa(['Diretor'], 60, 40, $faker);
+        self::makePessoa(
+            ['Diretor'],
+            60,
+            40,
+            $faker
+        );
 
         //Bibliotecario
         echo '    Bibliotecario' . PHP_EOL;
         for ($i = 0; $i < self::BIBLIOTECARIO_QNT; $i++) {
-            self::makePessoa(['Bibliotecário'], 60, 20, $faker);
+            self::makePessoa(
+                ['Bibliotecário'],
+                60,
+                20,
+                $faker
+            );
         }
 
         //Secretaria
         echo '    Secretaria' . PHP_EOL;
         for ($i = 0; $i < self::SECRETARIA_QNT; $i++) {
-            self::makePessoa(['Secretaria'], 60, 20, $faker);
+            self::makePessoa(
+                ['Secretaria'],
+                60,
+                20,
+                $faker
+            );
         }
 
         //Professor
@@ -71,56 +91,104 @@ class PessoaFactory extends Factory
             $roles = $faker->boolean(10) ?
                 ['Professor', 'Responsável']
                 : ['Professor'];
-            self::makePessoa($roles, 60, 25, $faker);
+            self::makePessoa(
+                $roles,
+                60,
+                25,
+                $faker
+            );
         }
         self::createProfessor();
 
         //alunos ensino infantil
         echo '    alunos ensino infantil' . PHP_EOL;
         for ($i = 0; $i < self::ENSINO_INFANTIL_QNT; $i++) {
-            self::makePessoa(['Aluno'], 5, 4, $faker);
+            self::makePessoa(
+                ['Aluno'],
+                5,
+                4,
+                $faker
+            );
         }
         //alunos ensino fundamental
         echo '    alunos ensino fundamental' . PHP_EOL;
         for ($i = 0; $i < self::ENSINO_FUNDAMENTAL_QNT; $i++) {
-            self::makePessoa(['Aluno'], 15, 5, $faker);
+            self::makePessoa(
+                ['Aluno'],
+                15,
+                5,
+                $faker
+            );
         }
         //alunos ensino medio
         echo '    alunos ensino medio' . PHP_EOL;
         for ($i = 0; $i < self::ENSINO_MEDIO_QNT; $i++) {
-            self::makePessoa(['Aluno'], 18, 14, $faker);
+            self::makePessoa(
+                ['Aluno'],
+                18,
+                14,
+                $faker
+            );
         }
         self::createAlunos();
 
         //Responsavel
         echo '    Responsavel' . PHP_EOL;
         for ($i = 0; $i < Aluno::count() * 0.9; $i++) {
-            self::makePessoa(['Responsável'], 50, 25, $faker);
+            self::makePessoa(
+                ['Responsável'],
+                50,
+                25,
+                $faker
+            );
         }
         self::createPais();
     }
 
 
-    protected function makePessoa($roles, $maxIdade, $minIdade = 4, $faker)
-    {
-        $gender = $faker->randomElement(['Masculino', 'Feminino']);
-        $firstName = $faker->firstName($gender == 'Masculino' ? 'male' : 'female');
+    protected function makePessoa(
+        $roles,
+        $maxIdade,
+        $minIdade = 4,
+        $faker
+    ) {
+        $gender = $faker->randomElement([
+            'Masculino',
+            'Feminino'
+        ]);
+        $firstName = $faker->firstName(
+            $gender == 'Masculino'
+                ? 'male'
+                : 'female'
+        );
         $lastName = $faker->lastName;
-        $data_nascimento = $faker->dateTimeBetween("-$maxIdade years", "-$minIdade years")->format('Y-m-d');
+        $data_nascimento = $faker->dateTimeBetween(
+            "-$maxIdade years",
+            "-$minIdade years"
+        )
+            ->format('Y-m-d');
 
         $pessoa = Pessoa::create([
             'nome' => "$firstName $lastName",
             'primeiro_nome' => $firstName,
             'ultimo_nome' => $lastName,
-            'email' => $faker->unique()->email,
+            'email' => $faker->unique()
+                ->email,
             'data_nascimento' => $data_nascimento,
             'genero' => $gender,
-            'cpf' => $faker->unique()->numerify('###.###.###-##'),
-            'rg' => $faker->unique()->numerify('##.###.###-#'),
-            'telefone_1' => $faker->numerify('(##) ####-####'),
-            'telefone_2' => $faker->numerify('(##) ####-####'),
+            'cpf' => $faker->unique()
+                ->numerify('###.###.###-##'),
+            'rg' => $faker->unique()
+                ->numerify('##.###.###-#'),
+            'telefone_1' => $faker
+                ->numerify('(##) ####-####'),
+            'telefone_2' => $faker
+                ->numerify('(##) ####-####'),
             'senha' => \Illuminate\Support\Facades\Hash::make('password'),
-            'foto' => self::getFoto($gender, self::getIdade($data_nascimento)),
+            'foto' => self::getFoto(
+                $gender,
+                self::getIdade($data_nascimento)
+            ),
         ]);
 
         foreach ($roles as $role) {
@@ -176,22 +244,27 @@ class PessoaFactory extends Factory
 
     protected function createPais()
     {
-        $pais = Pessoa::role('Responsável')->inRandomOrder()->pluck('id');
-        Pessoa::role('Aluno')->chunk(200, function (Collection $alunos) use (&$pais) {
-            $responsaveis = [];
-            foreach ($alunos as $aluno) {
-                if ($pais->isEmpty()) {
-                    $pais = Pessoa::role('Responsável')->inRandomOrder()->pluck('id');
+        $pais = Pessoa::role('Responsável')
+            ->inRandomOrder()
+            ->pluck('id');
+        Pessoa::role('Aluno')
+            ->chunk(200, function (Collection $alunos) use (&$pais) {
+                $responsaveis = [];
+                foreach ($alunos as $aluno) {
+                    if ($pais->isEmpty()) {
+                        $pais = Pessoa::role('Responsável')
+                            ->inRandomOrder()
+                            ->pluck('id');
+                    }
+                    // Responsavel::attributeAlunoResponsavel($aluno->id, $pais->first()->id);
+                    $responsaveis[] = [
+                        'responsavel_id' => $pais->first(),
+                        'aluno_id' => $aluno->id,
+                    ];
+                    $pais->shift();
                 }
-                // Responsavel::attributeAlunoResponsavel($aluno->id, $pais->first()->id);
-                $responsaveis[] = [
-                    'responsavel_id' => $pais->first(),
-                    'aluno_id' => $aluno->id,
-                ];
-                $pais->shift();
-            }
-            Responsavel::insert($responsaveis);
-        });
+                Responsavel::insert($responsaveis);
+            });
     }
 
 
@@ -204,15 +277,25 @@ class PessoaFactory extends Factory
     }
 
 
-    protected function getFoto($gender, $age)
-    {
+    protected function getFoto(
+        $gender,
+        $age
+    ) {
         $fotos = config('seeder_datas.pessoaFoto');
         $prefix = '';
 
         if ($gender == 'Masculino') {
-            $prefix = ($age <= 16) ? 'boy_' : ($age < 40 ? 'youngman_' : 'man_');
+            $prefix = ($age <= 16)
+                ? 'boy_'
+                : ($age < 40
+                    ? 'youngman_'
+                    : 'man_');
         } else if ($gender == 'Feminino') {
-            $prefix = ($age <= 16) ? 'girl_' : ($age < 40 ? 'youngwoman_' : 'woman_');
+            $prefix = ($age <= 16)
+                ? 'girl_'
+                : ($age < 40
+                    ? 'youngwoman_'
+                    : 'woman_');
         }
 
         $filteredArray = array_filter($fotos, function ($value) use ($prefix) {
@@ -231,28 +314,40 @@ class PessoaFactory extends Factory
     private static function attribuirPessoaEndereco($pessoa)
     {
         $endereco = self::createEndereco();
-        $pessoa->enderecos()->attach($endereco);
+        $pessoa->enderecos()
+            ->attach($endereco);
     }
 
 
     private static function attributeProtegidoEndereco($responsavel)
     {
         foreach ($responsavel->protegidos as $protegido) {
-            $protegido->pessoa->enderecos()->attach($responsavel->enderecos->first());
+            $protegido
+                ->pessoa
+                ->enderecos()
+                ->attach(
+                    $responsavel
+                        ->enderecos
+                        ->first()
+                );
         }
     }
 
 
     private static function attributeEndereco()
     {
-        $alunoRole = Role::where('name', 'Aluno')->first();
+        $alunoRole = Role::where('name', 'Aluno')
+            ->first();
 
         Pessoa::whereDoesntHave('roles', function ($query) use ($alunoRole) {
             $query->where('id', $alunoRole->id);
         })->chunk(100, function (Collection $adultos) {
             foreach ($adultos as $adulto) {
                 self::attribuirPessoaEndereco($adulto);
-                if ($adulto->has('protegidos')->exists()) {
+                if ($adulto
+                    ->has('protegidos')
+                    ->exists()
+                ) {
                     self::attributeProtegidoEndereco($adulto);
                 }
             }
@@ -270,7 +365,9 @@ class PessoaFactory extends Factory
             'numero' => $faker->buildingNumber,
             'cidade' => $faker->city,
             'uf' => $faker->stateAbbr,
-            'complemento' => $faker->optional()->secondaryAddress,
+            'complemento' => $faker
+                ->optional()
+                ->secondaryAddress,
         ]);
     }
 }

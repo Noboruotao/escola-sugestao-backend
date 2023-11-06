@@ -10,7 +10,12 @@ class ProfessorController extends Controller
 {
     public function __construct(Professor $professor)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->professor = $professor;
     }
 
@@ -26,12 +31,13 @@ class ProfessorController extends Controller
         $tipo_avaliacao_id = $request->input('tipo_avaliacao_id');
         $nota = $request->input('nota');
 
-        $resposta = $this->professor->attributeNota(
-            $aluno_id,
-            $classe_id,
-            $tipo_avaliacao_id,
-            $nota
-        );
+        $resposta = $this->professor
+            ->attributeNota(
+                $aluno_id,
+                $classe_id,
+                $tipo_avaliacao_id,
+                $nota
+            );
 
         return response()->json($resposta);
     }

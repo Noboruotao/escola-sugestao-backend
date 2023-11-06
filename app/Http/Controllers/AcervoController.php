@@ -13,7 +13,15 @@ class AcervoController extends Controller
 {
     public function __construct(Acervo $acervo)
     {
-        $this->middleware('auth:api', ['except' => ['getCapa', 'listAcervos']]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => [
+                    'getCapa',
+                    'listAcervos'
+                ]
+            ]
+        );
         $this->acervo = $acervo;
     }
 
@@ -70,14 +78,16 @@ class AcervoController extends Controller
             'IBNS' => $request->input('IBNS'),
             'ano_publicacao' => $request->input('ano_publicacao'),
             'edicao' => $request->input('edicao'),
-            // 'data_aquisicao' => $request->input('data_aquisicao'),
         ];
 
         $capa = $request->hasFile('capa')
             ? $request->file('capa')
             : null;
 
-        return $this->acervo->createAcervo($data, $capa);
+        return $this->acervo->createAcervo(
+            $data,
+            $capa
+        );
     }
 
 
@@ -85,7 +95,11 @@ class AcervoController extends Controller
     {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
-        return $this->acervo->getAcervosBySituacao($id, $page, $limit);
+        return $this->acervo->getAcervosBySituacao(
+            $id,
+            $page,
+            $limit
+        );
     }
 
 

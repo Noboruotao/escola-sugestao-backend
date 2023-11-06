@@ -10,7 +10,12 @@ class EditoraController extends Controller
     public function __construct(Editora $editora)
     {
         $this->editora = $editora;
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
     }
 
     function listEditora(Request $request)
@@ -19,11 +24,16 @@ class EditoraController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-        return $this->editora->listEditoras($page, $limit, $search);
+        return $this->editora->listEditoras(
+            $page,
+            $limit,
+            $search
+        );
     }
 
     function getEditoraById(Request $request, $id)
     {
-        return $this->editora->getEditoraById($id);
+        return $this->editora
+            ->getEditoraById($id);
     }
 }

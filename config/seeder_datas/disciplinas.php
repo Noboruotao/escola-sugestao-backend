@@ -2,6 +2,19 @@
 return [
 
     [
+        'nome' => 'Ensino Infantil',
+        'carga_horaria' => 250,
+        'periodo_id' => 1,
+    ],
+
+    [
+        'nome' => 'Ensino Infantil',
+        'carga_horaria' => 250,
+        'periodo_id' => 2,
+    ],
+
+
+    [
         'nome' => 'Matemática',
         'carga_horaria' => 60,
         'periodo_id' => 3

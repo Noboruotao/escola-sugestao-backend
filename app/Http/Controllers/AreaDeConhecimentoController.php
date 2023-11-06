@@ -18,7 +18,8 @@ class AreaDeConhecimentoController extends Controller
         $degree = $request->query('nivel', 2) == ''
             ? 2
             : $request->query('nivel', 2);
-        return $this->areaConhecimento->getAreas($degree);
+        return $this->areaConhecimento
+            ->getAreas($degree);
     }
 
 
@@ -26,6 +27,7 @@ class AreaDeConhecimentoController extends Controller
     {
         $escolhas = $request->input('escolhas');
 
-        return $this->areaConhecimento->attributeAlunoEscolhas($escolhas);
+        return $this->areaConhecimento
+            ->attributeAlunoEscolhas($escolhas);
     }
 }

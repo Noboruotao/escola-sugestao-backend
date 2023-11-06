@@ -9,7 +9,12 @@ class TipoAcervoController extends Controller
 {
     function __construct(AcervoTipo $acervoTipo)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->acervoTipo = $acervoTipo;
     }
 
@@ -19,10 +24,11 @@ class TipoAcervoController extends Controller
         $limit = $request->query('limit', 10);
         $search = $request->query('search', '');
 
-        return $this->acervoTipo->listAcervoTipos(
-            $page,
-            $limit,
-            $search
-        );
+        return $this->acervoTipo
+            ->listAcervoTipos(
+                $page,
+                $limit,
+                $search
+            );
     }
 }

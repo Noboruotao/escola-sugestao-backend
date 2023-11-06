@@ -9,7 +9,12 @@ class EmprestimoController extends Controller
 {
     public function __construct(Emprestimo $emprestimo)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->emprestimo = $emprestimo;
     }
 
@@ -23,7 +28,10 @@ class EmprestimoController extends Controller
         $acervo_id = $request->input('acervo_id');
         $leitor_id = $request->input('leitor_id');
 
-        $emprestimo = $this->emprestimo->makeEmprestimo($acervo_id, $leitor_id);
+        $emprestimo = $this->emprestimo->makeEmprestimo(
+            $acervo_id,
+            $leitor_id
+        );
         return response()->json([
             'success' => true,
             'data' => $emprestimo
@@ -48,10 +56,10 @@ class EmprestimoController extends Controller
 
     public function listEmprestimos(Request $request)
     {
-        // $roleResult = $this->checkRole('Bibliotecário');
-        // if ($roleResult !== null) {
-        //     return $roleResult;
-        // }
+        $roleResult = $this->checkRole('Bibliotecário');
+        if ($roleResult !== null) {
+            return $roleResult;
+        }
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
         $pendente = $request->query('pendente', false);
@@ -69,11 +77,13 @@ class EmprestimoController extends Controller
 
     public function getEmprestimoDetail(Request $request, $id)
     {
-        return $this->emprestimo->getEmprestimoDetail($id);
+        return $this->emprestimo
+            ->getEmprestimoDetail($id);
     }
 
     public function getUserEmprestimos()
     {
-        return $this->emprestimo->getUserEmprestimos();
+        return $this->emprestimo
+            ->getUserEmprestimos();
     }
 }

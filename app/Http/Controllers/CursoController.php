@@ -39,8 +39,10 @@ class CursoController extends Controller
     }
 
 
-    public function getCurso(Request $request, $id)
-    {
+    public function getCurso(
+        Request $request,
+        $id
+    ) {
         $curso = Curso::find($id);
         return response()->json([
             'success' => true,
