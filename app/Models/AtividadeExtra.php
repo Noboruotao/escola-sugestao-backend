@@ -95,12 +95,15 @@ class AtividadeExtra extends Model
             })
             ->with('tipo');
 
+        $count = $query->count();
+        $value = $query->offset($page * $limit)
+            ->limit($limit)
+            ->get();
+
         return response()->json([
             'success' => true,
-            'data' => $query->offset($page * $limit)
-                ->limit($limit)
-                ->get(),
-            'count' => $query->count(),
+            'data' => $value,
+            'count' => $count,
         ]);
     }
 

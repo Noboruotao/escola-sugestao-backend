@@ -83,7 +83,7 @@ class Curso extends Model
 
         return response()->json([
             'success' => true,
-            'data' => $value,
+            'data' => $values,
             'count' => $count
         ]);
     }

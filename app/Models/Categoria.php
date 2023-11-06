@@ -38,7 +38,11 @@ class Categoria extends Model
                     return $query->offset($offset * $limit)
                         ->limit($limit);
                 })
-                ->where('categoria', 'like', '%' . $search . '%')
+                ->where(
+                    'categoria',
+                    'like',
+                    '%' . $search . '%'
+                )
                 ->get();
             Cache::put(
                 'acervoCategoria',

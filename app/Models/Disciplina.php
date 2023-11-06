@@ -85,18 +85,20 @@ class Disciplina extends Model
                 return $query->orderBy($sortColumn, $sortOrder);
             });
 
+        $count = $query->count();
+        $value = $query
+            ->offset($page * $pageSize)
+            ->limit($pageSize)
+            ->get();
 
         return response()->json([
             'success' => true,
-            'data' => $query
-                ->offset($page * $pageSize)
-                ->limit($pageSize)
-                ->get(),
-            'count' => $query->count(),
+            'count' => $count,
+            'data' => $value,
         ]);
     }
 
-    
+
     public function getDisciplina($id)
     {
         $disciplina = self::where('id', $id)

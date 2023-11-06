@@ -204,7 +204,10 @@ class Acervo extends Model
 
         ]);
 
-        Cache::put('acervoParametros', $response);
+        Cache::put(
+            'acervoParametros',
+            $response
+        );
         return $response;
     }
 
