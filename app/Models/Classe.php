@@ -103,9 +103,15 @@ class Classe extends Model
             ], 404);
         }
 
-        $alunos = Pessoa::select(['nome', 'id'])
+        $alunos = Pessoa::select([
+            'nome',
+            'id'
+        ])
             ->orderBy('nome')
-            ->whereIn('id', $classe->alunos->pluck('id'))
+            ->whereIn(
+                'id',
+                $classe->alunos->pluck('id')
+            )
             ->get();
 
         foreach ($alunos as $aluno) {

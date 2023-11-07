@@ -24,6 +24,8 @@ class AcervoFactory extends Factory
 {
 
     private const ACERVO_QNT = 500;
+    private const AUTOR_QNT = 50;
+    private const  EDITORA_QNT = 50;
     /**
      * Define the model's default state.
      *
@@ -33,7 +35,7 @@ class AcervoFactory extends Factory
     {
         dump('Starting Acervo seeding');
 
-        self::createAutor(50);
+        self::createAutor();
         self::createEditoras();
         self::createAcervo();
         self::attributeAcervoAreas();
@@ -69,12 +71,13 @@ class AcervoFactory extends Factory
     }
 
 
-    public static function createAutor($num = 50)
+    public static function createAutor()
     {
-        $nacionalidades = Nacionalidade::where('id', '<=', 7)->pluck('id');
+        $nacionalidades = Nacionalidade::where('id', '<=', 7)
+            ->pluck('id');
         $locales = config('seeder_datas.locale');
 
-        for ($index = 0; $index < $num; $index++) {
+        for ($index = 0; $index < self::AUTOR_QNT; $index++) {
             $nacionalidade = $nacionalidades->random();
             $faker = \Faker\Factory::create($locales[$nacionalidade]);
 
@@ -97,10 +100,10 @@ class AcervoFactory extends Factory
     }
 
 
-    public static function createEditoras($num = 15)
+    public static function createEditoras()
     {
         $faker = \Faker\Factory::create('pt_BR');
-        for ($index = 0; $index < $num; $index++) {
+        for ($index = 0; $index < self::EDITORA_QNT; $index++) {
             $endereco = \Database\Factories\PessoaFactory::createEndereco();
             $editoras[] = [
                 'nome' => $faker->company,
@@ -221,7 +224,10 @@ class AcervoFactory extends Factory
             $ano_fim = $ano - 1;
             for ($i = 0; $i < $faker->randomDigit(); $i++) {
                 $data_emprestimo = $faker->dateTimeBetween("-$ano years", "-$ano_fim years");
-                $data_devolucao = $faker->dateTimeBetween($data_emprestimo, (clone $data_emprestimo)->modify('+30 days'));
+                $data_devolucao = $faker->dateTimeBetween(
+                    $data_emprestimo,
+                    (clone $data_emprestimo)->modify('+30 days')
+                );
                 $acervo = Acervo::inRandomOrder()->first();
 
                 $emprestimo = Emprestimo::create([

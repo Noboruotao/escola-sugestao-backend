@@ -47,7 +47,7 @@ class AlunoController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Não foi Encontrado nenhuma Curso Sugerida.'
-            ], 401);
+            ], 400);
         }
 
 

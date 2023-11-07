@@ -32,8 +32,8 @@ class AlunoFactory extends Factory
     {
         dump('Starting Aluno seeding');
         self::createClasses();
-        // self::attributeAlunoDisciplina();
         self::createAulas();
+        self::attributeAlunoDisciplina();
         self::attributeBolsas();
         self::attributeAlunoAtivExtra();
     }
@@ -220,11 +220,11 @@ class AlunoFactory extends Factory
         Aluno::orderBy('id')
             ->chunk(200, function (Collection $alunos) use ($all_periodos) {
                 foreach ($alunos as $aluno) {
-                    $alunoDisciplina = self::generateAlunoDisciplina(
-                        $aluno,
-                        $all_periodos
-                    );
-                    AlunoDisciplina::insert($alunoDisciplina);
+                //     $alunoDisciplina = self::generateAlunoDisciplina(
+                //         $aluno,
+                //         $all_periodos
+                //     );
+                //     AlunoDisciplina::insert($alunoDisciplina);
                     self::attributeAlunoArea($aluno);
                 }
             });

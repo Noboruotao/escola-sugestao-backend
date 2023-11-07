@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Professor;
+use App\Models\TipoAvaliacao;
 
 class ProfessorController extends Controller
 {
-    public function __construct(Professor $professor)
+    public function __construct(Professor $professor, TipoAvaliacao $tipoAvaliacao)
     {
         $this->middleware(
             'auth:api',
@@ -17,6 +18,7 @@ class ProfessorController extends Controller
             ]
         );
         $this->professor = $professor;
+        $this->tipoAvaliacao = $tipoAvaliacao;
     }
 
 
@@ -26,6 +28,7 @@ class ProfessorController extends Controller
         if ($permissionResult !== null) {
             return $permissionResult;
         }
+
         $aluno_id = $request->input('aluno_id');
         $classe_id = $request->input('classe_id');
         $tipo_avaliacao_id = $request->input('tipo_avaliacao_id');
@@ -49,6 +52,7 @@ class ProfessorController extends Controller
         if ($permissionResult !== null) {
             return $permissionResult;
         }
+
         $aluno_id = $request->input('aluno_id');
         $classe_id = $request->input('classe_id');
         $nota_final = $request->input('nota_final');
@@ -79,5 +83,19 @@ class ProfessorController extends Controller
             ->getAlunosClasse($classe_id);
 
         return response()->json($resposta);
+    }
+
+
+    public function getTipoAvaliacao(Request $request)
+    {
+        $permissionResult = $this->checkRole('Professor');
+        if ($permissionResult !== null) {
+            return $permissionResult;
+        }
+
+        $aluno_id = $request->query('aluno_id', null);
+        $classe_id = $request->query('classe_id', null);
+
+        return $this->tipoAvaliacao->getTipoAvaliacao($aluno_id, $classe_id);
     }
 }

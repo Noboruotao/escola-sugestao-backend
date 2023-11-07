@@ -18,8 +18,32 @@ class TipoAvaliacao extends Model
     protected $fillable = ['nome'];
 
 
-    public static function getTipoAvaliacao()
+    public static function getTipoAvaliacao(
+        $aluno_id = null,
+        $classe_id = null
+    ) {
+        if ($aluno_id && $classe_id) {
+            $tipos = self::whereNotIn(
+                'id',
+                self::getTipoAvaliacaoUsados($aluno_id, $classe_id)
+            )->get();
+        } else {
+            $tipos = self::get();
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $tipos
+        ]);
+    }
+
+
+    public static function getTipoAvaliacaoUsados($aluno_id, $classe_id)
     {
-        return self::get();
+        return  Nota::where('aluno_id', $aluno_id)
+            ->where('classe_id', $classe_id)
+            ->where('tipo_avaliacao_id', '!=', 3)
+            ->pluck('tipo_avaliacao_id')
+            ->unique();
     }
 }

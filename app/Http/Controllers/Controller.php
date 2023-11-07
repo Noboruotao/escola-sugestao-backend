@@ -29,7 +29,7 @@ class Controller extends BaseController
     }
 
 
-    protected function checkPermission($role)
+    protected function checkPermission($permission)
     {
         if (!auth()->user()) {
             return response()->json([
@@ -37,7 +37,7 @@ class Controller extends BaseController
                 'message' => 'Usuário Não Autenticado.'
             ]);
         }
-        if (!auth()->user()->can($role)) {
+        if (!auth()->user()->can($permission)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Usuário não tem permissão para executar este função'

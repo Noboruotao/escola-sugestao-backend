@@ -631,20 +631,23 @@ class Aluno extends Model
         $aluno,
         $aluno_area_valor_final
     ) {
-        $cursos = Curso::whereNotIn(
-            'id',
-            $aluno->cursosSugeridos()
-                ->pluck('sugerido_id')
-        )->get();
-        foreach ($cursos as $curso) {
-            $sugere = true;
-            $sugere = self::checkAlunoAreaWithParametros(
-                $curso,
-                $aluno_area_valor_final
-            );
-            if ($sugere) {
+
+        if ($this->periodo_id >= config('parametros.periodo_para_comecar_a_sugerir_curso')) {
+            $cursos = Curso::whereNotIn(
+                'id',
                 $aluno->cursosSugeridos()
-                    ->attach($curso);
+                    ->pluck('sugerido_id')
+            )->get();
+            foreach ($cursos as $curso) {
+                $sugere = true;
+                $sugere = self::checkAlunoAreaWithParametros(
+                    $curso,
+                    $aluno_area_valor_final
+                );
+                if ($sugere) {
+                    $aluno->cursosSugeridos()
+                        ->attach($curso);
+                }
             }
         }
     }
@@ -653,20 +656,23 @@ class Aluno extends Model
         $aluno,
         $aluno_area_valor_final
     ) {
-        $cursos = AtividadeExtra::whereNotIn(
-            'id',
-            $aluno->ativExtraSugeridos()
-                ->pluck('sugerido_id')
-        )->get();
-        foreach ($cursos as $curso) {
-            $sugere = true;
-            $sugere = self::checkAlunoAreaWithParametros(
-                $curso,
-                $aluno_area_valor_final
-            );
-            if ($sugere) {
+        if ($this->periodo_id >= config('parametros.periodo_para_comecar_a_sugerir_ativExtra')) {
+
+            $cursos = AtividadeExtra::whereNotIn(
+                'id',
                 $aluno->ativExtraSugeridos()
-                    ->attach($curso);
+                    ->pluck('sugerido_id')
+            )->get();
+            foreach ($cursos as $curso) {
+                $sugere = true;
+                $sugere = self::checkAlunoAreaWithParametros(
+                    $curso,
+                    $aluno_area_valor_final
+                );
+                if ($sugere) {
+                    $aluno->ativExtraSugeridos()
+                        ->attach($curso);
+                }
             }
         }
     }
