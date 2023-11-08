@@ -17,8 +17,10 @@ use Spatie\Permission\Models\Permission;
 
 class AuthController extends Controller
 {
-    public function __construct(Pessoa $pessoa, Emprestimo $emprestimo)
-    {
+    public function __construct(
+        Pessoa $pessoa,
+        Emprestimo $emprestimo
+    ) {
         $this->pessoa = $pessoa;
         $this->emprestimo = $emprestimo;
     }
@@ -34,7 +36,10 @@ class AuthController extends Controller
 
             $pessoa = $this->pessoa->getPessoaByEmail($credencials['email']);
 
-            if (!$pessoa || !Hash::check($credencials['senha'], $pessoa->senha)) {
+            if (!$pessoa || !Hash::check(
+                $credencials['senha'],
+                $pessoa->senha
+            )) {
 
                 return response()->json([
                     'success' => false,
@@ -108,7 +113,9 @@ class AuthController extends Controller
                 $rolePermissionsCacheKey,
                 86400,
                 function () use ($role) {
-                    return $role->permissions()->pluck('name')->toArray();
+                    return $role->permissions()
+                        ->pluck('name')
+                        ->toArray();
                 }
             );
 

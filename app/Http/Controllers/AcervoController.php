@@ -37,10 +37,6 @@ class AcervoController extends Controller
         return $this->acervo->getAcervoList(
             $page,
             $limit,
-            auth()->user()
-                ->hasRole('Bibliotecário')
-                ? false
-                : true,
             $sortColumn,
             $sortOrder,
             $search
@@ -51,7 +47,8 @@ class AcervoController extends Controller
     public function getAcervo(Request $request)
     {
         $acervo_id = $request->acervo_id;
-        return  $this->acervo->getAcervo($acervo_id);
+        return  $this->acervo
+            ->getAcervo($acervo_id);
     }
 
 
@@ -91,10 +88,13 @@ class AcervoController extends Controller
     }
 
 
-    public function getAcervosBySituacao(Request $request, $id)
-    {
+    public function getAcervosBySituacao(
+        Request $request,
+        $id
+    ) {
         $page = $request->query('page', 0);
         $limit = $request->query('limit', 10);
+
         return $this->acervo->getAcervosBySituacao(
             $id,
             $page,
@@ -103,31 +103,11 @@ class AcervoController extends Controller
     }
 
 
-    public function getCapa(Request $request, $capa)
-    {
-        try {
-            $capaNome = $capa;
-            $filePath = 'capas/' . $capaNome;
-            $fileContents = Storage::get($filePath);
-            $fileType = Storage::mimeType($filePath);
-            if ($fileContents) {
-                return response()->make(
-                    $fileContents,
-                    200,
-                    [
-                        'Content-Type' => $fileType,
-                        'Content-Disposition' => 'inline; filename="' . $capa . '"',
-                    ]
-                );
-            } else {
-                return response()->make('File not found.', 404);
-            }
-        } catch (\Throwable $th) {
-            return response()->make(
-                $th->getMessage('nao encontrado'),
-                404
-            );
-        }
+    public function getCapa(
+        Request $request,
+        $capa
+    ) {
+        return $this->acervo->getCapa($capa);
     }
 
 

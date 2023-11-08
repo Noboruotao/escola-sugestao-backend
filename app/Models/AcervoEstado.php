@@ -24,7 +24,11 @@ class AcervoEstado extends Model
         $search = ''
     ) {
 
-        $estados = self::where('estado', 'like', '%' . $search . '%')
+        $estados = self::where(
+            'estado',
+            'like',
+            '%' . $search . '%'
+        )
             ->when($limit, function ($query) use ($page, $limit) {
                 return $query->offset($page * $limit)
                     ->limit($limit);

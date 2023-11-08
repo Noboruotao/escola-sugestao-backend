@@ -82,7 +82,10 @@ class Disciplina extends Model
                 return $query->where('nome', 'like', '%' . $search . '%');
             })
             ->when($sortColumn, function ($query) use ($sortColumn, $sortOrder) {
-                return $query->orderBy($sortColumn, $sortOrder);
+                return $query->orderBy(
+                    $sortColumn,
+                    $sortOrder
+                );
             });
 
         $count = $query->count();

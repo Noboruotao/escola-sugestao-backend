@@ -135,7 +135,6 @@ class Acervo extends Model
     public function getAcervoList(
         $page = 0,
         $limit = 10,
-        $disponivel = true,
         $sortColumn,
         $sortOrder,
         $search = null
@@ -163,7 +162,8 @@ class Acervo extends Model
             })
             ->orderBy($sortColumn, $sortOrder);
 
-        if ($disponivel) {
+        if (!auth()->user()
+            ->hasRole('Bibliotecário')) {
             $query->whereNotIn('situacao_id', [
                 AcervoSituacao::EM_PROCESSAMENTO_TECNICO,
                 AcervoSituacao::EM_MANUTENCAO,
@@ -186,10 +186,35 @@ class Acervo extends Model
         ], 200);
     }
 
+    public function getCapa($capa){
+        try {
+            $capaNome = $capa;
+            $filePath = 'capas/' . $capaNome;
+            $fileContents = Storage::get($filePath);
+            $fileType = Storage::mimeType($filePath);
+            if ($fileContents) {
+                return response()->make(
+                    $fileContents,
+                    200,
+                    [
+                        'Content-Type' => $fileType,
+                        'Content-Disposition' => 'inline; filename="' . $capa . '"',
+                    ]
+                );
+            } else {
+                return response()->make('File not found.', 404);
+            }
+        } catch (\Throwable $th) {
+            return response()->make(
+                $th->getMessage('nao encontrado'),
+                404
+            );
+        }
+    }
+
 
     function getAcervoParametros()
     {
-
         if (Cache::get('acervoParametros')) {
             return Cache::get('acervoParametros');
         }

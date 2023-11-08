@@ -88,7 +88,11 @@ class AtividadeExtra extends Model
                 : $order
         )
             ->when($search, function ($query) use ($search) {
-                return $query->where('nome', 'like', '%' . $search . '%');
+                return $query->where(
+                    'nome',
+                    'like',
+                    '%' . $search . '%'
+                );
             })
             ->when($tipo != '', function ($query) use ($tipo) {
                 return $query->where('tipo_id', $tipo);

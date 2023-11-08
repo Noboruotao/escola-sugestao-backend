@@ -35,7 +35,7 @@ class AlunoController extends Controller
         $sortColumn = $request->query('sortColumn', null);
         $sortOrder = $request->query('sortOrder', null);
 
-        $cursos = $this->aluno->getCursosSugeridos(
+        return $this->aluno->getCursosSugeridos(
             $page,
             $limit,
             $search,
@@ -43,31 +43,31 @@ class AlunoController extends Controller
             $sortOrder
         );
 
-        if ($cursos->count() == 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Não foi Encontrado nenhuma Curso Sugerida.'
-            ], 400);
-        }
+        // if ($cursos->count() == 0) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Não foi Encontrado nenhuma Curso Sugerida.'
+        //     ], 400);
+        // }
 
 
-        $cursos = $sortOrder == 'asc'
-            ? $cursos->sortBy($sortColumn)
-            : $cursos->sortByDesc($sortColumn);
+        // $cursos = $sortOrder == 'asc'
+        //     ? $cursos->sortBy($sortColumn)
+        //     : $cursos->sortByDesc($sortColumn);
 
 
-        return response()->json([
-            'success' => true,
-            'data' => $cursos->slice(
-                $page * $limit,
-                $limit
-            )
-                ->values(),
-            'count' => auth()->user()
-                ->aluno
-                ->cursosSugeridos
-                ->count()
-        ], 200);
+        // return response()->json([
+        //     'success' => true,
+        //     'data' => $cursos->slice(
+        //         $page * $limit,
+        //         $limit
+        //     )
+        //         ->values(),
+        //     'count' => auth()->user()
+        //         ->aluno
+        //         ->cursosSugeridos
+        //         ->count()
+        // ], 200);
     }
 
 
@@ -94,29 +94,29 @@ class AlunoController extends Controller
             $tipo
         );
 
-        if ($ativExtra->count() == 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Não foi Encontrado nenhuma Atividade Sugerida.'
-            ], 401);
-        }
+        // if ($ativExtra->count() == 0) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Não foi Encontrado nenhuma Atividade Sugerida.'
+        //     ], 401);
+        // }
 
-        $ativExtra = $sortOrder == 'asc'
-            ? $ativExtra->sortBy($sortColumn)
-            : $ativExtra->sortByDesc($sortColumn);
+        // $ativExtra = $sortOrder == 'asc'
+        //     ? $ativExtra->sortBy($sortColumn)
+        //     : $ativExtra->sortByDesc($sortColumn);
 
 
-        return response()->json([
-            'success' => true,
-            'data' => $ativExtra
-                ->slice(
-                    $page * $limit,
-                    $limit
-                )
-                ->values(),
-            'count' => $ativExtra
-                ->count()
-        ], 200);
+        // return response()->json([
+        //     'success' => true,
+        //     'data' => $ativExtra
+        //         ->slice(
+        //             $page * $limit,
+        //             $limit
+        //         )
+        //         ->values(),
+        //     'count' => $ativExtra
+        //         ->count()
+        // ], 200);
     }
 
 

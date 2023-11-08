@@ -189,7 +189,7 @@ class Aluno extends Model
         $sortOrder
     ) {
         $user = auth()->user();
-        return $user->aluno->cursosSugeridos
+        $cursos = $user->aluno->cursosSugeridos
             ->when($search, function ($query) use ($search) {
                 return $query
                     ->filter(function ($curso) use ($search) {
@@ -197,6 +197,31 @@ class Aluno extends Model
                             stripos($curso['descricao'], $search) !== false;
                     });
             });
+
+        if (!$cursos) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi Encontrado nenhuma Curso Sugerida.'
+            ], 400);
+        }
+
+        $cursos = $sortOrder == 'asc'
+            ? $cursos->sortBy($sortColumn)
+            : $cursos->sortByDesc($sortColumn);
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $cursos->slice(
+                $page * $limit,
+                $limit
+            )
+                ->values(),
+            'count' => auth()->user()
+                ->aluno
+                ->cursosSugeridos
+                ->count()
+        ], 200);
     }
 
     public function getAtivExtraSugerido(
@@ -208,7 +233,7 @@ class Aluno extends Model
         $tipo
     ) {
         $user = auth()->user();
-        return $user->aluno
+        $ativExtra = $user->aluno
             ->ativExtraSugeridos
             ->when($tipo != '', function ($query) use ($tipo) {
                 return $query->where('tipo_id', $tipo);
@@ -219,6 +244,30 @@ class Aluno extends Model
                         stripos($ativ['descricao'], $search) !== false;
                 });
             });
+
+        if ($ativExtra->count() == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Não foi Encontrado nenhuma Atividade Sugerida.'
+            ], 401);
+        }
+
+        $ativExtra = $sortOrder == 'asc'
+            ? $ativExtra->sortBy($sortColumn)
+            : $ativExtra->sortByDesc($sortColumn);
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $ativExtra
+                ->slice(
+                    $page * $limit,
+                    $limit
+                )
+                ->values(),
+            'count' => $ativExtra
+                ->count()
+        ], 200);
     }
 
 
@@ -323,18 +372,28 @@ class Aluno extends Model
     }
 
 
-    public function getNotas($aluno_id, $classe_id, $disciplina_id, $todas)
-    {
+    public function getNotas(
+        $aluno_id,
+        $classe_id,
+        $disciplina_id,
+        $todas
+    ) {
         $user = self::find($aluno_id);
         if ($classe_id) {
             return $user->getClasseNotas($user, $classe_id);
         } else if ($disciplina_id) {
-            return self::getDisciplinaNotas($user, $disciplina_id, $todas);
+            return self::getDisciplinaNotas(
+                $user,
+                $disciplina_id,
+                $todas
+            );
         }
     }
 
-    public static function getClasseNotas($aluno, $classe_id)
-    {
+    public static function getClasseNotas(
+        $aluno,
+        $classe_id
+    ) {
         $classe = $aluno->classes()
             ->where('id', $classe_id)
             ->first();
@@ -488,7 +547,8 @@ class Aluno extends Model
             $existingPivotData,
             $valorKey
         );
-        $this->areas()->syncWithoutDetaching($attachData);
+        $this->areas()
+            ->syncWithoutDetaching($attachData);
         $this->sugerir();
     }
 
@@ -527,7 +587,10 @@ class Aluno extends Model
 
     public function AttributeAlunoAreaByAcervo($acervo)
     {
-        $this->attachAreasWithValues($acervo->areas, 'valor_acervos');
+        $this->attachAreasWithValues(
+            $acervo->areas,
+            'valor_acervos'
+        );
     }
 
     public function attributeAtivExtra($ativExtra)

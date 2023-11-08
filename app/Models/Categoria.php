@@ -69,8 +69,11 @@ class Categoria extends Model
     }
 
 
-    public function getAcervosByCategoria($id, $offset, $limit)
-    {
+    public function getAcervosByCategoria(
+        $id,
+        $offset,
+        $limit
+    ) {
 
         $acervoCategoria = Acervo::where('categoria_id', $id)
             ->offset($offset)

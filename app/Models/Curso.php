@@ -61,7 +61,10 @@ class Curso extends Model
         $sortColumn,
         $order
     ) {
-        $query = self::orderBy($sortColumn, $order)
+        $query = self::orderBy(
+            $sortColumn,
+            $order
+        )
             ->when($search, function ($query) use ($search) {
                 return $query->where(
                     'nome',

@@ -33,7 +33,10 @@ class AcervoTipo extends Model
 
     public function acervos()
     {
-        return $this->hasMany(Acervo::class, 'tipo_id');
+        return $this->hasMany(
+            Acervo::class,
+            'tipo_id'
+        );
     }
 
     function listAcervoTipos($page, $limit, $search)
@@ -41,7 +44,11 @@ class AcervoTipo extends Model
         if (Cache::get('acervoTipos')) {
             $acervoTipos = Cache::get('acervoTipos');
         } else {
-            $acervoTipos = self::where('tipo', 'like', '%' . $search . '%')
+            $acervoTipos = self::where(
+                'tipo',
+                'like',
+                '%' . $search . '%'
+            )
                 ->when($limit, function ($query) use ($page, $limit) {
                     return $query
                         ->offset($page * $limit)

@@ -61,6 +61,7 @@ class EmprestimoController extends Controller
         $pendente = $request->query('pendente', false);
         $pendente = $pendente == 'true' ? true : false;
         $search = $request->query('search', '');
+        
         return  $this->emprestimo
             ->getEmprestimos(
                 $page,
@@ -71,8 +72,10 @@ class EmprestimoController extends Controller
     }
 
 
-    public function getEmprestimoDetail(Request $request, $id)
-    {
+    public function getEmprestimoDetail(
+        Request $request,
+        $id
+    ) {
         return $this->emprestimo
             ->getEmprestimoDetail($id);
     }

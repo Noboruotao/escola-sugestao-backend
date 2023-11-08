@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -118,6 +119,50 @@ class Pessoa extends Authenticatable implements JWTSubject
         return Pessoa::where('email', $email)
             ->whereNull('deleted_at')
             ->first();
+    }
+
+    public function getFoto($id){
+        if (!$id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'O id é obrigatório'
+            ], 400);
+        }
+        try {
+            $foto = $this->pessoa
+                ->getFotoById($request->id);
+            if (!$foto) {
+                return response()
+                    ->make(
+                        'File not found.',
+                        404
+                    );
+            }
+            $filePath = 'fotos/' . $foto;
+            $fileContents = Storage::get($filePath);
+            $fileType = Storage::mimeType($filePath);
+            if ($fileContents) {
+                return response()->make(
+                    $fileContents,
+                    200,
+                    [
+                        'Content-Type' => $fileType,
+                        'Content-Disposition' => 'inline; filename="' . $foto . '"',
+                    ]
+                );
+            } else {
+                return response()
+                    ->make(
+                        'File not found.',
+                        404
+                    );
+            }
+        } catch (\Throwable $th) {
+            return response()->make(
+                $th->getMessage(),
+                404
+            );
+        }
     }
 
 

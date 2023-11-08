@@ -33,7 +33,7 @@ class AlunoFactory extends Factory
         dump('Starting Aluno seeding');
         self::createClasses();
         self::createAulas();
-        self::attributeAlunoDisciplina();
+        self::callAttributeAlunoArea();
         self::attributeBolsas();
         self::attributeAlunoAtivExtra();
     }
@@ -212,7 +212,7 @@ class AlunoFactory extends Factory
     }
 
 
-    public static function attributeAlunoDisciplina()
+    public static function callAttributeAlunoArea()
     {
         echo 'attributeAlunoDisciplina' . PHP_EOL;
         $all_periodos = Periodo::all();
@@ -220,11 +220,11 @@ class AlunoFactory extends Factory
         Aluno::orderBy('id')
             ->chunk(200, function (Collection $alunos) use ($all_periodos) {
                 foreach ($alunos as $aluno) {
-                //     $alunoDisciplina = self::generateAlunoDisciplina(
-                //         $aluno,
-                //         $all_periodos
-                //     );
-                //     AlunoDisciplina::insert($alunoDisciplina);
+                    //     $alunoDisciplina = self::generateAlunoDisciplina(
+                    //         $aluno,
+                    //         $all_periodos
+                    //     );
+                    //     AlunoDisciplina::insert($alunoDisciplina);
                     self::attributeAlunoArea($aluno);
                 }
             });
@@ -313,7 +313,10 @@ class AlunoFactory extends Factory
                         : DisciplinaSituacao::REPROVADO,
                     $nota_final
                 );
-                $notas = array_merge($notas, $notasDisciplina);
+                $notas = array_merge(
+                    $notas,
+                    $notasDisciplina
+                );
             }
         }
         Nota::insert($notas);
@@ -349,9 +352,15 @@ class AlunoFactory extends Factory
         $alunos = $periodo->alunos;
         $ano = $currentYear;
 
-        foreach ($allPeriodos->where('id', '<=', $periodo->id)
+        foreach ($allPeriodos->where(
+            'id',
+            '<=',
+            $periodo->id
+        )
             ->sortByDesc('id') as $subPeriodo) {
-            $ativo = ($subPeriodo->id === $periodo->id) ? 1 : 0;
+            $ativo = ($subPeriodo->id === $periodo->id)
+                ? 1
+                : 0;
             $disciplinas = $subPeriodo->disciplinas;
 
             if ($disciplinas->isEmpty()) {
@@ -401,8 +410,14 @@ class AlunoFactory extends Factory
                 $ano
             );
 
-            self::attributeAlunoClasse($turmaA, $classeA);
-            self::attributeAlunoClasse($turmaB, $classeB);
+            self::attributeAlunoClasse(
+                $turmaA,
+                $classeA
+            );
+            self::attributeAlunoClasse(
+                $turmaB,
+                $classeB
+            );
         }
     }
 
@@ -412,7 +427,7 @@ class AlunoFactory extends Factory
         echo 'createAulas' . PHP_EOL;
         Classe::whereNotNull('disciplina_id')
             ->orderBy('id')
-            ->chunk(500, function ($classes) {
+            ->chunk(100, function ($classes) {
                 $aulas = [];
                 foreach ($classes as $classe) {
                     $aulas[] = [

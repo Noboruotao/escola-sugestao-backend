@@ -69,6 +69,7 @@ class AutorController extends Controller
         if ($permissionResult !== null) {
             return $permissionResult;
         }
-        return $this->autor->deleteAutor($id);
+        return $this->autor
+            ->deleteAutor($id);
     }
 }

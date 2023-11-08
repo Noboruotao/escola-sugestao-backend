@@ -9,8 +9,10 @@ use App\Models\TipoAvaliacao;
 
 class ProfessorController extends Controller
 {
-    public function __construct(Professor $professor, TipoAvaliacao $tipoAvaliacao)
-    {
+    public function __construct(
+        Professor $professor,
+        TipoAvaliacao $tipoAvaliacao
+    ) {
         $this->middleware(
             'auth:api',
             [
@@ -34,15 +36,13 @@ class ProfessorController extends Controller
         $tipo_avaliacao_id = $request->input('tipo_avaliacao_id');
         $nota = $request->input('nota');
 
-        $resposta = $this->professor
+        return $this->professor
             ->attributeNota(
                 $aluno_id,
                 $classe_id,
                 $tipo_avaliacao_id,
                 $nota
             );
-
-        return response()->json($resposta);
     }
 
 
@@ -62,8 +62,6 @@ class ProfessorController extends Controller
             $classe_id,
             $nota_final
         );
-
-        return response()->json($resposta);
     }
 
 
@@ -71,18 +69,21 @@ class ProfessorController extends Controller
     {
         $classe_id = $request->query('classe_id', null);
 
-        if (!$classe_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Valor Inválido'
-            ]);
-        }
+        // if (!$classe_id) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Valor Inválido'
+        //     ]);
+        // }
 
-        $resposta = auth()->user()
+        // $resposta = auth()->user()
+        //     ->professor
+        //     ->getAlunosClasse($classe_id);
+        return auth()->user()
             ->professor
             ->getAlunosClasse($classe_id);
 
-        return response()->json($resposta);
+        // return response()->json($resposta);
     }
 
 
@@ -96,6 +97,10 @@ class ProfessorController extends Controller
         $aluno_id = $request->query('aluno_id', null);
         $classe_id = $request->query('classe_id', null);
 
-        return $this->tipoAvaliacao->getTipoAvaliacao($aluno_id, $classe_id);
+        return $this->tipoAvaliacao
+            ->getTipoAvaliacao(
+                $aluno_id,
+                $classe_id
+            );
     }
 }

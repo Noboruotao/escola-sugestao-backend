@@ -8,8 +8,10 @@ use App\Models\AtivExtraTipo;
 
 class AtividadeExtracurricularController extends Controller
 {
-    public function __construct(AtividadeExtra $atividade_extra, AtivExtraTipo $ativExtra_tipo)
-    {
+    public function __construct(
+        AtividadeExtra $atividade_extra,
+        AtivExtraTipo $ativExtra_tipo
+    ) {
         $this->middleware(
             'auth:api',
             [

@@ -133,9 +133,21 @@ class AreaConhecimento extends Model
 
     public function getAncestorAreas()
     {
-        return self::where('codigo', 'like', '%/' . $this->codigo)
-            ->orWhere('codigo', 'like', $this->codigo . '/%')
-            ->orWhere('codigo', 'like', $this->codigo . '%')
+        return self::where(
+            'codigo',
+            'like',
+            '%/' . $this->codigo
+        )
+            ->orWhere(
+                'codigo',
+                'like',
+                $this->codigo . '/%'
+            )
+            ->orWhere(
+                'codigo',
+                'like',
+                $this->codigo . '%'
+            )
             ->get();
     }
 

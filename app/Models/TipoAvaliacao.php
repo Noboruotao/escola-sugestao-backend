@@ -25,7 +25,10 @@ class TipoAvaliacao extends Model
         if ($aluno_id && $classe_id) {
             $tipos = self::whereNotIn(
                 'id',
-                self::getTipoAvaliacaoUsados($aluno_id, $classe_id)
+                self::getTipoAvaliacaoUsados(
+                    $aluno_id,
+                    $classe_id
+                )
             )->get();
         } else {
             $tipos = self::get();
@@ -38,8 +41,10 @@ class TipoAvaliacao extends Model
     }
 
 
-    public static function getTipoAvaliacaoUsados($aluno_id, $classe_id)
-    {
+    public static function getTipoAvaliacaoUsados(
+        $aluno_id,
+        $classe_id
+    ) {
         return  Nota::where('aluno_id', $aluno_id)
             ->where('classe_id', $classe_id)
             ->where('tipo_avaliacao_id', '!=', 3)

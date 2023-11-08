@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 
 class DisciplinaController extends Controller
 {
-    public function __construct(Disciplina $disciplina, DisciplinaSituacao $disciplina_situacao)
-    {
+    public function __construct(
+        Disciplina $disciplina,
+        DisciplinaSituacao $disciplina_situacao
+    ) {
         $this->middleware(
             'auth:api',
             [
@@ -85,7 +87,8 @@ class DisciplinaController extends Controller
 
     public function getSituacoesDisciplina()
     {
-        return $this->disciplina_situacao->getSituacoesDisciplina();
+        return $this->disciplina_situacao
+            ->getSituacoesDisciplina();
     }
 
 
@@ -113,8 +116,10 @@ class DisciplinaController extends Controller
     }
 
 
-    public function getDisciplina(Request $request, $disciplina_id)
-    {
+    public function getDisciplina(
+        Request $request,
+        $disciplina_id
+    ) {
         return $this->disciplina
             ->getDisciplina($disciplina_id);
     }

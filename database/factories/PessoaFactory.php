@@ -22,13 +22,13 @@ class PessoaFactory extends Factory
     /*
         [numero de anos] * [numero de classes] * [numero de alunos]
     */
-    private const ENSINO_INFANTIL_QNT = 2 * 2 * 20;
-    private const ENSINO_FUNDAMENTAL_QNT = 9 * 2 * 25;
-    private const ENSINO_MEDIO_QNT = 2 * 3 * 40;
+    private const ENSINO_INFANTIL_QNT = 2 * 2 * 10;
+    private const ENSINO_FUNDAMENTAL_QNT = 9 * 2 * 10;
+    private const ENSINO_MEDIO_QNT = 2 * 3 * 10;
 
-    private const PROFESSOR_QNT = 20;
-    private const BIBLIOTECARIO_QNT = 10;
-    private const SECRETARIA_QNT = 10;
+    private const PROFESSOR_QNT = 10;
+    private const BIBLIOTECARIO_QNT = 5;
+    private const SECRETARIA_QNT = 5;
 
     public function definition()
     {

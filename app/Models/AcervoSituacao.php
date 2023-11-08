@@ -29,12 +29,18 @@ class AcervoSituacao extends Model
     function listSituacao($page, $limit, $search)
     {
 
-        $situacoes = self::where('situacao', 'like', '%' . $search . '%')
-            ->when($limit,
-             function ($query) use ($limit, $page) {
-                return $query->offset($page * $limit)
-                    ->limit($limit);
-            })
+        $situacoes = self::where(
+            'situacao',
+            'like',
+            '%' . $search . '%'
+        )
+            ->when(
+                $limit,
+                function ($query) use ($limit, $page) {
+                    return $query->offset($page * $limit)
+                        ->limit($limit);
+                }
+            )
             ->get();
 
         return response()->json([

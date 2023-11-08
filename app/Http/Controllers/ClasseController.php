@@ -28,10 +28,6 @@ class ClasseController extends Controller
         $sortColumn = $request->query('sortColumn', 'ano');
         $sortOrder = $request->query('sortOrder', 'asc');
 
-        // if ($sortColumn === null) {
-        //     $sortColumn = $ativo == 1 ? 'disciplina.nome' : 'ano';
-        // }
-
         return $this->classe
             ->getClassesEnableAtivo(
                 $ativo,

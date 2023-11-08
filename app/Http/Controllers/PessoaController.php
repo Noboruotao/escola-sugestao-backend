@@ -41,47 +41,48 @@ class PessoaController extends Controller
         Request $request,
         $id
     ) {
-        if (!$id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'O id é obrigatório'
-            ], 400);
-        }
-        try {
-            $foto = $this->pessoa
-                ->getFotoById($request->id);
-            if (!$foto) {
-                return response()
-                    ->make(
-                        'File not found.',
-                        404
-                    );
-            }
-            $filePath = 'fotos/' . $foto;
-            $fileContents = Storage::get($filePath);
-            $fileType = Storage::mimeType($filePath);
-            if ($fileContents) {
-                return response()->make(
-                    $fileContents,
-                    200,
-                    [
-                        'Content-Type' => $fileType,
-                        'Content-Disposition' => 'inline; filename="' . $foto . '"',
-                    ]
-                );
-            } else {
-                return response()
-                    ->make(
-                        'File not found.',
-                        404
-                    );
-            }
-        } catch (\Throwable $th) {
-            return response()->make(
-                $th->getMessage(),
-                404
-            );
-        }
+        return $this->pessoa->getPessoa($id);
+        // if (!$id) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'O id é obrigatório'
+        //     ], 400);
+        // }
+        // try {
+        //     $foto = $this->pessoa
+        //         ->getFotoById($request->id);
+        //     if (!$foto) {
+        //         return response()
+        //             ->make(
+        //                 'File not found.',
+        //                 404
+        //             );
+        //     }
+        //     $filePath = 'fotos/' . $foto;
+        //     $fileContents = Storage::get($filePath);
+        //     $fileType = Storage::mimeType($filePath);
+        //     if ($fileContents) {
+        //         return response()->make(
+        //             $fileContents,
+        //             200,
+        //             [
+        //                 'Content-Type' => $fileType,
+        //                 'Content-Disposition' => 'inline; filename="' . $foto . '"',
+        //             ]
+        //         );
+        //     } else {
+        //         return response()
+        //             ->make(
+        //                 'File not found.',
+        //                 404
+        //             );
+        //     }
+        // } catch (\Throwable $th) {
+        //     return response()->make(
+        //         $th->getMessage(),
+        //         404
+        //     );
+        // }
     }
 
     public function getAcervosEmprestados()

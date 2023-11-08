@@ -32,7 +32,11 @@ class Autor extends Model
 
     public function getAutors($offset, $limit, $search)
     {
-        $autors = self::where('nome', 'like', '%' . $search . '%')
+        $autors = self::where(
+            'nome',
+            'like',
+            '%' . $search . '%'
+        )
             ->when($limit, function ($query) use ($limit, $offset) {
                 return $query
                     ->offset($offset * $limit)
@@ -49,8 +53,10 @@ class Autor extends Model
     }
 
 
-    public function getAutorById($id, $com_acervos = false)
-    {
+    public function getAutorById(
+        $id,
+        $com_acervos = false
+    ) {
 
         $autor = Autor::when($com_acervos, function ($query) {
             return $query->with([

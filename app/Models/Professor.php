@@ -118,10 +118,10 @@ class Professor extends Model
 
         $aluno->AttributeAlunoAreaByNota($classe->disciplina);
 
-        return [
+        return response()->json([
             'success' => true,
             'data' => $nova_nota
-        ];
+        ], 200);
     }
 
 
@@ -164,6 +164,7 @@ class Professor extends Model
             ->situacao_id = self::verificarAprovacao($nota_final);
 
         $disciplina->pivot->save();
+
         return response()->json([
             'success' => true,
             'data' => $disciplina,
@@ -172,6 +173,13 @@ class Professor extends Model
 
     public function getAlunosClasse($classe_id)
     {
+        if (!$classe_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Valor Inválido'
+            ]);
+        }
+
         $classe = $this->classes()
             ->where('id', $classe_id)
             ->first();

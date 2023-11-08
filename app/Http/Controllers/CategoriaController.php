@@ -9,7 +9,12 @@ class CategoriaController extends Controller
 {
     public function __construct(Categoria $categoria)
     {
-        $this->middleware('auth:api', ['except' => []]);
+        $this->middleware(
+            'auth:api',
+            [
+                'except' => []
+            ]
+        );
         $this->categoria = $categoria;
     }
 
