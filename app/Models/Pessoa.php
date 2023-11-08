@@ -121,7 +121,8 @@ class Pessoa extends Authenticatable implements JWTSubject
             ->first();
     }
 
-    public function getFoto($id){
+    public function getFoto($id)
+    {
         if (!$id) {
             return response()->json([
                 'success' => false,
@@ -129,8 +130,7 @@ class Pessoa extends Authenticatable implements JWTSubject
             ], 400);
         }
         try {
-            $foto = $this->pessoa
-                ->getFotoById($request->id);
+            $foto = self::getFotoById($id);
             if (!$foto) {
                 return response()
                     ->make(

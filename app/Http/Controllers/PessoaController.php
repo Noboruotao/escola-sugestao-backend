@@ -41,7 +41,8 @@ class PessoaController extends Controller
         Request $request,
         $id
     ) {
-        return $this->pessoa->getPessoa($id);
+        return $this->pessoa
+            ->getFoto($id);
         // if (!$id) {
         //     return response()->json([
         //         'success' => false,

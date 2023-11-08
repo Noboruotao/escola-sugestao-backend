@@ -163,7 +163,8 @@ class Acervo extends Model
             ->orderBy($sortColumn, $sortOrder);
 
         if (!auth()->user()
-            ->hasRole('Bibliotecário')) {
+            ->hasRole('Bibliotecário')
+        ) {
             $query->whereNotIn('situacao_id', [
                 AcervoSituacao::EM_PROCESSAMENTO_TECNICO,
                 AcervoSituacao::EM_MANUTENCAO,
@@ -185,6 +186,7 @@ class Acervo extends Model
             'count' => $totalResults
         ], 200);
     }
+    
 
     public function getCapa($capa){
         try {
