@@ -218,13 +218,8 @@ class AlunoFactory extends Factory
         $all_periodos = Periodo::all();
 
         Aluno::orderBy('id')
-            ->chunk(200, function (Collection $alunos) use ($all_periodos) {
+            ->chunk(10, function (Collection $alunos) use ($all_periodos) {
                 foreach ($alunos as $aluno) {
-                    //     $alunoDisciplina = self::generateAlunoDisciplina(
-                    //         $aluno,
-                    //         $all_periodos
-                    //     );
-                    //     AlunoDisciplina::insert($alunoDisciplina);
                     self::attributeAlunoArea($aluno);
                 }
             });
