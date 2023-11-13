@@ -137,7 +137,6 @@ class AcervoFactory extends Factory
         $categorias = Categoria::pluck('id');
         $tipos = AcervoTipo::pluck('id');
         $estados = AcervoEstado::pluck('id');
-        // $situacoes = AcervoSituacao::where('id', '<>', 2)
         $situacoes = AcervoSituacao::where('id', 1)
             ->pluck('id');
         $nomes = AreaConhecimento::pluck('nome');
@@ -204,7 +203,9 @@ class AcervoFactory extends Factory
         Acervo::orderBy('id')->chunk(100, function (Collection $acervos) {
             $acervo_areas = [];
             foreach ($acervos as $acervo) {
-                foreach (AreaConhecimento::where('nome', $acervo->titulo)->first()->getRelatedAreas() as $area) {
+                foreach (AreaConhecimento::where('nome', $acervo->titulo)
+                    ->first()
+                    ->getRelatedAreas() as $area) {
                     $acervo_areas[] = [
                         'area_codigo' => $area->codigo,
                         'model_id' => $acervo->id,
@@ -212,7 +213,8 @@ class AcervoFactory extends Factory
                     ];
                 }
             }
-            DB::table('model_has_areas')->insert($acervo_areas);
+            DB::table('model_has_areas')
+                ->insert($acervo_areas);
         });
     }
 
@@ -220,10 +222,17 @@ class AcervoFactory extends Factory
     private static function createEmprestimo($aluno, $faker, $bibliotecarios)
     {
         $ano = 1;
-        for ($j = $aluno->aluno->periodo_id; $j > 0; $j--) {
+        for (
+            $j = $aluno->aluno->periodo_id;
+            $j > 0;
+            $j--
+        ) {
             $ano_fim = $ano - 1;
             for ($i = 0; $i < $faker->randomDigit(); $i++) {
-                $data_emprestimo = $faker->dateTimeBetween("-$ano years", "-$ano_fim years");
+                $data_emprestimo = $faker->dateTimeBetween(
+                    "-$ano years",
+                    "-$ano_fim years"
+                );
                 $data_devolucao = $faker->dateTimeBetween(
                     $data_emprestimo,
                     (clone $data_emprestimo)->modify('+30 days')

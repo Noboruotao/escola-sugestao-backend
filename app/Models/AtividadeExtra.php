@@ -14,6 +14,7 @@ class AtividadeExtra extends Model
     protected $table = 'atividade_extracurriculares';
     protected $fillable = [
         'nome',
+        'descricao',
         'tipo_id',
         'ativo'
     ];

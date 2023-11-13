@@ -39,7 +39,13 @@ class PermissionAndRoleFactory extends Factory
     {
         $guard_name = \Spatie\Permission\Guard::getDefaultName(static::class);
         foreach (config('seeder_datas.permissions') as $base) {
-            foreach (['.create', '.read', '.update', '.delete', '.*'] as $action) {
+            foreach ([
+                '.create',
+                '.read',
+                '.update',
+                '.delete',
+                '.*'
+            ] as $action) {
                 $permissions[] = [
                     'name' => $base . $action,
                     'guard_name' => $guard_name,

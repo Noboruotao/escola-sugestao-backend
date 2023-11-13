@@ -316,7 +316,7 @@ class AlunoFactory extends Factory
         }
         Nota::insert($notas);
         AlunoDisciplina::insert($alunoDisciplina);
-        self::attributeAlunoArea($aluno);
+        // self::attributeAlunoArea($aluno);
     }
 
 

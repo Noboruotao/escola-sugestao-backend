@@ -567,7 +567,8 @@ class Aluno extends Model
                 ];
             }
 
-            $this->areas()->syncWithoutDetaching($syncData);
+            $this->areas()
+                ->syncWithoutDetaching($syncData);
         }
     }
 
