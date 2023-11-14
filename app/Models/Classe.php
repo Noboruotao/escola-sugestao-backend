@@ -78,18 +78,48 @@ class Classe extends Model
         }
 
         $qnt = $query->count();
-        $datas = $query->with('disciplina')
+        $classes = $query->with('disciplina')
             ->orderBy($sortColumn, $sortOrder)
             ->offset($page * $pageSize)
             ->limit($pageSize)
             ->get();
 
+        if ($user->hasRole('Aluno')) {
+            $classes = self::setAlunoNotasOnClasse($classes);
+        }
 
         return response()->json([
             'success' => true,
-            'data' => $datas,
+            'data' => $classes,
             'count' => $qnt
         ]);
+    }
+
+    private static function setAlunoNotasOnClasse($classes)
+    {
+        $notas = Nota::where('aluno_id', auth()->user()->id)
+            ->whereIn('classe_id', $classes->pluck('id')->toArray())
+            ->get();
+
+        foreach ($classes as $classe) {
+            $classe->p1 = $notas->where('classe_id', $classe->id)
+                ->where('tipo_avaliacao_id', TipoAvaliacao::P1)
+                ->first()
+                ->nota
+                ?? null;
+            $classe->p2 = $notas->where('classe_id', $classe->id)
+                ->where('tipo_avaliacao_id', TipoAvaliacao::P2)
+                ->first()
+                ->nota
+                ?? null;
+            $classe->sub = $notas->where('classe_id', $classe->id)
+                ->where('tipo_avaliacao_id', TipoAvaliacao::P_SUB)
+                ->first()
+                ->nota
+                ?? null;
+        }
+
+        return $classes;
     }
 
 
