@@ -23,7 +23,7 @@ use App\Models\Pessoa;
 class AcervoFactory extends Factory
 {
 
-    private const ACERVO_QNT = 500;
+    private const ACERVO_QNT = 5000;
     private const AUTOR_QNT = 50;
     private const  EDITORA_QNT = 50;
     /**
@@ -153,6 +153,10 @@ class AcervoFactory extends Factory
                 $estados,
                 $situacoes
             );
+            if (count($acervos) >= 1000) {
+                Acervo::insert($acervos);
+                $acervos = [];
+            }
         }
         Acervo::insert($acervos);
     }
@@ -233,10 +237,12 @@ class AcervoFactory extends Factory
                     "-$ano years",
                     "-$ano_fim years"
                 );
+
                 $data_devolucao = $faker->dateTimeBetween(
                     $data_emprestimo,
                     (clone $data_emprestimo)->modify('+30 days')
                 );
+
                 $acervo = Acervo::inRandomOrder()->first();
 
                 $emprestimo = Emprestimo::create([

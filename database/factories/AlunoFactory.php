@@ -116,7 +116,11 @@ class AlunoFactory extends Factory
         $nota_sub = null;
 
         if (self::calculateFinalNota($nota_p1, $nota_p2, null) < 5) {
-            $nota_sub = self::generateRandomNota(10.00, null, $faker);
+            $nota_sub = self::generateRandomNota(
+                3.00,
+                null,
+                $faker
+            );
         }
 
         $nota_final = self::calculateFinalNota(
@@ -218,7 +222,7 @@ class AlunoFactory extends Factory
         $all_periodos = Periodo::all();
 
         Aluno::orderBy('id')
-            ->chunk(10, function (Collection $alunos) use ($all_periodos) {
+            ->chunk(20, function (Collection $alunos) use ($all_periodos) {
                 foreach ($alunos as $aluno) {
                     self::attributeAlunoArea($aluno);
                 }

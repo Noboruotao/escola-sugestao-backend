@@ -22,9 +22,9 @@ class PessoaFactory extends Factory
     /*
         [numero de anos] * [numero de classes] * [numero de alunos]
     */
-    private const ENSINO_INFANTIL_QNT = 2 * 2 * 2;
-    private const ENSINO_FUNDAMENTAL_QNT = 9 * 2 * 2;
-    private const ENSINO_MEDIO_QNT = 2 * 3 * 2;
+    private const ENSINO_INFANTIL_QNT = 2 * 2 * 1;
+    private const ENSINO_FUNDAMENTAL_QNT = 9 * 2 * 1;
+    private const ENSINO_MEDIO_QNT = 2 * 3 * 1;
 
     private const PROFESSOR_QNT = 10;
     private const BIBLIOTECARIO_QNT = 5;

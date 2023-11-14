@@ -205,6 +205,7 @@ class Aluno extends Model
             ], 400);
         }
 
+
         $cursos = $sortOrder == 'asc'
             ? $cursos->sortBy($sortColumn)
             : $cursos->sortByDesc($sortColumn);
@@ -212,10 +213,11 @@ class Aluno extends Model
 
         return response()->json([
             'success' => true,
-            'data' => $cursos->slice(
-                $page * $limit,
-                $limit
-            )
+            'data' => $cursos
+                ->slice(
+                    $page * $limit,
+                    $limit
+                )
                 ->values(),
             'count' => auth()->user()
                 ->aluno
@@ -442,7 +444,6 @@ class Aluno extends Model
             ? $query->sortBy($sortColumn)
             : $query->sortByDesc($sortColumn);
 
-
         $values = $query;
 
         return response()->json([
@@ -461,9 +462,9 @@ class Aluno extends Model
         $notas,
         $area
     ) {
-        $valor_total = $notas->sum('nota');
-        $valor_final = $valor_total / $notas->count();
-
+        // $valor_total = $notas->sum('nota');
+        // $valor_final = $valor_total / $notas->count();
+        $valor_final = $notas->avg('nota');
         $this->areas()
             ->syncWithoutDetaching([
                 $area->codigo => [

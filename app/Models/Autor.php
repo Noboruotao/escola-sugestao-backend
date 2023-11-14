@@ -61,7 +61,9 @@ class Autor extends Model
         $autor = Autor::when($com_acervos, function ($query) {
             return $query->with([
                 'nacionalidade',
-                'acervos'
+                'acervos' => function ($query) {
+                    $query->orderBy('titulo');
+                }
             ]);
         })
             ->find($id);

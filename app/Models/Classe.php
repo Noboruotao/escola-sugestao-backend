@@ -80,6 +80,7 @@ class Classe extends Model
         $qnt = $query->count();
         $classes = $query->with('disciplina')
             ->orderBy($sortColumn, $sortOrder)
+            ->orderBy('disciplina_id')
             ->offset($page * $pageSize)
             ->limit($pageSize)
             ->get();
@@ -87,6 +88,7 @@ class Classe extends Model
         if ($user->hasRole('Aluno')) {
             $classes = self::setAlunoNotasOnClasse($classes);
         }
+
 
         return response()->json([
             'success' => true,
