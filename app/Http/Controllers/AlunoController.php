@@ -85,7 +85,16 @@ class AlunoController extends Controller
         $sortOrder = $request->query('sortOrder', null);
         $tipo = $request->query('tipo', '');
 
-        $ativExtra = $this->aluno->getAtivExtraSugerido(
+        // $ativExtra = $this->aluno->getAtivExtraSugerido(
+        //     $page,
+        //     $limit,
+        //     $search,
+        //     $sortColumn,
+        //     $sortOrder,
+        //     $tipo
+        // );
+
+        return $this->aluno->getAtivExtraSugerido(
             $page,
             $limit,
             $search,
