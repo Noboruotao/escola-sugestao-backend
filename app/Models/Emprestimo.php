@@ -268,8 +268,9 @@ class Emprestimo extends Model
         if ($emprestimos->count() == 0) {
             return response()->json([
                 'success' => false,
-                'message' => 'Emprestimo Não Encontrado'
-            ], 400);
+                'message' => 'Emprestimo Não Encontrado',
+                'count' => 0,
+            ]);
         }
         return response()->json([
             'success' => true,
